@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'teachers',
     'events',
     "games",
-    "importer",
 ]
 
 MIDDLEWARE = [

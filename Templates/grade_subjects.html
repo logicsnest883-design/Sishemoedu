@@ -13,46 +13,62 @@
 
   <!-- 🧠 Content -->
   <div class="relative z-10 w-full max-w-6xl mx-auto px-6 py-24 text-center">
+
     <h1 class="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-pink-600 to-yellow-500 mb-6 drop-shadow-md">
       {{ grade.name }}
     </h1>
+
     <p class="text-lg md:text-xl text-gray-700 max-w-2xl mx-auto mb-16">
       Select a subject below to start exploring topics, notes, and books.
     </p>
 
     <!-- 📚 Subject Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
       {% for subject in subjects %}
-        <a href=" {% if mode == 'books' %}
-             {% url 'subject_books' subject.id %}
-         {% else %}
-             {% url 'subject_topics' subject.id %}
-         {% endif %}"
+        <a href="{% if mode == 'books' %}
+                    {% url 'subject_books' subject.id grade.id %}
+                 {% else %}
+                    {% url 'subject_topics' subject.id grade.id %}
+                 {% endif %}"
+
            class="relative group bg-white/70 backdrop-blur-xl border border-white/40 shadow-lg hover:shadow-2xl rounded-3xl p-10 transition-all duration-500 transform hover:-translate-y-3 hover:scale-[1.03]">
-          
-          <!-- glowing gradient hover effect -->
+
+          <!-- glowing background effect -->
           <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-100 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-lg"></div>
 
           <div class="relative z-10 flex flex-col items-center">
+
+            <!-- icon -->
             <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center mb-6 group-hover:from-purple-600 group-hover:to-pink-600 transition-all duration-500 shadow-inner">
-              <!-- 📖 Open book icon -->
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                   stroke-width="1.5" stroke="currentColor"
                    class="w-10 h-10 text-purple-600 group-hover:text-white transition">
+
                 <path stroke-linecap="round" stroke-linejoin="round"
                       d="M3 5a2 2 0 012-2h7a2 2 0 012 2v14a2 2 0 01-2-2H5a2 2 0 01-2-2V5zM21 5a2 2 0 00-2-2h-7a2 2 0 00-2 2v14a2 2 0 012-2h7a2 2 0 002-2V5z" />
               </svg>
+
             </div>
+
             <h3 class="text-2xl font-bold text-gray-800 group-hover:text-purple-900 transition">
               {{ subject.name }}
             </h3>
+
             <p class="mt-2 text-gray-500 text-sm group-hover:text-gray-700 transition">
               Explore {{ subject.topics.count }} topics
             </p>
+
           </div>
         </a>
+
       {% empty %}
-        <p class="col-span-3 text-gray-500 text-center text-lg">No subjects available for this grade yet.</p>
+        <p class="col-span-3 text-gray-500 text-center text-lg">
+          No subjects available for this grade yet.
+        </p>
       {% endfor %}
+
     </div>
   </div>
 </section>
@@ -64,4 +80,5 @@
   50% { transform: translateY(-25px) rotate(5deg); }
 }
 </style>
+
 {% endblock %}

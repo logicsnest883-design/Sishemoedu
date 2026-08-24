@@ -17,7 +17,7 @@ class UserProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
 
 
-    # Add fields later for teachers/parents/learners
+    # Add fields later for teachers/parents/learners yes
     # Example:
     # phone = models.CharField(max_length=20, blank=True, null=True)
     # address = models.CharField(max_length=150, blank=True, null=True)

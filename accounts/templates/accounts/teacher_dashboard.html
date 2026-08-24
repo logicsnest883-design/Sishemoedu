@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-5xl mx-auto">
+
+    <h1 class="text-3xl font-bold text-teal-700 mb-8 text-center">
+        {{ grade.name }} - Teacher Portal
+    </h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- View Tests -->
+        <a href="{% url 'view_tests' %}" 
+           class="bg-teal-600 text-white px-6 py-8 rounded shadow hover:bg-teal-700 text-center transition">
+            <h2 class="text-xl font-semibold mb-2">View Tests</h2>
+            <p>See all tests for your grade</p>
+        </a>
+
+        <!-- Enter Scores -->
+        <a href=" {% url 'enter_scores_list'%} " 
+           class="bg-teal-600 text-white px-6 py-8 rounded shadow hover:bg-teal-700 text-center transition">
+            <h2 class="text-xl font-semibold mb-2">Enter Scores</h2>
+            <p>Enter marks for students</p>
+        </a>
+
+        <!-- Class Register / Learners -->
+        <a href=" {% url 'class_register' %} " 
+           class="bg-teal-600 text-white px-6 py-8 rounded shadow hover:bg-teal-700 text-center transition">
+            <h2 class="text-xl font-semibold mb-2">Class Register</h2>
+            <p>View your students list</p>
+        </a>
+
+        <!-- Future Links -->
+        <a href="#" 
+           class="bg-gray-400 text-white px-6 py-8 rounded shadow text-center cursor-not-allowed">
+            <h2 class="text-xl font-semibold mb-2">Reports / Analytics</h2>
+            <p>Coming soon</p>
+        </a>
+
+    </div>
+</div>
+{% endblock %}

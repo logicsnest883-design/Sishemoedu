@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex justify-center items-center min-h-screen bg-gray-950">
+
+<canvas id="maze" width="900" height="550"
+        class="rounded-2xl shadow-2xl"></canvas>
+
+</div>
+
+<!-- QUIZ -->
+<div id="quizBox"
+     class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+
+    <div class="bg-white p-8 rounded-2xl w-96 text-center">
+
+        <h2 class="text-xl font-bold mb-4">Quiz</h2>
+
+        <p class="mb-4">What is 2 + 2?</p>
+
+        <button onclick="answer(true)" class="bg-green-600 text-white px-4 py-2 rounded m-1">4</button>
+        <button onclick="answer(false)" class="bg-red-600 text-white px-4 py-2 rounded m-1">5</button>
+
+    </div>
+</div>
+
+<!-- WIN -->
+<div id="winBox"
+     class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+
+    <div class="bg-white p-10 rounded-2xl text-center">
+        <h1 class="text-3xl font-bold text-green-600">You Escaped!</h1>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById("maze");
+const ctx = canvas.getContext("2d");
+
+// DARK MAZE STYLE
+canvas.style.background = "#111827";
+
+// PLAYER
+let player = {
+    x: 90,
+    y: 90,
+    r: 10,
+    speed: 2.5
+};
+
+// CLEAN MAZE STRUCTURE (grid-like corridors but still smooth movement)
+const walls = [
+    // OUTER BORDER
+    {x1: 50, y1: 50, x2: 850, y2: 50},
+    {x1: 850, y1: 50, x2: 850, y2: 500},
+    {x1: 850, y1: 500, x2: 50, y2: 500},
+    {x1: 50, y1: 500, x2: 50, y2: 50},
+
+    // MAIN CORRIDORS (structured)
+    {x1: 200, y1: 50, x2: 200, y2: 400},
+    {x1: 350, y1: 150, x2: 350, y2: 500},
+    {x1: 500, y1: 50, x2: 500, y2: 350},
+    {x1: 650, y1: 150, x2: 650, y2: 500},
+
+    // CROSS BLOCKS (create maze feel)
+    {x1: 200, y1: 200, x2: 500, y2: 200},
+    {x1: 350, y1: 350, x2: 650, y2: 350}
+];
+
+// SPECIAL ZONES
+let quizZone = { x: 500, y: 200, r: 18, triggered: false };
+let exit = { x: 820, y: 470, r: 20 };
+
+// KEYS
+let keys = {};
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+// DIST
+function dist(x1,y1,x2,y2){
+    return Math.hypot(x1-x2, y1-y2);
+}
+
+// COLLISION
+function collision(nx, ny){
+    for (let w of walls) {
+
+        let A = {x:w.x1, y:w.y1};
+        let B = {x:w.x2, y:w.y2};
+
+        let dx = B.x - A.x;
+        let dy = B.y - A.y;
+
+        let t = ((nx-A.x)*dx + (ny-A.y)*dy) / (dx*dx + dy*dy);
+        t = Math.max(0, Math.min(1, t));
+
+        let cx = A.x + t*dx;
+        let cy = A.y + t*dy;
+
+        if (dist(nx,ny,cx,cy) < player.r + 3) return true;
+    }
+    return false;
+}
+
+// MOVE
+function move(){
+    let nx = player.x;
+    let ny = player.y;
+
+    if (keys["ArrowUp"]) ny -= player.speed;
+    if (keys["ArrowDown"]) ny += player.speed;
+    if (keys["ArrowLeft"]) nx -= player.speed;
+    if (keys["ArrowRight"]) nx += player.speed;
+
+    if (!collision(nx, ny)) {
+        player.x = nx;
+        player.y = ny;
+    }
+
+    // QUIZ
+    if (!quizZone.triggered &&
+        dist(player.x, player.y, quizZone.x, quizZone.y) < quizZone.r) {
+
+        quizZone.triggered = true;
+        document.getElementById("quizBox").classList.remove("hidden");
+    }
+
+    // WIN
+    if (dist(player.x, player.y, exit.x, exit.y) < exit.r) {
+        document.getElementById("winBox").classList.remove("hidden");
+    }
+}
+
+// DRAW
+function draw(){
+
+    ctx.clearRect(0,0,900,550);
+
+    // WALLS (thick + glowing feel)
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 6;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "rgba(255,255,255,0.2)";
+
+    for (let w of walls){
+        ctx.beginPath();
+        ctx.moveTo(w.x1,w.y1);
+        ctx.lineTo(w.x2,w.y2);
+        ctx.stroke();
+    }
+
+    ctx.shadowBlur = 0;
+
+    // QUIZ ZONE
+    ctx.beginPath();
+    ctx.fillStyle = "#3b82f6";
+    ctx.arc(quizZone.x, quizZone.y, quizZone.r, 0, Math.PI*2);
+    ctx.fill();
+
+    // EXIT
+    ctx.beginPath();
+    ctx.fillStyle = "#22c55e";
+    ctx.arc(exit.x, exit.y, exit.r, 0, Math.PI*2);
+    ctx.fill();
+
+    // PLAYER (glow effect)
+    ctx.beginPath();
+    ctx.fillStyle = "#ef4444";
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "red";
+    ctx.arc(player.x, player.y, player.r, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+}
+
+// QUIZ
+function answer(correct){
+    document.getElementById("quizBox").classList.add("hidden");
+
+    if (!correct){
+        player.x = 90;
+        player.y = 90;
+        quizZone.triggered = false;
+    }
+}
+
+// LOOP
+function loop(){
+    move();
+    draw();
+    requestAnimationFrame(loop);
+}
+
+loop();
+
+</script>
+
+{% endblock %}

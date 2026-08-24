@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% block title %}Select Academic Period{% endblock %}
+
+{% block content %}
+
+<div class="p-6 max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-8">
+
+        <h1 class="text-3xl font-bold text-teal-700">
+            Enter Student Scores
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+            {{ grade.name }} • Select the academic period first
+        </p>
+
+    </div>
+
+
+    <!-- Academic Period Selection -->
+
+    <div class="max-w-xl mx-auto bg-white shadow-lg rounded-2xl border p-6">
+
+        <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">
+            Select Academic Period
+        </h2>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                <!-- Year -->
+
+                <div>
+
+                    <label for="year"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+
+                        Academic Year
+
+                    </label>
+
+                    <select name="year"
+                            id="year"
+                            required
+                            class="w-full border border-gray-300 rounded-xl
+                                   px-4 py-3 focus:ring-2 focus:ring-teal-500
+                                   focus:border-teal-500 outline-none">
+
+                        <option value="">
+                            Select Year
+                        </option>
+
+                        {% for year in years %}
+
+                            <option value="{{ year }}"
+                                {% if selected_year == year %}
+                                    selected
+                                {% endif %}>
+
+                                {{ year }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Term -->
+
+                <div>
+
+                    <label for="term"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+
+                        Term
+
+                    </label>
+
+                    <select name="term"
+                            id="term"
+                            required
+                            class="w-full border border-gray-300 rounded-xl
+                                   px-4 py-3 focus:ring-2 focus:ring-teal-500
+                                   focus:border-teal-500 outline-none">
+
+                        <option value="">
+                            Select Term
+                        </option>
+
+                        {% for value, label in terms %}
+
+                            <option value="{{ value }}"
+                                {% if selected_term == value %}
+                                    selected
+                                {% endif %}>
+
+                                {{ label }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Continue -->
+
+            <button type="submit"
+                    class="w-full mt-6
+                           bg-teal-600 hover:bg-teal-700
+                           text-white font-semibold
+                           py-3 rounded-xl
+                           transition">
+
+                Continue →
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- Test Types -->
+
+    {% if selected_year and selected_term %}
+
+        <div class="mt-10">
+
+            <div class="text-center mb-6">
+
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Select Test
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+                    {{ selected_term }} • {{ selected_year }}
+                </p>
+
+            </div>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                {% for value, label in test_types %}
+
+                    <a href="{% url 'enter_scores' value %}?year={{ selected_year }}&term={{ selected_term|urlencode }}"
+                       class="bg-teal-600 hover:bg-teal-700
+                              text-white px-6 py-8
+                              rounded-2xl shadow-md
+                              hover:shadow-xl
+                              text-center transition
+                              transform hover:-translate-y-1">
+
+                        <h2 class="text-xl font-semibold">
+                            {{ label }}
+                        </h2>
+
+                        <p class="text-teal-100 text-sm mt-2">
+                            {{ selected_term }} • {{ selected_year }}
+                        </p>
+
+                        <div class="mt-4 text-2xl">
+                            →
+                        </div>
+
+                    </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- Back -->
+
+    <div class="mt-10 text-center">
+
+        <a href="{% url 'teacher_dashboard' %}"
+           class="text-teal-600 hover:text-teal-800 font-semibold">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

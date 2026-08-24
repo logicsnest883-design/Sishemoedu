@@ -1,0 +1,398 @@
+{% extends "base.html" %}
+
+{% block title %}Enter Scores - {{ test_type }}{% endblock %}
+
+{% block content %}
+
+<div class="p-4 sm:p-6 max-w-7xl mx-auto">
+
+    <!-- ========================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================= -->
+
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-6">
+
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+                    Enter Scores
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    {{ grade.name }} • {{ test_type }}
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+
+                {% if year %}
+                    <span class="px-4 py-2 rounded-lg bg-blue-50 text-blue-700 font-semibold">
+                        Year: {{ year }}
+                    </span>
+                {% endif %}
+
+                {% if term %}
+                    <span class="px-4 py-2 rounded-lg bg-purple-50 text-purple-700 font-semibold">
+                        {{ term }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- INSTRUCTIONS -->
+    <!-- ========================= -->
+
+    <div class="bg-teal-50 border border-teal-200 rounded-xl p-4 mb-5">
+
+        <div class="flex items-start gap-3">
+
+            <div class="text-teal-600 text-xl">
+                ✏️
+            </div>
+
+            <div>
+
+                <p class="font-semibold text-teal-800">
+                    Enter student marks
+                </p>
+
+                <p class="text-sm text-teal-700 mt-1">
+                    Click inside each box and enter the student's mark.
+                    The maximum mark for each subject is shown below the box.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- SCORE FORM -->
+    <!-- ========================= -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+
+            <div class="overflow-x-auto">
+
+                <table class="min-w-full border-collapse">
+
+                    <!-- ========================= -->
+                    <!-- TABLE HEADER -->
+                    <!-- ========================= -->
+
+                    <thead>
+
+                        <tr class="bg-teal-700 text-white">
+
+                            <th class="border border-teal-600
+                                       px-4 py-4
+                                       text-left
+                                       whitespace-nowrap
+                                       sticky left-0
+                                       bg-teal-700
+                                       z-10">
+
+                                Student
+
+                            </th>
+
+
+                            {% for subject in subjects %}
+
+                                <th class="border border-teal-600
+                                           px-4 py-4
+                                           text-center
+                                           whitespace-nowrap">
+
+                                    {{ subject.name }}
+
+                                </th>
+
+                            {% endfor %}
+
+
+                            <th class="border border-teal-600
+                                       px-4 py-4
+                                       text-center
+                                       whitespace-nowrap">
+
+                                Total
+
+                            </th>
+
+
+                            <th class="border border-teal-600
+                                       px-4 py-4
+                                       text-center
+                                       whitespace-nowrap">
+
+                                Average
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- ========================= -->
+                    <!-- TABLE BODY -->
+                    <!-- ========================= -->
+
+                    <tbody class="divide-y divide-gray-200">
+
+                        {% for row in rows %}
+
+                        <tr class="hover:bg-teal-50 transition">
+
+
+                            <!-- ========================= -->
+                            <!-- STUDENT -->
+                            <!-- ========================= -->
+
+                            <td class="border border-gray-200
+                                       px-4 py-4
+                                       whitespace-nowrap
+                                       font-semibold
+                                       text-gray-800
+                                       sticky left-0
+                                       bg-white
+                                       z-10">
+
+                                <div class="flex items-center gap-3">
+
+                                    <div class="w-9 h-9
+                                                rounded-full
+                                                bg-teal-100
+                                                text-teal-700
+                                                flex items-center
+                                                justify-center
+                                                font-bold
+                                                text-sm">
+
+                                        {{ forloop.counter }}
+
+                                    </div>
+
+
+                                    <span>
+
+                                        {% if row.student.first_name and row.student.last_name %}
+
+                                            {{ row.student.first_name }}
+                                            {{ row.student.last_name }}
+
+                                        {% else %}
+
+                                            {{ row.student.profile.user.get_full_name }}
+
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- ========================= -->
+                            <!-- SUBJECT MARKS -->
+                            <!-- ========================= -->
+
+                            {% for item in row.subject_scores %}
+
+                            <td class="border border-gray-200
+                                       px-3 py-3
+                                       text-center">
+
+                                {% if item.test_id %}
+
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max="{{ item.max_score }}"
+                                        name="score_{{ row.student.id }}_{{ item.subject.id }}"
+                                        value="{% if item.score is not None %}{{ item.score }}{% endif %}"
+                                        placeholder="Enter"
+                                        class="w-20 sm:w-24
+                                               px-3 py-2
+                                               text-center
+                                               font-semibold
+                                               text-gray-800
+                                               bg-white
+                                               border-2
+                                               border-gray-300
+                                               rounded-lg
+                                               outline-none
+                                               focus:border-teal-500
+                                               focus:ring-2
+                                               focus:ring-teal-200
+                                               hover:border-teal-400
+                                               transition">
+
+
+                                    <div class="text-xs
+                                                text-gray-400
+                                                mt-1">
+
+                                        Max: {{ item.max_score }}
+
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="text-gray-400">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            {% endfor %}
+
+
+                            <!-- ========================= -->
+                            <!-- TOTAL -->
+                            <!-- ========================= -->
+
+                            <td class="border border-gray-200
+                                       px-4 py-4
+                                       text-center
+                                       font-bold
+                                       text-gray-800">
+
+                                {{ row.total }}
+
+                            </td>
+
+
+                            <!-- ========================= -->
+                            <!-- AVERAGE -->
+                            <!-- ========================= -->
+
+                            <td class="border border-gray-200
+                                       px-4 py-4
+                                       text-center">
+
+                                <span class="inline-flex
+                                             items-center
+                                             px-3 py-1
+                                             rounded-full
+                                             bg-blue-50
+                                             text-blue-700
+                                             font-bold">
+
+                                    {{ row.average }}%
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="100%"
+                                class="px-6 py-12
+                                       text-center
+                                       text-gray-500">
+
+                                <div class="text-4xl mb-3">
+                                    📚
+                                </div>
+
+                                <p class="font-semibold">
+                                    No students found.
+                                </p>
+
+                                <p class="text-sm mt-1">
+                                    There are currently no students assigned
+                                    to {{ grade.name }}.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- ACTION BUTTONS -->
+        <!-- ========================= -->
+
+        <div class="flex flex-col sm:flex-row
+                    justify-between
+                    items-center
+                    gap-4
+                    mt-6">
+
+
+            <a href="{% url 'enter_scores_list' %}"
+               class="inline-flex
+                      items-center
+                      gap-2
+                      text-gray-600
+                      hover:text-teal-700
+                      font-semibold
+                      transition">
+
+                ← Back to Test Selection
+
+            </a>
+
+
+            <button type="submit"
+                    class="w-full sm:w-auto
+                           inline-flex
+                           items-center
+                           justify-center
+                           gap-2
+                           bg-teal-600
+                           hover:bg-teal-700
+                           text-white
+                           font-bold
+                           px-8
+                           py-3
+                           rounded-xl
+                           shadow-md
+                           hover:shadow-lg
+                           transition">
+
+                💾 Save Scores
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

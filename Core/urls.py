@@ -18,9 +18,9 @@ urlpatterns = [
     path("<str:mode>/grade/<int:grade_id>/subjects/", views.grade_subjects, name="grade_subjects"),
 
     # Topics
-    path("subjects/<int:subject_id>/topics/", views.subject_topics, name="subject_topics"),
-    path("subjects/<int:subject_id>/grade/<int:grade_id>/topics/",
-         views.subject_topics, name="subject_topics_by_grade"),
+    path("subjects/<int:subject_id>/grade/<int:grade_id>/topics/", views.subject_topics, name="subject_topics"),
+    path("about/", views.about, name="about"),
+    path("contact/", views.contact, name="contact"),
 
     # Notes
     path("topics/<int:topic_id>/notes/", views.topic_notes, name="topic_notes"),

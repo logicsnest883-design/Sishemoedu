@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}
+AI Note Importer
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto py-10 px-4">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800">
+            AI Note Importer
+        </h1>
+
+        <p class="mt-2 text-gray-500">
+            Upload textbook pages and generate beautifully formatted notes for your students.
+        </p>
+    </div>
+
+    <form method="POST"
+          enctype="multipart/form-data"
+          class="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
+
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Grade -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Grade
+                </label>
+
+                {{ form.grade }}
+            </div>
+
+            <!-- Subject -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Subject
+                </label>
+
+                {{ form.subject }}
+            </div>
+
+            <!-- Topic -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Topic
+                </label>
+
+                {{ form.topic }}
+            </div>
+
+            <!-- Note Title -->
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Note Title
+                </label>
+
+                {{ form.title }}
+            </div>
+
+        </div>
+
+        <!-- PDF Upload -->
+
+        <div class="mt-8">
+
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                Textbook / PDF
+            </label>
+
+            {{ form.source_file }}
+
+            <p class="text-sm text-gray-500 mt-2">
+                Upload the textbook or scanned PDF containing the lesson.
+            </p>
+
+        </div>
+
+        <!-- Page Range -->
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+
+            <div>
+
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Start Page
+                </label>
+
+                {{ form.start_page }}
+
+            </div>
+
+            <div>
+
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    End Page
+                </label>
+
+                {{ form.end_page }}
+
+            </div>
+
+        </div>
+
+        <!-- Button -->
+
+        <div class="mt-10 flex justify-end">
+
+            <button
+                type="submit"
+                class="px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold transition duration-200 shadow-md">
+
+                Generate Notes
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

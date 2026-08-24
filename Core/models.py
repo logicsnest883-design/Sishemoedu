@@ -83,9 +83,35 @@ class Topic(models.Model):
 
 
 class Note(models.Model):
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="notes")
+    topic = models.ForeignKey(
+        Topic,
+        on_delete=models.CASCADE,
+        related_name="notes"
+    )
+
     title = models.CharField(max_length=200)
-    content = RichTextField()  # supports text + images + diagrams
+
+    # Text content
+    content = RichTextField(blank=True, null=True)
+
+    # PDF or document upload
+    document = models.FileField(
+        upload_to="notes/documents/",
+        blank=True,
+        null=True
+    )
+
+    def __str__(self):
+        return self.title
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+
+        # Require either text content or a document
+        if not self.content and not self.document:
+            raise ValidationError(
+                "Provide either note content or upload a document."
+            )
 
 
 from django.db import models

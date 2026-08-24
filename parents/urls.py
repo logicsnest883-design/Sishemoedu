@@ -18,5 +18,8 @@ urlpatterns = [
         views.parent_detail,
         name="parent_detail"
     ),
+    path("create/", views.create_parent, name="create_parent"),
+    path("parent/dashboard/", views.parent_dashboard, name="parent_dashboard"),
+    path("child/<int:student_id>/", views.parent_child_detail, name="parent_child_detail"),
 
 ]

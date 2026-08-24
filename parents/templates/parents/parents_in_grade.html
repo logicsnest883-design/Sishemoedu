@@ -9,96 +9,103 @@ Parents in {{ grade.name }}
 <div class="min-h-screen bg-gray-50 p-6">
 
     <!-- Page Header -->
-    <div class="max-w-7xl mx-auto mb-8">
-        <h1 class="text-3xl font-bold text-teal-700">
-            Parents in {{ grade.name }}
-        </h1>
-        <p class="text-gray-600 mt-2">
-            List of all parents with children in this grade.
-        </p>
+    <div class="max-w-7xl mx-auto mb-8 flex justify-between items-center">
+        
+        <div>
+            <h1 class="text-3xl font-bold text-teal-700">
+                Parents in {{ grade.name }}
+            </h1>
+            <p class="text-gray-600 mt-2">
+                List of all parents with children in this grade.
+            </p>
+        </div>
+
+        <!-- ✅ Add Parent Button -->
+        <a href="{% url 'parents:create_parent' %}"
+           class="bg-teal-600 text-white px-5 py-2 rounded-lg shadow hover:bg-teal-700 transition">
+            + Add Parent
+        </a>
+
     </div>
 
-<!-- Parents List -->
-<div class="max-w-7xl mx-auto">
 
-    {% if parents %}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Parents List -->
+    <div class="max-w-7xl mx-auto">
 
-            {% for parent in parents %}
+        {% if parents %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-            <!-- Clickable Card -->
-            <a href="{% url 'parents:parent_detail' parent.id %}" 
-               class="block bg-white shadow-md rounded-2xl p-6 hover:shadow-xl hover:scale-105 transition duration-300">
+                {% for parent in parents %}
 
-                <!-- Parent Info -->
-                <div class="flex items-center mb-4">
-                    
-                    <!-- Parent Photo -->
-                    {% if parent.profile and parent.profile.image %}
-                        <img src="{{ parent.profile.image.url }}" alt="Parent Image"
-                             class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-teal-500">
-                    {% else %}
-                        <div class="w-16 h-16 rounded-full bg-gray-300 mr-4 border-2 border-teal-500"></div>
-                    {% endif %}
+                <!-- Clickable Card -->
+                <a href="{% url 'parents:parent_detail' parent.id %}" 
+                   class="block bg-white shadow-md rounded-2xl p-6 hover:shadow-xl hover:scale-105 transition duration-300">
 
-                    <!-- Parent Name -->
-                    <h2 class="text-xl font-semibold text-gray-800">
-                        {% if parent.first_name and parent.last_name %}
-                            {{ parent.first_name }} {{ parent.last_name }}
-                        {% elif parent.profile and parent.profile.user %}
-                            {{ parent.profile.user.get_full_name }}
+                    <!-- Parent Info -->
+                    <div class="flex items-center mb-4">
+                        
+                        {% if parent.profile and parent.profile.image %}
+                            <img src="{{ parent.profile.image.url }}" alt="Parent Image"
+                                 class="w-16 h-16 rounded-full object-cover mr-4 border-2 border-teal-500">
                         {% else %}
-                            Unknown Parent
+                            <div class="w-16 h-16 rounded-full bg-gray-300 mr-4 border-2 border-teal-500"></div>
                         {% endif %}
-                    </h2>
-                </div>
 
-                <!-- Contact Info -->
-                <div class="text-sm text-gray-600 mb-4">
-                    <p><span class="font-medium">Phone:</span> {{ parent.phone }}</p>
-                    {% if parent.profile and parent.profile.user %}
-                        <p><span class="font-medium">Email:</span> {{ parent.profile.user.email }}</p>
-                    {% endif %}
-                </div>
+                        <h2 class="text-xl font-semibold text-gray-800">
+                            {% if parent.profile and parent.profile.user %}
+                                {{ parent.profile.user.get_full_name }}
+                            {% else %}
+                                Unknown Parent
+                            {% endif %}
+                        </h2>
+                    </div>
 
+                    <!-- Contact Info -->
+                    <div class="text-sm text-gray-600 mb-4">
+                        <p><span class="font-medium">Phone:</span> {{ parent.phone }}</p>
+                        {% if parent.profile and parent.profile.user %}
+                            <p><span class="font-medium">Email:</span> {{ parent.profile.user.email }}</p>
+                        {% endif %}
+                    </div>
 
-<!-- Children Section -->
-<div class="border-t pt-3">
-    <p class="text-sm font-semibold text-teal-600 mb-2">
-        Child in {{ grade.name }}
-    </p>
+                    <!-- Children Section -->
+                    <div class="border-t pt-3">
+                        <p class="text-sm font-semibold text-teal-600 mb-2">
+                            Children in {{ grade.name }}
+                        </p>
 
-    <ul class="space-y-2">
-        {% for child in parent.children.all %}
-            {% if child.grade == grade %}
-                <li class="flex items-center bg-gray-100 px-3 py-1 rounded-lg">
-                    
-                    <!-- Child Photo -->
-                    {% if child.photo %}
-                        <img src="{{ child.photo.url }}" alt="Child Photo"
-                             class="w-10 h-10 rounded-full object-cover mr-3 border border-gray-300">
-                    {% else %}
-                        <div class="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
-                    {% endif %}
+                        <ul class="space-y-2">
+                            {% for child in parent.children.all %}
+                                {% if child.grade == grade %}
+                                    <li class="flex items-center bg-gray-100 px-3 py-1 rounded-lg">
+                                        
+                                        {% if child.photo %}
+                                            <img src="{{ child.photo.url }}" alt="Child Photo"
+                                                 class="w-10 h-10 rounded-full object-cover mr-3 border border-gray-300">
+                                        {% else %}
+                                            <div class="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
+                                        {% endif %}
 
-                    <!-- Child Name -->
-                    <span class="text-gray-700">
-                        {{ child.first_name }} {{ child.last_name }}
-                    </span>
+                                        <span class="text-gray-700">
+                                            {{ child.profile.user.get_full_name }}
+                                        </span>
 
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-</div>
-
-
+                                    </li>
+                                {% endif %}
+                            {% empty %}
+                                <li class="text-sm text-gray-400">
+                                    No children assigned.
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
 
                 </a>
 
                 {% endfor %}
 
             </div>
+
         {% else %}
             <div class="bg-white shadow rounded-xl p-6 text-center text-gray-600">
                 No parents found in this grade.

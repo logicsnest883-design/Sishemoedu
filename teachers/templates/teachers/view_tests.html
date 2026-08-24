@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}View Tests{% endblock %}
+
+{% block content %}
+<div class="p-6 max-w-6xl mx-auto">
+
+    <h1 class="text-3xl font-bold text-teal-700 mb-6">
+        Tests for {{ grade.name }}
+    </h1>
+
+    {% if tests %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white shadow rounded">
+                <thead class="bg-teal-600 text-white">
+                    <tr>
+                        <th class="px-4 py-3 text-left">Subject</th>
+                        <th class="px-4 py-3 text-left">Test Type</th>
+                        <th class="px-4 py-3 text-left">Max Score</th>
+                        <th class="px-4 py-3 text-left">Date</th>
+                        <th class="px-4 py-3 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for test in tests %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-3">{{ test.subject.name }}</td>
+                        <td class="px-4 py-3">{{ test.test_type }}</td>
+                        <td class="px-4 py-3">{{ test.max_score }}</td>
+                        <td class="px-4 py-3">{{ test.test_date }}</td>
+                        <td class="px-4 py-3 text-center">
+                            <a href="{% url 'enter_scores' test.id %}"
+                               class="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700">
+                                Enter Scores
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="bg-yellow-100 text-yellow-800 p-4 rounded">
+            No tests available for this grade yet.
+        </div>
+    {% endif %}
+
+    <div class="mt-6">
+        <a href="{% url 'teacher_dashboard' %}" 
+           class="text-teal-600 hover:underline">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

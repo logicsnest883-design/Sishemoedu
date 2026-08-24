@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto mt-10 p-6">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-gray-800">
+            Parent Dashboard
+        </h1>
+
+        <p class="text-gray-600 mt-2">
+            Welcome {{ parent.full_name }}
+        </p>
+    </div>
+
+    <!-- Children -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        {% for child in children %}
+        <div class="bg-white shadow-lg rounded-2xl p-6 border">
+
+            <!-- Child Info -->
+            <h2 class="text-2xl font-semibold text-gray-800">
+                {{ child.profile.user.get_full_name }}
+            </h2>
+
+            <p class="text-gray-500 mt-1">
+                Class: {{ child.grade.name }}
+            </p>
+
+            <!-- ===================== -->
+            <!-- NEW: STUDENT DETAILS -->
+            <!-- ===================== -->
+            <div class="mt-4">
+                <a href="{% url 'parents:parent_child_detail' child.id %}"
+   class="inline-block text-blue-600 font-semibold hover:underline">
+    View Student Details →
+</a>
+            </div>
+
+            <!-- Attendance -->
+            <div class="mt-5">
+
+                <p class="text-gray-700 font-medium mb-1">
+                    Attendance
+                </p>
+
+                <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                    <div class="
+                        h-4 rounded-full
+                        {% if child.attendance_percentage >= 80 %}
+                            bg-green-500
+                        {% elif child.attendance_percentage >= 60 %}
+                            bg-yellow-500
+                        {% else %}
+                            bg-red-500
+                        {% endif %}
+                    "
+                    style="width: {{ child.attendance_percentage }}%">
+                    </div>
+                </div>
+
+                <p class="text-sm mt-2 text-gray-600">
+                    {{ child.attendance_percentage }}%
+                </p>
+
+            </div>
+
+            <!-- Test Categories -->
+            <div class="mt-8">
+
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    Test Categories
+                </h3>
+
+                {% if child.tests_by_type %}
+
+                    <div class="space-y-4">
+
+                        {% for test_type, scores in child.tests_by_type.items %}
+
+                        <!-- Clickable Test Type -->
+                        <a href=" {% url 'parent_test_detail' child.id test_type %} "
+                           class="block bg-blue-50 border border-blue-200 rounded-2xl p-5 hover:bg-blue-100 transition duration-300">
+
+                            <div class="flex justify-between items-center">
+
+                                <div>
+                                    <h4 class="text-lg font-bold text-blue-800">
+                                        {{ test_type }}
+                                    </h4>
+
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        {{ scores|length }} Subject{{ scores|length|pluralize }}
+                                    </p>
+                                </div>
+
+                                <div class="text-blue-700 text-2xl font-bold">
+                                    →
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="bg-gray-50 border rounded-xl p-4">
+                        <p class="text-gray-500 text-sm">
+                            No tests available yet.
+                        </p>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <div class="bg-white p-8 rounded-2xl shadow text-center">
+            <p class="text-gray-500 text-lg">
+                No children found.
+            </p>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

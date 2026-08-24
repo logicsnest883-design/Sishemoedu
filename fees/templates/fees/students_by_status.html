@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="pt-6 px-4 sm:px-6 lg:px-8">
+
+    <h1 class="text-3xl font-bold text-teal-700 mb-6">
+        {{ title }}
+    </h1>
+
+    <div class="bg-white shadow rounded-lg p-6">
+
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead>
+                <tr class="bg-teal-50 text-left text-sm font-semibold text-gray-600">
+                    <th class="px-4 py-2">Student</th>
+                    <th class="px-4 py-2">Grade</th>
+                    <th class="px-4 py-2">Balance</th>
+                    <th class="px-4 py-2">Action</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-100 text-sm">
+                {% for student in students %}
+                <tr>
+                    <td class="px-4 py-2">
+                        {{ student.profile.user.get_full_name }}
+                    </td>
+
+                    <td class="px-4 py-2">
+                        {{ student.grade.name|default:"—" }}
+                    </td>
+
+                    <td class="px-4 py-2">
+                        K {{ student.school_balance }}
+                    </td>
+
+                    <td class="px-4 py-2 space-x-3">
+
+    <a href="{% url 'fees:record_payment' student.id %}"
+       class="text-teal-600 hover:underline">
+       Record Payment
+    </a>
+
+    <a href="{% url 'fees:update_balance' student.id %}"
+       class="text-blue-600 hover:underline">
+        Edit Balance
+    </a>
+
+</td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-gray-500">
+                        No students found.
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+{% endblock %}

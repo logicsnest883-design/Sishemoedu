@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto mt-10 p-6">
+
+    <!-- Header -->
+    <div class="text-center mb-10">
+        <h1 class="text-4xl font-bold text-gray-800">
+            Parent Dashboard
+        </h1>
+
+        <p class="text-gray-600 mt-2">
+            Welcome {{ parent.full_name }}
+        </p>
+    </div>
+
+    <!-- Children Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        {% for child in children %}
+        <div class="bg-white shadow-lg rounded-2xl p-6 border">
+
+            <!-- Child Name -->
+            <h2 class="text-2xl font-semibold text-gray-800">
+                {{ child.profile.user.get_full_name }}
+            </h2>
+
+            <p class="text-gray-500 mt-1">
+                Class: {{ child.grade.name }}
+            </p>
+
+            <p class="text-gray-500">
+                Latest Week: {{ child.latest_week }}
+            </p>
+
+            <!-- Attendance -->
+            <div class="mt-5">
+
+                <p class="text-gray-700 font-medium mb-1">
+                    Attendance
+                </p>
+
+                <div class="w-full bg-gray-200 rounded-full h-4">
+                    <div class="
+                        h-4 rounded-full
+                        {% if child.attendance_percentage >= 80 %}
+                            bg-green-500
+                        {% elif child.attendance_percentage >= 60 %}
+                            bg-yellow-500
+                        {% else %}
+                            bg-red-500
+                        {% endif %}
+                    " style="width: {{ child.attendance_percentage }}%"></div>
+                </div>
+
+                <p class="text-sm mt-2 text-gray-600">
+                    {{ child.attendance_percentage }}%
+                </p>
+            </div>
+
+            <!-- ========================= -->
+            <!-- TESTS SECTION -->
+            <!-- ========================= -->
+            <div class="mt-6">
+
+                <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                    Tests Performance
+                </h3>
+
+                {% if child.tests %}
+
+                    <div class="space-y-3">
+
+                        {% for test in child.tests %}
+
+                        <div class="border rounded-lg p-3 bg-gray-50">
+
+                            <div class="flex justify-between items-center">
+                                <p class="font-medium text-gray-700">
+                                    {{ test.test_type }}
+                                </p>
+
+                                <span class="text-sm text-gray-500">
+                                    {{ test.subject.name }}
+                                </span>
+                            </div>
+
+                            <div class="mt-2 flex justify-between text-sm">
+                                <span>
+                                    Score: 
+                                    <b>
+                                        {{ test.score }}/{{ test.max_score }}
+                                    </b>
+                                </span>
+
+                                <span class="text-gray-500">
+                                    {{ test.test_date }}
+                                </span>
+                            </div>
+
+                            <!-- Progress bar -->
+                            <div class="w-full bg-gray-200 h-2 rounded-full mt-2">
+                                <div class="h-2 rounded-full bg-blue-500"
+                                     style="width: {% widthratio test.score test.max_score 100 %}%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+                    <p class="text-gray-500 text-sm">
+                        No tests available yet.
+                    </p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% empty %}
+        <p class="text-gray-500">No children found.</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

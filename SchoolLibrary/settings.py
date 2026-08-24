@@ -42,6 +42,11 @@ INSTALLED_APPS = [
     'accounts',
     'students',
     'parents',
+    'fees',
+    'teachers',
+    'events',
+    "games",
+    "importer",
 ]
 
 MIDDLEWARE = [
@@ -135,4 +140,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+
+from decouple import config
+
+OPENROUTER_API_KEY = config("OPENROUTER_API_KEY")
 

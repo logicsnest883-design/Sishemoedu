@@ -1,0 +1,667 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto mt-8 mb-16 px-4 sm:px-6">
+
+    <!-- ========================= -->
+    <!-- TOP NAVIGATION -->
+    <!-- ========================= -->
+
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+
+        <a href="{% url 'parent_dashboard' %}"
+           class="inline-flex items-center gap-2 text-gray-600 hover:text-blue-700
+                  font-semibold transition">
+
+            <span class="text-xl">←</span>
+            Back to Dashboard
+
+        </a>
+
+        <button onclick="window.print()"
+                class="inline-flex items-center justify-center gap-2
+                       bg-gray-100 hover:bg-gray-200
+                       text-gray-700 font-semibold
+                       px-5 py-2.5 rounded-xl
+                       transition">
+
+            🖨️ Print Report
+
+        </button>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- REPORT CARD -->
+    <!-- ========================= -->
+
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden
+                border border-gray-200">
+
+
+        <!-- ========================= -->
+        <!-- SCHOOL HEADER -->
+        <!-- ========================= -->
+
+        <div class="relative bg-gradient-to-r from-blue-800
+                    via-blue-700 to-indigo-700
+                    text-white px-6 sm:px-10 py-10">
+
+            <div class="absolute -top-16 -right-16
+                        w-40 h-40 rounded-full
+                        bg-white opacity-10">
+            </div>
+
+            <div class="absolute -bottom-20 -left-10
+                        w-48 h-48 rounded-full
+                        bg-white opacity-5">
+            </div>
+
+            <div class="relative text-center">
+
+                <div class="inline-flex items-center justify-center
+                            w-16 h-16 rounded-2xl
+                            bg-white/15 border border-white/20
+                            mb-4">
+
+                    <span class="text-3xl">
+                        🎓
+                    </span>
+
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl font-extrabold
+                           tracking-wide">
+
+                    SISHEMO SCHOOL
+
+                </h1>
+
+                <p class="mt-2 text-blue-100 text-lg font-medium">
+
+                    Student Academic Report Card
+
+                </p>
+
+                <div class="mt-4">
+
+                    <span class="inline-flex items-center
+                                 bg-white/15
+                                 border border-white/20
+                                 rounded-full
+                                 px-4 py-2
+                                 text-sm font-semibold">
+
+                        {{ test_type }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- STUDENT INFORMATION -->
+        <!-- ========================= -->
+
+        <div class="px-6 sm:px-10 py-8 bg-gray-50 border-b">
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+
+                <!-- Student Photo -->
+
+                <div class="flex justify-center md:justify-start">
+
+                    {% if child.photo %}
+
+                        <img src="{{ child.photo.url }}"
+                             alt="{{ child.first_name }} {{ child.last_name }}"
+                             class="w-28 h-28 sm:w-32 sm:h-32
+                                    rounded-2xl object-cover
+                                    border-4 border-white
+                                    shadow-lg">
+
+                    {% else %}
+
+                        <div class="w-28 h-28 sm:w-32 sm:h-32
+                                    rounded-2xl
+                                    bg-gray-200
+                                    border-4 border-white
+                                    shadow-lg
+                                    flex items-center justify-center">
+
+                            <span class="text-gray-400 text-4xl">
+                                👤
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Student -->
+
+                <div class="bg-white rounded-2xl
+                            border border-gray-200
+                            p-5 shadow-sm">
+
+                    <p class="text-xs font-bold
+                              text-gray-400 uppercase tracking-wider">
+
+                        Student Name
+
+                    </p>
+
+                    <h2 class="text-lg sm:text-xl
+                               font-bold text-gray-800 mt-2">
+
+                        {{ child.first_name }}
+                        {{ child.last_name }}
+
+                    </h2>
+
+                </div>
+
+
+                <!-- Grade -->
+
+                <div class="bg-white rounded-2xl
+                            border border-gray-200
+                            p-5 shadow-sm">
+
+                    <p class="text-xs font-bold
+                              text-gray-400 uppercase tracking-wider">
+
+                        Grade
+
+                    </p>
+
+                    <h2 class="text-lg sm:text-xl
+                               font-bold text-gray-800 mt-2">
+
+                        {{ child.grade.name }}
+
+                    </h2>
+
+                </div>
+
+
+                <!-- Test -->
+
+                <div class="bg-white rounded-2xl
+                            border border-gray-200
+                            p-5 shadow-sm">
+
+                    <p class="text-xs font-bold
+                              text-gray-400 uppercase tracking-wider">
+
+                        Assessment
+
+                    </p>
+
+                    <h2 class="text-lg sm:text-xl
+                               font-bold text-blue-700 mt-2">
+
+                        {{ test_type }}
+
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- PERFORMANCE TABLE -->
+        <!-- ========================= -->
+
+        <div class="px-4 sm:px-8 py-8">
+
+            <div class="mb-6">
+
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Academic Performance
+                </h2>
+
+                <p class="text-gray-500 mt-1">
+                    Subject-by-subject performance
+                </p>
+
+            </div>
+
+
+            <div class="overflow-x-auto rounded-2xl
+                        border border-gray-200">
+
+                <table class="min-w-full">
+
+                    <!-- Header -->
+
+                    <thead class="bg-gray-50">
+
+                        <tr>
+
+                            <th class="px-5 sm:px-6 py-4
+                                       text-left
+                                       text-xs font-bold
+                                       text-gray-500
+                                       uppercase tracking-wider">
+
+                                Subject
+
+                            </th>
+
+                            <th class="px-5 sm:px-6 py-4
+                                       text-center
+                                       text-xs font-bold
+                                       text-gray-500
+                                       uppercase tracking-wider">
+
+                                Score
+
+                            </th>
+
+                            <th class="px-5 sm:px-6 py-4
+                                       text-left
+                                       text-xs font-bold
+                                       text-gray-500
+                                       uppercase tracking-wider
+                                       min-w-[250px]">
+
+                                Performance
+
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <!-- Body -->
+
+                    <tbody class="divide-y divide-gray-100">
+
+                        {% for score in scores %}
+
+                        <tr class="hover:bg-blue-50/50 transition">
+
+
+                            <!-- Subject -->
+
+                            <td class="px-5 sm:px-6 py-5">
+
+                                <div class="flex items-center gap-3">
+
+                                    <div class="w-9 h-9
+                                                rounded-lg
+                                                bg-blue-100
+                                                text-blue-700
+                                                flex items-center
+                                                justify-center
+                                                font-bold">
+
+                                        {{ forloop.counter }}
+
+                                    </div>
+
+                                    <span class="font-bold text-gray-800">
+
+                                        {{ score.test.subject.name }}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Score -->
+
+                            <td class="px-5 sm:px-6 py-5 text-center">
+
+                                {% if score.score is not None %}
+
+                                    <span class="font-bold text-gray-800">
+
+                                        {{ score.score }}
+
+                                    </span>
+
+                                    <span class="text-gray-400">
+
+                                        / {{ score.test.max_score }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-gray-400">
+                                        Not Graded
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Performance -->
+
+                            <td class="px-5 sm:px-6 py-5">
+
+                                {% if score.score is not None %}
+
+                                <div class="flex items-center gap-3">
+
+                                    <!-- Progress Bar -->
+
+                                    <div class="flex-1 bg-gray-200
+                                                rounded-full h-3
+                                                overflow-hidden">
+
+                                        <div
+                                            class="h-3 rounded-full transition-all
+                                            {% if score.performance_color == 'green' %}
+                                                bg-green-500
+                                            {% elif score.performance_color == 'yellow' %}
+                                                bg-yellow-500
+                                            {% elif score.performance_color == 'orange' %}
+                                                bg-orange-500
+                                            {% elif score.performance_color == 'red' %}
+                                                bg-red-500
+                                            {% else %}
+                                                bg-gray-400
+                                            {% endif %}
+                                            "
+                                            style="width: {{ score.percentage }}%">
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Percentage -->
+
+                                    <span
+                                        class="font-bold text-sm min-w-[55px] text-right
+
+                                        {% if score.performance_color == 'green' %}
+                                            text-green-600
+                                        {% elif score.performance_color == 'yellow' %}
+                                            text-yellow-600
+                                        {% elif score.performance_color == 'orange' %}
+                                            text-orange-600
+                                        {% elif score.performance_color == 'red' %}
+                                            text-red-600
+                                        {% else %}
+                                            text-gray-500
+                                        {% endif %}
+                                        ">
+
+                                        {{ score.percentage }}%
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Performance Label -->
+
+                                <div class="mt-1">
+
+                                    {% if score.performance == "Excellent" %}
+
+                                        <span class="text-xs text-green-600 font-semibold">
+                                            Excellent
+                                        </span>
+
+                                    {% elif score.performance == "Good" %}
+
+                                        <span class="text-xs text-yellow-600 font-semibold">
+                                            Good
+                                        </span>
+
+                                    {% elif score.performance == "Needs Improvement" %}
+
+                                        <span class="text-xs text-orange-600 font-semibold">
+                                            Needs Improvement
+                                        </span>
+
+                                    {% elif score.performance == "Needs Attention" %}
+
+                                        <span class="text-xs text-red-600 font-semibold">
+                                            Needs Attention
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-xs text-gray-500 font-semibold">
+                                            Not Graded
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                {% else %}
+
+                                    <span class="text-sm text-gray-400">
+                                        No score available
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="3"
+                                class="px-6 py-12 text-center">
+
+                                <div class="text-5xl mb-3">
+                                    📚
+                                </div>
+
+                                <p class="text-gray-500 font-medium">
+
+                                    No scores available
+                                    for this test.
+
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- SUMMARY -->
+        <!-- ========================= -->
+
+        <div class="bg-gray-50 border-t
+                    px-6 sm:px-10 py-8">
+
+            <h2 class="text-xl font-bold
+                       text-gray-800 mb-5">
+
+                Performance Summary
+
+            </h2>
+
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+
+                <!-- Total Score -->
+
+                <div class="relative overflow-hidden
+                            bg-white rounded-2xl
+                            border border-gray-200
+                            shadow-sm p-6">
+
+                    <div class="absolute -right-6 -top-6
+                                w-24 h-24
+                                rounded-full
+                                bg-blue-50">
+                    </div>
+
+                    <p class="relative text-sm
+                              font-bold text-gray-400
+                              uppercase tracking-wider">
+
+                        Total Score
+
+                    </p>
+
+                    <div class="relative flex
+                                items-end gap-2 mt-2">
+
+                        <h2 class="text-4xl
+                                   font-extrabold
+                                   text-blue-700">
+
+                            {{ total_score }}
+
+                        </h2>
+
+                        <span class="text-gray-400 mb-1">
+                            / {{ total_max }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Average -->
+
+                <div class="relative overflow-hidden
+                            bg-white rounded-2xl
+                            border border-gray-200
+                            shadow-sm p-6">
+
+                    <div class="absolute -right-6 -top-6
+                                w-24 h-24
+                                rounded-full
+                                bg-green-50">
+                    </div>
+
+                    <p class="relative text-sm
+                              font-bold text-gray-400
+                              uppercase tracking-wider">
+
+                        Average Percentage
+
+                    </p>
+
+                    <div class="relative flex
+                                items-end gap-2 mt-2">
+
+                        <h2 class="
+                            text-4xl
+                            font-extrabold
+
+                            {% if average >= 80 %}
+                                text-green-600
+                            {% elif average >= 60 %}
+                                text-yellow-600
+                            {% elif average >= 40 %}
+                                text-orange-600
+                            {% else %}
+                                text-red-600
+                            {% endif %}
+                        ">
+
+                            {{ average }}%
+
+                        </h2>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- FOOTER -->
+        <!-- ========================= -->
+
+        <div class="border-t px-6 sm:px-10
+                    py-5 text-center
+                    text-sm text-gray-400">
+
+            <p>
+                SISHEMO SCHOOL • Student Academic Report
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- PRINT STYLES -->
+<!-- ========================= -->
+
+<style>
+
+@media print {
+
+    body {
+        background: white !important;
+    }
+
+    nav,
+    footer,
+    button,
+    .print-hidden {
+        display: none !important;
+    }
+
+    .shadow-2xl,
+    .shadow-lg,
+    .shadow-sm {
+        box-shadow: none !important;
+    }
+
+    .rounded-3xl {
+        border-radius: 0 !important;
+    }
+
+    .max-w-6xl {
+        max-width: 100% !important;
+    }
+
+}
+
+</style>
+
+{% endblock %}

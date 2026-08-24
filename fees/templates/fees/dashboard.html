@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Fees Dashboard{% endblock %}
+
+{% block content %}
+<div class="pt-8 px-6 lg:px-12 bg-gray-50 min-h-screen">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Fees & Payments</h1>
+            <p class="text-gray-500 mt-1">Financial overview and payment tracking</p>
+        </div>
+
+        <div class="mt-4 md:mt-0">
+            <a href="{% url 'fees:students_by_status' 'owing' %}"
+               class="bg-teal-600 text-white px-5 py-2 rounded-lg shadow hover:bg-teal-700 transition">
+                View Students With Balance
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+
+        <!-- Total Students -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+            <p class="text-sm text-gray-500">Total Students</p>
+            <p class="text-3xl font-bold text-gray-800 mt-2">
+                {{ total_students }}
+            </p>
+        </div>
+
+        <!-- Total Collected -->
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+            <p class="text-sm text-gray-500">Total Collected</p>
+            <p class="text-3xl font-bold text-green-600 mt-2">
+                K {{ total_collected }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">All-time payments received</p>
+        </div>
+
+        <!-- Students With Balance -->
+        <a href="{% url 'fees:students_by_status' 'owing' %}"
+           class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-red-200 transition block">
+            <p class="text-sm text-gray-500">Students With Balance</p>
+            <p class="text-3xl font-bold text-red-600 mt-2">
+                {{ students_with_balance }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">Outstanding payments</p>
+        </a>
+
+        <!-- Settled Students -->
+        <a href="{% url 'fees:students_by_status' 'settled' %}"
+           class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-green-200 transition block">
+            <p class="text-sm text-gray-500">Settled Students</p>
+            <p class="text-3xl font-bold text-green-600 mt-2">
+                {{ settled_students }}
+            </p>
+            <p class="text-xs text-gray-400 mt-1">Fully paid accounts</p>
+        </a>
+
+    </div>
+
+
+    <!-- Recent Payments Section -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+
+        <div class="flex justify-between items-center px-6 py-4 border-b border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800">Recent Payments</h2>
+            <a href="{% url 'fees:students_by_status' 'all' %}"
+               class="text-sm text-teal-600 hover:underline">
+                View All Students
+            </a>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-100 text-sm">
+                <thead class="bg-gray-50">
+                    <tr class="text-left text-gray-500 uppercase text-xs tracking-wider">
+                        <th class="px-6 py-3">Student</th>
+                        <th class="px-6 py-3">Grade</th>
+                        <th class="px-6 py-3">Amount</th>
+                        <th class="px-6 py-3">Date</th>
+                        <th class="px-6 py-3">Reference</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100 bg-white">
+                    {% for payment in recent_payments %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 font-medium text-gray-700">
+                            {{ payment.student.profile.user.get_full_name }}
+                        </td>
+
+                        <td class="px-6 py-4 text-gray-500">
+                            {{ payment.student.grade.name|default:"—" }}
+                        </td>
+
+                        <td class="px-6 py-4 font-semibold text-green-600">
+                            K {{ payment.amount }}
+                        </td>
+
+                        <td class="px-6 py-4 text-gray-500">
+                            {{ payment.payment_date|date:"d M Y" }}
+                        </td>
+
+                        <td class="px-6 py-4 text-gray-500">
+                            {{ payment.reference|default:"—" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-400">
+                            No payments recorded yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

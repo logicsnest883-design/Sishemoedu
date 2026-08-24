@@ -12,19 +12,32 @@ def home(request):
 
 def section_grades(request, section_id):
     section = get_object_or_404(Section, id=section_id)
-    grades = section.grades.all()
-    return render(request, "section_grades.html", {"section": section, "grades": grades})
+
+    # Order grades alphabetically
+    grades = section.grades.all().order_by("name")
+
+    return render(
+        request,
+        "section_grades.html",
+        {
+            "section": section,
+            "grades": grades,
+            "mode": "notes",
+        },
+    )
 
 
 def grade_subjects(request, grade_id, mode):
     grade = get_object_or_404(Grade, id=grade_id)
-    subjects = grade.section.subjects.all()
+
+    # Subjects still belong to section
+    subjects = Subject.objects.filter(section=grade.section)
+
     return render(request, "grade_subjects.html", {
         "grade": grade,
         "subjects": subjects,
-        "mode": mode,  # pass this
+        "mode": mode,
     })
-
 
 
 
@@ -35,6 +48,24 @@ def subject_books(request, subject_id):
 
 
 
+def about(request):
+    return render(request, "about.html")
+
+
+
+from django.contrib import messages
+
+def contact(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        # For now just show success message
+        messages.success(request, "Your message has been sent successfully!")
+
+    return render(request, "contact.html")
+
 
 def section_subjects(request, section_id):
     section = get_object_or_404(Section, id=section_id)
@@ -44,14 +75,13 @@ def section_subjects(request, section_id):
 
 def subject_topics(request, subject_id, grade_id):
     subject = get_object_or_404(Subject, id=subject_id)
-    grade = get_object_or_404(Grade, id=grade_id)
 
-    topics = Topic.objects.filter(subject=subject, grade=grade)
+    topics = subject.topics.filter(grade_id=grade_id).order_by("order")
 
     return render(request, "subject_topics.html", {
         "subject": subject,
-        "grade": grade,
-        "topics": topics
+        "topics": topics,
+        "grade_id": grade_id
     })
 
 
@@ -64,12 +94,18 @@ def topic_notes(request, topic_id):
 
 def section_detail(request, section_id):
     section = get_object_or_404(Section, id=section_id)
-    return render(request, "section_detail.html", {"section": section})
 
+    grades = section.grades.all().order_by("name")
 
-def section_detail(request, section_id):
-    section = get_object_or_404(Section, id=section_id)
-    return render(request, "section_detail.html", {"section": section})
+    return render(
+        request,
+        "section_detail.html",
+        {
+            "section": section,
+            "grades": grades,
+        },
+    )
+
 
 
 
@@ -92,11 +128,6 @@ def section_books(request, section_id):
         "mode": "books"
     })
 
-
-def subject_topics(request, subject_id):
-    subject = get_object_or_404(Subject, id=subject_id)
-    topics = subject.topics.prefetch_related('notes').all()
-    return render(request, "subject_topics.html", {"subject": subject, "topics": topics})
 
 
 def section_tutorials(request, section_id):

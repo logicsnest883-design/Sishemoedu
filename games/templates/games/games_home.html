@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-10">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+
+        <h1 class="text-5xl font-extrabold text-gray-800">
+            Games Center
+        </h1>
+
+        <p class="text-gray-600 mt-4 text-lg">
+            Play educational and fun games on the Sishemo platform.
+        </p>
+
+    </div>
+
+    <!-- Games Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <!-- Quiz Maze -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border hover:shadow-2xl transition duration-300">
+
+            <!-- Top -->
+            <div class="bg-blue-700 h-52 flex items-center justify-center">
+
+                <span class="text-8xl">
+                    🧠
+                </span>
+
+            </div>
+
+            <!-- Content -->
+            <div class="p-6">
+
+                <div class="flex items-center justify-between">
+
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Quiz Maze
+                    </h2>
+
+                    <span class="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full">
+                        LIVE
+                    </span>
+
+                </div>
+
+                <p class="text-gray-600 mt-4 leading-relaxed">
+                    Answer questions correctly to move through the maze and reach the finish.
+                </p>
+
+                <a href=" {% url 'quiz_maze' %} "
+                   class="mt-6 block text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-2xl transition">
+                    Play Game
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- Horror Maze -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border opacity-80">
+
+            <div class="bg-red-700 h-52 flex items-center justify-center">
+
+                <span class="text-8xl">
+                    👻
+                </span>
+
+            </div>
+
+            <div class="p-6">
+
+                <div class="flex items-center justify-between">
+
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Horror Maze
+                    </h2>
+
+                    <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">
+                        COMING SOON
+                    </span>
+
+                </div>
+
+                <p class="text-gray-600 mt-4 leading-relaxed">
+                    Escape a terrifying maze full of surprises and hidden dangers.
+                </p>
+
+                <button
+                    class="mt-6 w-full bg-gray-300 text-gray-600 font-bold py-3 rounded-2xl cursor-not-allowed">
+                    Locked
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Multiplayer Maze -->
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border opacity-80">
+
+            <div class="bg-green-700 h-52 flex items-center justify-center">
+
+                <span class="text-8xl">
+                    🎮
+                </span>
+
+            </div>
+
+            <div class="p-6">
+
+                <div class="flex items-center justify-between">
+
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        Multiplayer Maze
+                    </h2>
+
+                    <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-3 py-1 rounded-full">
+                        COMING SOON
+                    </span>
+
+                </div>
+
+                <p class="text-gray-600 mt-4 leading-relaxed">
+                    Challenge friends and compete to finish the maze first.
+                </p>
+
+                <button
+                    class="mt-6 w-full bg-gray-300 text-gray-600 font-bold py-3 rounded-2xl cursor-not-allowed">
+                    Locked
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

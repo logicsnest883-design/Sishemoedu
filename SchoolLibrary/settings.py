@@ -124,7 +124,9 @@ USE_TZ = True
 # settings.py
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://schoollibrary-production.up.railway.app",  # replace with your Railway URL
+    "https://sishemoedutrust.site",
+    "https://www.sishemoedutrust.site",
+    "https://web-production-2cd3e.up.railway.app",
 ]
 
 
@@ -132,7 +134,7 @@ CSRF_TRUSTED_ORIGINS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type

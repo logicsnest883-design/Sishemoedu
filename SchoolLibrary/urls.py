@@ -19,7 +19,6 @@ urlpatterns = [
     path("", include("teachers.urls")),
     path('events/', include('events.urls')),
     path("games/", include("games.urls")),
-    path("importer/", include("importer.urls")),
 ]
 
 # Serve media files during development

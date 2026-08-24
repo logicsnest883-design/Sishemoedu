@@ -147,5 +147,5 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 from decouple import config
 
-OPENROUTER_API_KEY = config("OPENROUTER_API_KEY")
+#OPENROUTER_API_KEY = config("OPENROUTER_API_KEY")
 

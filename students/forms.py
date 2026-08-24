@@ -8,7 +8,6 @@ class StudentCreateForm(forms.ModelForm):
     username = forms.CharField(max_length=150)
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
-    email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
@@ -25,7 +24,6 @@ class StudentCreateForm(forms.ModelForm):
             username=self.cleaned_data['username'],
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'],
-            email=self.cleaned_data['email'],
             password=self.cleaned_data['password']
         )
 

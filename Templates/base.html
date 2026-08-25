@@ -96,27 +96,6 @@
 
             </a>
 
-
-            <!-- TEACHER ONLY -->
-            {% if user.is_authenticated and user.userprofile.role == 'teacher' %}
-
-                <a href="{% url 'import_note' %}"
-                   class="flex items-center gap-1
-                          px-1.5 sm:px-2
-                          text-xs sm:text-sm md:text-base
-                          whitespace-nowrap
-                          hover:text-teal-600 transition">
-
-                    <i data-feather="upload-cloud"
-                       class="w-4 h-4 sm:w-5 sm:h-5"></i>
-
-                    <span>Upload Notes</span>
-
-                </a>
-
-            {% endif %}
-
-
             <!-- ============================= -->
             <!-- AUTHENTICATED USER -->
             <!-- ============================= -->

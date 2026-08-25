@@ -11,6 +11,7 @@ class Section(models.Model):
         ('lower', 'Lower Primary'),
         ('upper', 'Upper Primary'),
         ('secondary', 'Secondary'),
+        ('early childhood', 'Early Childhood')
     ]
     name = models.CharField(max_length=20, choices=SECTION_CHOICES, unique=True)
 

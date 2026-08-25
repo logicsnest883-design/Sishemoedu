@@ -41,7 +41,7 @@ def teacher_dashboard(request):
     # FOR EVERY SUBJECT
     # ---------------------------------
     subjects = Subject.objects.filter(
-        section=grade.section
+        section__grades__name=grade.name
     ).order_by("name")
 
     for subject in subjects:
@@ -153,7 +153,7 @@ def enter_scores_grid(request, test_type):
     # SUBJECTS
     # =========================
     subjects = Subject.objects.filter(
-        section=grade.section
+        section__grades__name=grade.name
     ).order_by("name")
 
     # =========================

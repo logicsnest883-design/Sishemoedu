@@ -1,5 +1,5 @@
 from django import forms
-from .models import Test, StudentScore, Subject
+from .models import Test, StudentScore
 
 
 

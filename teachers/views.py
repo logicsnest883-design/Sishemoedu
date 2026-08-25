@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.forms import modelformset_factory
-from .models import Test, StudentScore, Subject, TestType
+from .models import Test, StudentScore, TestType
 from students.models import Grade, Student
 from .forms import StudentScoreForm
 from django.utils import timezone
+from Core.models import Subject
 
 
 @login_required
@@ -39,7 +40,9 @@ def teacher_dashboard(request):
     # AUTOMATICALLY ENSURE TESTS EXIST
     # FOR EVERY SUBJECT
     # ---------------------------------
-    subjects = grade.subjects.all()
+    subjects = Subject.objects.filter(
+        section=grade.section
+    ).order_by("name")
 
     for subject in subjects:
 
@@ -100,7 +103,6 @@ def teacher_dashboard(request):
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Test, StudentScore, Subject
 from students.models import Student
 
 @login_required
@@ -151,7 +153,7 @@ def enter_scores_grid(request, test_type):
     # SUBJECTS
     # =========================
     subjects = Subject.objects.filter(
-        grade=grade
+        section=grade.section
     ).order_by("name")
 
     # =========================

@@ -363,6 +363,112 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Test
 
+
+@login_required
+def generate_mark_schedule(request, test_type):
+
+    profile = request.user.userprofile
+
+    if profile.role != "teacher":
+        messages.error(request, "Access denied.")
+        return redirect("teacher_login")
+
+    grade = profile.assigned_grade
+
+    if not grade:
+        messages.error(request, "No grade assigned to you.")
+        return redirect("teacher_dashboard")
+
+    year = request.GET.get("year")
+    term = request.GET.get("term")
+
+    if not year or not term:
+        messages.error(request, "Year and term are required.")
+        return redirect("enter_scores_list")
+
+    try:
+        year = int(year)
+    except (ValueError, TypeError):
+        messages.error(request, "Invalid academic year.")
+        return redirect("enter_scores_list")
+
+    subjects = Subject.objects.filter(
+        section__grades__name=grade.name
+    ).order_by("name")
+
+    tests = Test.objects.filter(
+        grade=grade,
+        test_type=test_type,
+        term=term,
+        year=year
+    ).select_related("subject")
+
+    students = Student.objects.filter(
+        grade=grade
+    ).order_by("first_name", "last_name")
+
+    rows = []
+
+    for student in students:
+
+        subject_scores = []
+        total = 0
+        count = 0
+
+        for subject in subjects:
+
+            test = tests.filter(subject=subject).first()
+
+            score = None
+
+            if test:
+                score_obj = StudentScore.objects.filter(
+                    student=student,
+                    test=test
+                ).first()
+
+                if score_obj:
+                    score = score_obj.score
+                    total += score
+                    count += 1
+
+            subject_scores.append({
+                "subject": subject,
+                "score": score,
+            })
+
+        average = round(total / count, 2) if count else 0
+
+        rows.append({
+            "student": student,
+            "subject_scores": subject_scores,
+            "total": total,
+            "average": average,
+        })
+
+    return render(
+        request,
+        "teachers/mark_schedule.html",
+        {
+            "grade": grade,
+            "subjects": subjects,
+            "rows": rows,
+            "test_type": test_type,
+            "year": year,
+            "term": term,
+        }
+    )
+
+
+
+
+
+
+
+
+
+
+
 @login_required
 def view_tests(request):
     profile = request.user.userprofile

@@ -405,7 +405,7 @@ def generate_mark_schedule(request, test_type):
 
     students = Student.objects.filter(
         grade=grade
-    ).order_by("first_name", "last_name")
+    )
 
     rows = []
 
@@ -445,6 +445,12 @@ def generate_mark_schedule(request, test_type):
             "total": total,
             "average": average,
         })
+
+        rows = sorted(
+            rows,
+            key=lambda x: x["total"],
+            reverse=True
+        )
 
     return render(
         request,

@@ -11,7 +11,6 @@ class ParentCreateForm(forms.ModelForm):
     username = forms.CharField(max_length=150)
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
-    email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
     # Select children

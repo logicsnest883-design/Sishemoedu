@@ -53,6 +53,13 @@ class Test(models.Model):
 
     max_score = models.PositiveIntegerField(default=100)
 
+    def save(self, *args, **kwargs):
+        if self.grade and self.grade.name == "Grade 7":
+            self.max_score = 150
+        else:
+            self.max_score = 100
+        super().save(*args, **kwargs)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

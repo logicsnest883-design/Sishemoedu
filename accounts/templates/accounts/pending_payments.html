@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Pending Payments{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-50">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row
+                    sm:items-center sm:justify-between
+                    gap-4 mb-8">
+
+            <div>
+
+                <a href="{% url 'school_admin_dashboard' %}"
+                   class="text-sm font-medium text-gray-500
+                          hover:text-gray-900 transition">
+
+                    ← Back to Dashboard
+
+                </a>
+
+                <h1 class="text-2xl sm:text-3xl font-bold
+                           text-gray-900 mt-3">
+
+                    Pending Payments
+
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Review and verify payments submitted by parents.
+                </p>
+
+            </div>
+
+            <div class="bg-amber-100 text-amber-700
+                        px-4 py-2 rounded-xl
+                        font-semibold text-sm">
+
+                {{ payments|length }} Pending
+
+            </div>
+
+        </div>
+
+
+        <!-- Payments -->
+        {% if payments %}
+
+            <div class="space-y-4">
+
+                {% for payment in payments %}
+
+                    <div class="bg-white rounded-2xl
+                                border border-gray-200
+                                shadow-sm p-5 sm:p-6">
+
+                        <div class="flex flex-col lg:flex-row
+                                    lg:items-center
+                                    lg:justify-between
+                                    gap-5">
+
+                            <!-- Student -->
+                            <div class="flex items-center gap-4">
+
+                                {% if payment.student.photo %}
+
+                                    <img
+                                        src="{{ payment.student.photo.url }}"
+                                        alt="{{ payment.student.first_name }}"
+                                        class="w-14 h-14 rounded-full
+                                               object-cover"
+                                    >
+
+                                {% else %}
+
+                                    <div class="w-14 h-14 rounded-full
+                                                bg-emerald-100
+                                                text-emerald-700
+                                                flex items-center
+                                                justify-center
+                                                font-bold text-xl">
+
+                                        {{ payment.student.first_name|first|upper }}
+
+                                    </div>
+
+                                {% endif %}
+
+                                <div>
+
+                                    <h2 class="font-bold text-gray-900 text-lg">
+
+                                        {{ payment.student.first_name }}
+                                        {{ payment.student.last_name }}
+
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500">
+
+                                        {{ payment.student.grade.name }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Payment Info -->
+                            <div class="grid grid-cols-2
+                                        sm:grid-cols-3
+                                        gap-5">
+
+                                <div>
+
+                                    <p class="text-xs text-gray-500 uppercase
+                                              tracking-wide">
+
+                                        Amount
+
+                                    </p>
+
+                                    <p class="font-bold text-gray-900 mt-1">
+
+                                        K{{ payment.amount|floatformat:2 }}
+
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-xs text-gray-500 uppercase
+                                              tracking-wide">
+
+                                        Method
+
+                                    </p>
+
+                                    <p class="font-semibold text-gray-900 mt-1">
+
+                                        {{ payment.get_method_display }}
+
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-xs text-gray-500 uppercase
+                                              tracking-wide">
+
+                                        Invoice
+
+                                    </p>
+
+                                    <p class="font-semibold text-gray-900 mt-1">
+
+                                        {{ payment.invoice_number }}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Action -->
+                            <div>
+
+                                <a href="{% url 'payment_verification_detail' payment.id %}"
+                                   class="inline-flex items-center
+                                          justify-center gap-2
+                                          px-5 py-3
+                                          rounded-xl
+                                          bg-emerald-600
+                                          text-white
+                                          font-semibold
+                                          hover:bg-emerald-700
+                                          transition">
+
+                                    Review Payment
+                                    <span>→</span>
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="bg-white rounded-2xl
+                        border border-gray-200
+                        shadow-sm p-12 text-center">
+
+                <div class="w-16 h-16 rounded-full
+                            bg-emerald-100
+                            text-emerald-600
+                            flex items-center justify-center
+                            text-3xl mx-auto">
+
+                    ✓
+
+                </div>
+
+                <h2 class="text-xl font-bold text-gray-900 mt-5">
+
+                    No Pending Payments
+
+                </h2>
+
+                <p class="text-gray-500 mt-2">
+
+                    All submitted payments have been processed.
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

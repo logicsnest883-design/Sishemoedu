@@ -84,10 +84,11 @@ WSGI_APPLICATION = 'SchoolLibrary.wsgi.application'
 
 import dj_database_url
 
+import dj_database_url
+
 DATABASES = {
     "default": dj_database_url.config(
-        default=None,
-        conn_max_age=600,
+        conn_max_age=600
     )
 }
 

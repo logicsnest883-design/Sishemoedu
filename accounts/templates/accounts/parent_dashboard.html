@@ -15,10 +15,12 @@
         </p>
     </div>
 
+
     <!-- Children -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 
         {% for child in children %}
+
         <div class="bg-white shadow-lg rounded-2xl p-6 border">
 
             <!-- Child Info -->
@@ -30,15 +32,37 @@
                 Class: {{ child.grade.name }}
             </p>
 
-            <!-- ===================== -->
-            <!-- NEW: STUDENT DETAILS -->
-            <!-- ===================== -->
-            <div class="mt-4">
-                <a href="{% url 'parents:parent_child_detail' child.id %}"
-   class="inline-block text-blue-600 font-semibold hover:underline">
-    View Student Details →
-</a>
-            </div>
+
+            <!-- Student Actions -->
+<div class="mt-5 flex flex-col sm:flex-row gap-3">
+
+    <a href="{% url 'parents:parent_child_detail' child.id %}"
+       class="inline-flex items-center justify-center
+              px-4 py-2.5 rounded-xl
+              bg-gray-100 text-gray-700
+              font-semibold
+              hover:bg-gray-200
+              transition">
+        View Student Details
+    </a>
+
+    <a href="{% url 'fees:parent_make_payment' child.id %}"
+       class="inline-flex items-center justify-center gap-2
+              px-4 py-2.5 rounded-xl
+              bg-emerald-600 text-white
+              font-semibold
+              shadow-sm
+              hover:bg-emerald-700
+              hover:shadow-md
+              transition">
+
+        <span>💳</span>
+        Make Payment
+
+    </a>
+
+</div>
+
 
             <!-- Attendance -->
             <div class="mt-5">
@@ -48,6 +72,7 @@
                 </p>
 
                 <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+
                     <div class="
                         h-4 rounded-full
                         {% if child.attendance_percentage >= 80 %}
@@ -60,6 +85,7 @@
                     "
                     style="width: {{ child.attendance_percentage }}%">
                     </div>
+
                 </div>
 
                 <p class="text-sm mt-2 text-gray-600">
@@ -68,6 +94,7 @@
 
             </div>
 
+
             <!-- Test Categories -->
             <div class="mt-8">
 
@@ -75,35 +102,76 @@
                     Test Categories
                 </h3>
 
+
                 {% if child.tests_by_type %}
 
                     <div class="space-y-4">
 
                         {% for test_type, scores in child.tests_by_type.items %}
 
-                        <!-- Clickable Test Type -->
-                        <a href=" {% url 'parent_test_detail' child.id test_type %} "
-                           class="block bg-blue-50 border border-blue-200 rounded-2xl p-5 hover:bg-blue-100 transition duration-300">
+                            {% if child.can_view_results %}
 
-                            <div class="flex justify-between items-center">
+                                <!-- Accessible Test -->
+                                <a href="{% url 'parent_test_detail' child.id test_type %}"
+                                   class="block bg-blue-50 border border-blue-200 rounded-2xl p-5 hover:bg-blue-100 transition duration-300">
 
-                                <div>
-                                    <h4 class="text-lg font-bold text-blue-800">
-                                        {{ test_type }}
-                                    </h4>
+                                    <div class="flex justify-between items-center">
 
-                                    <p class="text-sm text-gray-600 mt-1">
-                                        {{ scores|length }} Subject{{ scores|length|pluralize }}
-                                    </p>
+                                        <div>
+                                            <h4 class="text-lg font-bold text-blue-800">
+                                                {{ test_type }}
+                                            </h4>
+
+                                            <p class="text-sm text-gray-600 mt-1">
+                                                {{ scores|length }}
+                                                Subject{{ scores|length|pluralize }}
+                                            </p>
+                                        </div>
+
+                                        <div class="text-blue-700 text-2xl font-bold">
+                                            →
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            {% else %}
+
+                                <!-- Results Blocked -->
+                                <div class="bg-red-50 border border-red-200 rounded-2xl p-5">
+
+                                    <div class="flex items-start gap-4">
+
+                                        <div class="text-red-600 text-2xl">
+                                            🔒
+                                        </div>
+
+                                        <div>
+
+                                            <h4 class="text-lg font-bold text-red-700">
+                                                {{ test_type }} — Access Restricted
+                                            </h4>
+
+                                            <p class="text-sm text-gray-700 mt-2">
+                                                Results are currently unavailable
+                                                because there is an outstanding
+                                                school balance for this learner.
+                                            </p>
+
+                                            <p class="text-sm text-gray-700 mt-2">
+                                                Please make the required payment
+                                                or contact the school administrator
+                                                to request access.
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
-                                <div class="text-blue-700 text-2xl font-bold">
-                                    →
-                                </div>
-
-                            </div>
-
-                        </a>
+                            {% endif %}
 
                         {% endfor %}
 
@@ -112,9 +180,11 @@
                 {% else %}
 
                     <div class="bg-gray-50 border rounded-xl p-4">
+
                         <p class="text-gray-500 text-sm">
                             No tests available yet.
                         </p>
+
                     </div>
 
                 {% endif %}
@@ -123,12 +193,15 @@
 
         </div>
 
+
         {% empty %}
 
         <div class="bg-white p-8 rounded-2xl shadow text-center">
+
             <p class="text-gray-500 text-lg">
                 No children found.
             </p>
+
         </div>
 
         {% endfor %}

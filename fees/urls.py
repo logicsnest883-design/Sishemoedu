@@ -5,12 +5,25 @@ app_name = "fees"
 
 urlpatterns = [
 
+
     # Dashboard
     path(
         "",
         views.fees_dashboard,
         name="fees_dashboard"
     ),
+
+    path(
+    "parent/payment/<int:student_id>/",
+    views.parent_make_payment,
+    name="parent_make_payment"
+),
+
+    path(
+    "parent/payment/<int:payment_id>/invoice/",
+    views.parent_payment_invoice,
+    name="parent_payment_invoice"
+),
 
     # Record payment for a student
     path(

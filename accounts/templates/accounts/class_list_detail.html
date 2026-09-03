@@ -1,0 +1,387 @@
+{% extends "base.html" %}
+
+{% block title %}{{ grade.name }} Class List{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto p-4 sm:p-6">
+
+```
+<!-- HEADER -->
+
+<div class="bg-white rounded-2xl shadow-sm
+            border border-gray-200 p-5 mb-6">
+
+    <div class="flex flex-col sm:flex-row
+                sm:items-center sm:justify-between gap-4">
+
+        <div>
+
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+                {{ grade.name }}
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Learner Class List
+            </p>
+
+        </div>
+
+        <a href="{% url 'class_lists' %}"
+           class="inline-flex items-center justify-center
+                  gap-2 px-5 py-3 rounded-xl
+                  bg-gray-100 hover:bg-gray-200
+                  text-gray-700 font-semibold">
+
+            ← All Grades
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- DESKTOP TABLE -->
+
+<div class="hidden md:block bg-white rounded-2xl
+            shadow-lg border border-gray-200 overflow-hidden">
+
+    <div class="overflow-x-auto">
+
+        <table class="w-full border-collapse">
+
+            <thead>
+
+                <tr class="bg-teal-700 text-white">
+
+                    <th class="px-4 py-4 text-left border border-teal-600">
+                        #
+                    </th>
+
+                    <th class="px-4 py-4 text-left border border-teal-600">
+                        Learner
+                    </th>
+
+                    <th class="px-4 py-4 text-left border border-teal-600">
+                        Enrollment Date
+                    </th>
+
+                    <th class="px-4 py-4 text-center border border-teal-600">
+                        Transport
+                    </th>
+
+                    <th class="px-4 py-4 text-center border border-teal-600">
+                        Lunch
+                    </th>
+
+                    <th class="px-4 py-4 text-right border border-teal-600">
+                        Balance
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for student in students %}
+
+                <tr class="hover:bg-teal-50 transition">
+
+                    <!-- NUMBER -->
+
+                    <td class="px-4 py-4 border border-gray-200">
+                        {{ forloop.counter }}
+                    </td>
+
+
+                    <!-- LEARNER -->
+
+                    <td class="px-4 py-4 border border-gray-200">
+
+                        <div class="font-semibold text-gray-800">
+
+                            {% if student.first_name and student.last_name %}
+
+                                {{ student.first_name }}
+                                {{ student.last_name }}
+
+                            {% elif student.profile and student.profile.user %}
+
+                                {{ student.profile.user.get_full_name }}
+
+                            {% else %}
+
+                                Unnamed Student
+
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- ENROLLMENT -->
+
+                    <td class="px-4 py-4 border border-gray-200">
+                        {{ student.enrollment_date }}
+                    </td>
+
+
+                    <!-- TRANSPORT -->
+
+                    <td class="px-4 py-4 text-center border border-gray-200">
+
+                        {% if student.on_transport %}
+
+                            <span class="text-green-600 font-semibold">
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-gray-400">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- LUNCH -->
+
+                    <td class="px-4 py-4 text-center border border-gray-200">
+
+                        {% if student.on_school_lunch %}
+
+                            <span class="text-green-600 font-semibold">
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span class="text-gray-400">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- BALANCE -->
+
+                    <td class="px-4 py-4 text-right border border-gray-200">
+
+                        <span class="font-bold
+                            {% if student.school_balance > 0 %}
+                                text-red-600
+                            {% elif student.school_balance < 0 %}
+                                text-green-600
+                            {% else %}
+                                text-gray-700
+                            {% endif %}">
+
+                            K{{ student.school_balance }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="6"
+                        class="px-6 py-12 text-center
+                               text-gray-500">
+
+                        No learners found in {{ grade.name }}.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- MOBILE CARDS -->
+
+<div class="md:hidden space-y-4">
+
+    {% for student in students %}
+
+    <div class="bg-white rounded-2xl
+                border border-gray-200
+                shadow-sm overflow-hidden">
+
+
+        <!-- STUDENT HEADER -->
+
+        <div class="bg-teal-700 text-white p-4">
+
+            <p class="text-xs opacity-80">
+                Learner {{ forloop.counter }}
+            </p>
+
+            <h2 class="font-bold text-lg">
+
+                {% if student.first_name and student.last_name %}
+
+                    {{ student.first_name }}
+                    {{ student.last_name }}
+
+                {% elif student.profile and student.profile.user %}
+
+                    {{ student.profile.user.get_full_name }}
+
+                {% else %}
+
+                    Unnamed Student
+
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+
+        <!-- STUDENT DETAILS -->
+
+        <div class="p-4 space-y-3">
+
+
+            <!-- ENROLLMENT -->
+
+            <div class="flex justify-between gap-4">
+
+                <span class="text-gray-500">
+                    Enrollment
+                </span>
+
+                <span class="font-semibold text-gray-800">
+                    {{ student.enrollment_date }}
+                </span>
+
+            </div>
+
+
+            <!-- TRANSPORT -->
+
+            <div class="flex justify-between gap-4">
+
+                <span class="text-gray-500">
+                    Transport
+                </span>
+
+                <span class="font-semibold">
+
+                    {% if student.on_transport %}
+
+                        <span class="text-green-600">
+                            Yes
+                        </span>
+
+                    {% else %}
+
+                        <span class="text-gray-400">
+                            No
+                        </span>
+
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            <!-- LUNCH -->
+
+            <div class="flex justify-between gap-4">
+
+                <span class="text-gray-500">
+                    Lunch
+                </span>
+
+                <span class="font-semibold">
+
+                    {% if student.on_school_lunch %}
+
+                        <span class="text-green-600">
+                            Yes
+                        </span>
+
+                    {% else %}
+
+                        <span class="text-gray-400">
+                            No
+                        </span>
+
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            <!-- BALANCE -->
+
+            <div class="border-t pt-3
+                        flex justify-between
+                        items-center">
+
+                <span class="font-semibold text-gray-700">
+                    School Balance
+                </span>
+
+                <span class="text-lg font-bold
+                    {% if student.school_balance > 0 %}
+                        text-red-600
+                    {% elif student.school_balance < 0 %}
+                        text-green-600
+                    {% else %}
+                        text-gray-700
+                    {% endif %}">
+
+                    K{{ student.school_balance }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% empty %}
+
+    <div class="bg-white rounded-2xl
+                border border-gray-200
+                p-10 text-center text-gray-500">
+
+        No learners found in {{ grade.name }}.
+
+    </div>
+
+    {% endfor %}
+
+</div>
+```
+
+</div>
+
+{% endblock %}

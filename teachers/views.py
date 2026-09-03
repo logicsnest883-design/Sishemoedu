@@ -157,21 +157,41 @@ def enter_scores_grid(request, test_type):
     ).order_by("name")
 
     # =========================
+    # CORRECT MAX SCORE
+    # GRADE 7 = 150
+    # ALL OTHER GRADES = 100
+    # =========================
+    correct_max_score = (
+        150
+        if grade.name.strip().lower() == "grade 7"
+        else 100
+    )
+
+    # =========================
     # ENSURE TESTS EXIST
     # FOR THIS YEAR + TERM
     # =========================
     for subject in subjects:
 
-        Test.objects.get_or_create(
+        test, created = Test.objects.get_or_create(
             grade=grade,
             subject=subject,
             test_type=test_type,
             term=term,
             year=year,
             defaults={
-                "max_score": 100
+                "max_score": correct_max_score
             }
         )
+
+        # Fix existing tests that may have the wrong max score
+        if test.max_score != correct_max_score:
+
+            test.max_score = correct_max_score
+
+            test.save(
+                update_fields=["max_score"]
+            )
 
     # =========================
     # GET TESTS
@@ -225,7 +245,9 @@ def enter_scores_grid(request, test_type):
 
                     continue
 
-                # Validate score
+                # =========================
+                # VALIDATE SCORE
+                # =========================
                 if score_value < 0 or score_value > test.max_score:
 
                     errors.append(
@@ -322,6 +344,9 @@ def enter_scores_grid(request, test_type):
                     "test_id": None,
                 })
 
+        # =========================
+        # CALCULATE AVERAGE
+        # =========================
         average = (
             round(total / count, 2)
             if count > 0
@@ -335,7 +360,9 @@ def enter_scores_grid(request, test_type):
             "average": average,
         })
 
-    # Highest total first
+    # =========================
+    # HIGHEST TOTAL FIRST
+    # =========================
     rows = sorted(
         rows,
         key=lambda x: x["total"],

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Class Lists{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto p-4 sm:p-6">
+
+    <!-- HEADER -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 mb-6">
+
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
+            Class Lists
+        </h1>
+
+        <p class="text-gray-500 mt-1">
+            Select a grade to view its learners and school balances.
+        </p>
+
+    </div>
+
+
+    <!-- GRADES -->
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+
+        {% for grade in grades %}
+
+        <a href="{% url 'class_list_detail' grade.id %}"
+           class="bg-white rounded-2xl border border-gray-200
+                  shadow-sm hover:shadow-lg hover:border-teal-300
+                  transition p-5">
+
+            <div class="flex items-center justify-between">
+
+                <div>
+
+                    <h2 class="text-xl font-bold text-gray-800">
+                        {{ grade.name }}
+                    </h2>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        View class learners
+                    </p>
+
+                </div>
+
+                <div class="w-11 h-11 rounded-xl
+                            bg-teal-100 text-teal-700
+                            flex items-center justify-center">
+
+                    👨‍🎓
+
+                </div>
+
+            </div>
+
+            <div class="mt-4 text-teal-700 font-semibold text-sm">
+                View Class →
+            </div>
+
+        </a>
+
+        {% empty %}
+
+        <div class="col-span-full bg-white rounded-2xl
+                    border border-gray-200 p-10
+                    text-center text-gray-500">
+
+            No grades found.
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- BACK -->
+
+    <div class="mt-6">
+
+        <a href="{% url 'school_admin_dashboard' %}"
+           class="inline-flex items-center gap-2
+                  px-5 py-3 rounded-xl
+                  bg-gray-100 hover:bg-gray-200
+                  text-gray-700 font-semibold">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

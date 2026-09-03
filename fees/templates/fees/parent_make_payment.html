@@ -1,0 +1,650 @@
+{% extends "base.html" %}
+
+{% block title %}Make Payment{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-50 py-8">
+
+```
+<div class="max-w-3xl mx-auto px-4 sm:px-6">
+
+    <!-- Back -->
+    <div class="mb-6">
+
+        <a href="{% url 'parents:parent_dashboard' %}"
+           class="inline-flex items-center gap-2
+                  text-sm font-medium text-gray-600
+                  hover:text-gray-900 transition">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+
+    <!-- Header -->
+    <div class="mb-8">
+
+        <div class="flex items-center gap-3">
+
+            <div class="w-12 h-12 rounded-xl
+                        bg-emerald-100 text-emerald-600
+                        flex items-center justify-center
+                        text-2xl">
+
+                💳
+
+            </div>
+
+            <div>
+
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Make a Payment
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Make a school fee payment for your learner.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Learner Card -->
+    <div class="bg-white rounded-2xl border border-gray-200
+                shadow-sm overflow-hidden mb-6">
+
+        <div class="p-6">
+
+            <div class="flex items-center gap-4">
+
+                {% if student.photo %}
+
+                    <img src="{{ student.photo.url }}"
+                         alt="{{ student.first_name }}"
+                         class="w-16 h-16 rounded-full object-cover">
+
+                {% else %}
+
+                    <div class="w-16 h-16 rounded-full
+                                bg-emerald-100 text-emerald-600
+                                flex items-center justify-center
+                                text-2xl font-bold">
+
+                        {{ student.first_name|first|upper }}
+
+                    </div>
+
+                {% endif %}
+
+                <div>
+
+                    <h2 class="text-xl font-bold text-gray-900">
+                        {{ student.first_name }} {{ student.last_name }}
+                    </h2>
+
+                    <p class="text-gray-500 mt-1">
+                        {{ student.grade.name }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Balance -->
+            <div class="mt-6 pt-5 border-t border-gray-100">
+
+                <div class="flex items-center justify-between">
+
+                    <span class="text-gray-600 font-medium">
+                        Current School Balance
+                    </span>
+
+                    <span class="text-xl font-bold
+                        {% if student.school_balance > 0 %}
+                            text-red-600
+                        {% elif student.school_balance < 0 %}
+                            text-emerald-600
+                        {% else %}
+                            text-gray-800
+                        {% endif %}">
+
+                        K{{ student.school_balance|floatformat:2 }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Payment Form -->
+    <div class="bg-white rounded-2xl border border-gray-200
+                shadow-sm p-6 sm:p-8">
+
+        <div class="mb-7">
+
+            <h2 class="text-xl font-bold text-gray-900">
+                Payment Details
+            </h2>
+
+            <p class="text-sm text-gray-500 mt-1">
+                Enter the amount and select your payment method.
+            </p>
+
+        </div>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- Amount -->
+            <div>
+
+                <label for="amount"
+                       class="block text-sm font-semibold
+                              text-gray-700 mb-2">
+
+                    Amount (K)
+
+                </label>
+
+                <div class="relative">
+
+                    <span class="absolute left-4 top-1/2
+                                 -translate-y-1/2
+                                 text-gray-500 font-medium">
+
+                        K
+
+                    </span>
+
+                    <input
+                        type="number"
+                        name="amount"
+                        id="amount"
+                        step="0.01"
+                        min="1"
+                        required
+                        placeholder="0.00"
+                        class="w-full pl-10 pr-4 py-3.5
+                               rounded-xl border border-gray-300
+                               text-gray-900
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-emerald-500
+                               outline-none transition"
+                    >
+
+                </div>
+
+                <p class="text-xs text-gray-500 mt-2">
+                    Enter the amount you wish to pay.
+                </p>
+
+            </div>
+
+
+            <!-- Payment Method -->
+            <div class="mt-7">
+
+                <label class="block text-sm font-semibold
+                              text-gray-700 mb-3">
+
+                    Payment Method
+
+                </label>
+
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+
+                    <!-- Airtel Money -->
+                    <label class="relative cursor-pointer">
+
+                        <input
+                            type="radio"
+                            name="method"
+                            value="airtel"
+                            required
+                            class="peer sr-only"
+                        >
+
+                        <div class="rounded-2xl border-2
+                                    border-gray-200
+                                    p-5
+                                    peer-checked:border-red-500
+                                    peer-checked:bg-red-50
+                                    hover:border-red-300
+                                    transition">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-12 h-12 rounded-xl
+                                            bg-red-100 text-red-600
+                                            flex items-center
+                                            justify-center
+                                            font-bold text-lg">
+
+                                    A
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="font-bold text-gray-900">
+                                        Airtel Money
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Pay using Airtel Money
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </label>
+
+
+                    <!-- Bank Transfer -->
+                    <label class="relative cursor-pointer">
+
+                        <input
+                            type="radio"
+                            name="method"
+                            value="bank"
+                            required
+                            class="peer sr-only"
+                        >
+
+                        <div class="rounded-2xl border-2
+                                    border-gray-200
+                                    p-5
+                                    peer-checked:border-blue-500
+                                    peer-checked:bg-blue-50
+                                    hover:border-blue-300
+                                    transition">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-12 h-12 rounded-xl
+                                            bg-blue-100 text-blue-600
+                                            flex items-center
+                                            justify-center
+                                            text-xl">
+
+                                    🏦
+
+                                </div>
+
+                                <div>
+
+                                    <h3 class="font-bold text-gray-900">
+                                        Bank Transfer
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Pay through the bank
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </label>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- Information -->
+            <div class="mt-7 rounded-xl
+                        bg-blue-50 border border-blue-200
+                        p-4">
+
+                <div class="flex items-start gap-3">
+
+                    <div class="text-blue-600 text-lg">
+                        ℹ️
+                    </div>
+
+                    <div>
+
+                        <h3 class="text-sm font-bold text-blue-800">
+                            What happens next?
+                        </h3>
+
+                        <p class="text-sm text-blue-700 mt-1
+                                  leading-relaxed">
+
+                            Enter your amount and select how you will
+                            pay. After continuing, an invoice will be
+                            generated with the school's payment
+                            instructions. You will then make the payment
+                            and upload your proof of payment.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Buttons -->
+            <div class="mt-8 flex flex-col sm:flex-row
+                        gap-3 sm:justify-end">
+
+                <a href="{% url 'parents:parent_dashboard' %}"
+                   class="inline-flex items-center justify-center
+                          px-5 py-3 rounded-xl
+                          bg-gray-100 text-gray-700
+                          font-semibold
+                          hover:bg-gray-200
+                          transition">
+
+                    Cancel
+
+                </a>
+
+
+                <button type="submit"
+                        class="inline-flex items-center
+                               justify-center gap-2
+                               px-6 py-3 rounded-xl
+                               bg-emerald-600 text-white
+                               font-semibold
+                               shadow-sm
+                               hover:bg-emerald-700
+                               hover:shadow-md
+                               transition">
+
+                    Generate Invoice
+
+                    <span>→</span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- Payment History -->
+    <div class="bg-white rounded-2xl border border-gray-200
+                shadow-sm overflow-hidden mt-6">
+
+        <div class="p-6 border-b border-gray-200">
+
+            <div class="flex items-center gap-3">
+
+                <div class="w-10 h-10 rounded-xl
+                            bg-gray-100
+                            flex items-center justify-center
+                            text-lg">
+
+                    📋
+
+                </div>
+
+                <div>
+
+                    <h2 class="text-xl font-bold text-gray-900">
+                        Payment History
+                    </h2>
+
+                    <p class="text-sm text-gray-500 mt-1">
+                        View previous payment submissions for this learner.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% if payments %}
+
+            <div class="divide-y divide-gray-100">
+
+                {% for payment in payments %}
+
+                    <div class="p-6">
+
+                        <div class="flex flex-col sm:flex-row
+                                    sm:items-center
+                                    sm:justify-between gap-4">
+
+                            <!-- Payment Information -->
+                            <div>
+
+                                <div class="flex items-center gap-3">
+
+                                    <p class="text-lg font-bold text-gray-900">
+                                        K{{ payment.amount|floatformat:2 }}
+                                    </p>
+
+
+                                    {% if payment.status == "pending" %}
+
+                                        <span class="inline-flex items-center
+                                                     px-2.5 py-1 rounded-full
+                                                     bg-amber-100 text-amber-700
+                                                     text-xs font-semibold">
+
+                                            Pending
+
+                                        </span>
+
+                                    {% elif payment.status == "confirmed" %}
+
+                                        <span class="inline-flex items-center
+                                                     px-2.5 py-1 rounded-full
+                                                     bg-emerald-100 text-emerald-700
+                                                     text-xs font-semibold">
+
+                                            Confirmed
+
+                                        </span>
+
+                                    {% elif payment.status == "rejected" %}
+
+                                        <span class="inline-flex items-center
+                                                     px-2.5 py-1 rounded-full
+                                                     bg-red-100 text-red-700
+                                                     text-xs font-semibold">
+
+                                            Rejected
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <p class="text-sm text-gray-500 mt-2">
+
+                                    {{ payment.get_method_display }}
+
+                                    ·
+
+                                    {{ payment.created_at|date:"d M Y, H:i" }}
+
+                                </p>
+
+
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Invoice: {{ payment.invoice_number }}
+                                </p>
+
+
+                                {% if payment.transaction_reference %}
+
+                                    <p class="text-xs text-gray-400 mt-1">
+                                        Reference:
+                                        {{ payment.transaction_reference }}
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Status Description -->
+                            <div class="sm:text-right">
+
+                                {% if payment.status == "pending" %}
+
+                                    <p class="text-sm font-medium text-amber-700">
+                                        Awaiting verification
+                                    </p>
+
+                                {% elif payment.status == "confirmed" %}
+
+                                    <p class="text-sm font-medium text-emerald-700">
+                                        Payment verified
+                                    </p>
+
+                                {% elif payment.status == "rejected" %}
+
+                                    <p class="text-sm font-medium text-red-700">
+                                        Payment rejected
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Rejection Reason -->
+                        {% if payment.status == "rejected" and payment.rejection_reason %}
+
+                            <div class="mt-4 rounded-xl
+                                        bg-red-50 border border-red-200
+                                        p-4">
+
+                                <p class="text-xs font-bold uppercase
+                                          tracking-wide text-red-600">
+
+                                    Rejection Reason
+
+                                </p>
+
+                                <p class="text-sm text-red-700 mt-1">
+                                    {{ payment.rejection_reason }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Confirmed Information -->
+                        {% if payment.status == "confirmed" %}
+
+                            <div class="mt-4 rounded-xl
+                                        bg-emerald-50 border border-emerald-200
+                                        p-4">
+
+                                <p class="text-sm text-emerald-700">
+
+                                    ✓ This payment has been verified by
+                                    the school.
+
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Pending Information -->
+                        {% if payment.status == "pending" %}
+
+                            <div class="mt-4 rounded-xl
+                                        bg-amber-50 border border-amber-200
+                                        p-4">
+
+                                <p class="text-sm text-amber-700">
+
+                                    Your payment proof has been submitted
+                                    and is waiting for verification by
+                                    the school administrator.
+
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <!-- Empty History -->
+            <div class="p-10 text-center">
+
+                <div class="w-14 h-14 mx-auto rounded-2xl
+                            bg-gray-100
+                            flex items-center justify-center
+                            text-2xl">
+
+                    💳
+
+                </div>
+
+                <h3 class="font-semibold text-gray-900 mt-4">
+                    No Payment History
+                </h3>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Payments you submit for this learner will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- Footer -->
+    <p class="text-center text-xs text-gray-400 mt-5">
+        Payments are subject to verification by the school.
+    </p>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

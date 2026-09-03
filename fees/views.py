@@ -153,3 +153,174 @@ def update_balance(request, student_id):
             "student": student
         }
     )
+
+
+from decimal import Decimal, InvalidOperation
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+from students.models import Student
+from .models import Payment
+
+
+@login_required
+def parent_make_payment(request, student_id):
+
+    parent = request.user.userprofile.parent_profile
+
+    student = get_object_or_404(
+        Student,
+        id=student_id,
+        parent=parent
+    )
+
+    payments = Payment.objects.filter(
+        student=student,
+        parent=parent
+    ).order_by("-created_at")
+
+    if request.method == "POST":
+
+        amount = request.POST.get("amount", "").strip()
+        method = request.POST.get("method", "").strip()
+
+        try:
+            amount = Decimal(amount)
+
+            if amount <= 0:
+                raise ValueError
+
+        except (ValueError, TypeError, InvalidOperation):
+
+            messages.error(
+                request,
+                "Please enter a valid payment amount."
+            )
+
+            return render(
+                request,
+                "fees/parent_make_payment.html",
+                {
+                    "parent": parent,
+                    "student": student,
+                    "payments": payments,
+                }
+            )
+
+        if method not in ["airtel", "bank"]:
+
+            messages.error(
+                request,
+                "Please select a payment method."
+            )
+
+            return render(
+                request,
+                "fees/parent_make_payment.html",
+                {
+                    "parent": parent,
+                    "student": student,
+                    "payments": payments,
+                }
+            )
+
+        payment = Payment.objects.create(
+            student=student,
+            parent=parent,
+            amount=amount,
+            method=method,
+        )
+
+        return redirect(
+            "fees:parent_payment_invoice",
+            payment_id=payment.id
+        )
+
+    return render(
+        request,
+        "fees/parent_make_payment.html",
+        {
+            "parent": parent,
+            "student": student,
+            "payments": payments,
+        }
+    )
+
+
+
+
+@login_required
+def parent_payment_invoice(request, payment_id):
+
+    parent = request.user.userprofile.parent_profile
+
+    payment = get_object_or_404(
+        Payment,
+        id=payment_id,
+        parent=parent
+    )
+
+    if request.method == "POST":
+
+        transaction_reference = request.POST.get(
+            "transaction_reference"
+        )
+
+        proof_of_payment = request.FILES.get(
+            "proof_of_payment"
+        )
+
+        if not transaction_reference:
+            messages.error(
+                request,
+                "Please enter the transaction reference."
+            )
+
+            return render(
+                request,
+                "fees/parent_payment_invoice.html",
+                {
+                    "payment": payment,
+                    "student": payment.student,
+                }
+            )
+
+        if not proof_of_payment:
+            messages.error(
+                request,
+                "Please upload your proof of payment."
+            )
+
+            return render(
+                request,
+                "fees/parent_payment_invoice.html",
+                {
+                    "payment": payment,
+                    "student": payment.student,
+                }
+            )
+
+        payment.transaction_reference = transaction_reference
+        payment.proof_of_payment = proof_of_payment
+        payment.status = "pending"
+        payment.save()
+
+        messages.success(
+            request,
+            "Your payment has been submitted for verification."
+        )
+
+        return redirect(
+            "parents:parent_dashboard"
+        )
+
+    return render(
+        request,
+        "fees/parent_payment_invoice.html",
+        {
+            "payment": payment,
+            "student": payment.student,
+        }
+    )

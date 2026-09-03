@@ -9,10 +9,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path("", include("accounts.urls")),
+
     path('admin/', admin.site.urls),
 
     path("", include("Core.urls")),
-    path("", include("accounts.urls")),
     path("", include("students.urls")),
     path("parents/", include("parents.urls")),
     path("fees/", include("fees.urls")),

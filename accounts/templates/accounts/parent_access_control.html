@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+
+{% block title %}Parent Results Access{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-50">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center
+                    sm:justify-between gap-4 mb-8">
+
+            <div>
+
+                <div class="flex items-center gap-3 mb-3">
+
+                    <div class="w-12 h-12 rounded-xl
+                                bg-indigo-100 text-indigo-600
+                                flex items-center justify-center text-2xl">
+
+                        🔐
+
+                    </div>
+
+                    <div>
+
+                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                            Parent Results Access
+                        </h1>
+
+                        <p class="text-gray-500 mt-1">
+                            Manage parent access to learner results.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <a href="{% url 'school_admin_dashboard' %}"
+               class="inline-flex items-center justify-center gap-2
+                      px-4 py-2.5 rounded-xl
+                      bg-white border border-gray-200
+                      text-gray-700 font-medium
+                      shadow-sm hover:bg-gray-50 hover:shadow
+                      transition">
+
+                ← Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- Information -->
+        <div class="rounded-2xl
+                    bg-gradient-to-r from-indigo-500 to-purple-600
+                    p-6 sm:p-7 mb-8 shadow-md">
+
+            <div class="flex items-start gap-4">
+
+                <div class="w-11 h-11 shrink-0 rounded-xl
+                            bg-white/20
+                            flex items-center justify-center
+                            text-xl">
+
+                    ℹ️
+
+                </div>
+
+                <div>
+
+                    <h2 class="text-lg font-bold text-white">
+                        How access works
+                    </h2>
+
+                    <p class="text-sm text-indigo-50 mt-1 leading-relaxed">
+                        Parents can automatically view results when their
+                        learner has no outstanding school balance. If there
+                        is an outstanding balance, you can manually grant
+                        access to the parent.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Section heading -->
+        <div class="flex items-center justify-between mb-5">
+
+            <div>
+
+                <h2 class="text-xl font-bold text-gray-900">
+                    Select a Grade
+                </h2>
+
+                <p class="text-sm text-gray-500 mt-1">
+                    Choose a grade to view its learners and manage access.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Grade Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2
+                    lg:grid-cols-3 xl:grid-cols-4 gap-5">
+
+            {% for grade in grades %}
+
+                <a href="{% url 'parent_access_grade' grade.id %}"
+                   class="group block">
+
+                    <div class="h-full rounded-2xl
+                                bg-white border border-gray-200
+                                p-6 shadow-sm
+                                hover:shadow-lg
+                                hover:-translate-y-1
+                                hover:border-indigo-200
+                                transition-all duration-200">
+
+                        <!-- Icon -->
+                        <div class="flex items-start justify-between">
+
+                            <div class="w-14 h-14 rounded-2xl
+                                        bg-indigo-100 text-indigo-600
+                                        flex items-center justify-center
+                                        text-2xl">
+
+                                👥
+
+                            </div>
+
+                            <div class="w-9 h-9 rounded-full
+                                        bg-gray-100
+                                        flex items-center justify-center
+                                        text-gray-400
+                                        group-hover:bg-indigo-100
+                                        group-hover:text-indigo-600
+                                        transition">
+
+                                →
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Grade -->
+                        <div class="mt-6">
+
+                            <h3 class="text-xl font-bold text-gray-900
+                                       group-hover:text-indigo-600
+                                       transition">
+
+                                {{ grade.name }}
+
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-2">
+                                Manage parent results access
+                            </p>
+
+                        </div>
+
+
+                        <!-- Bottom -->
+                        <div class="mt-5 pt-4 border-t border-gray-100">
+
+                            <span class="text-sm font-medium
+                                         text-indigo-600
+                                         group-hover:text-indigo-700">
+
+                                View learners
+                                <span class="ml-1">→</span>
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            {% empty %}
+
+                <div class="col-span-full">
+
+                    <div class="rounded-2xl bg-white
+                                border border-gray-200
+                                p-10 text-center shadow-sm">
+
+                        <div class="text-4xl mb-4">
+                            📚
+                        </div>
+
+                        <h3 class="text-lg font-bold text-gray-800">
+                            No grades available
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Create grades before managing parent access.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

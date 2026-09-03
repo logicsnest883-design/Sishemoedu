@@ -138,7 +138,7 @@ def parent_dashboard(request):
         latest = records.order_by("-week").first()
         child.latest_week = latest.week if latest else None
 
-    return render(request, "parents/dashboard.html", {
+    return render(request, "accounts/parent_dashboard.html", {
         "parent": parent,
         "children": children
     })

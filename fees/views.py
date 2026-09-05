@@ -183,20 +183,89 @@ def parent_make_payment(request, student_id):
 
     if request.method == "POST":
 
-        amount = request.POST.get("amount", "").strip()
         method = request.POST.get("method", "").strip()
 
         try:
-            amount = Decimal(amount)
-
-            if amount <= 0:
-                raise ValueError
+            fees = Decimal(request.POST.get("fees_amount", "0") or "0")
+            transport = Decimal(request.POST.get("transport_amount", "0") or "0")
+            lunch = Decimal(request.POST.get("lunch_amount", "0") or "0")
+            uniform = Decimal(request.POST.get("uniform_amount", "0") or "0")
+            other = Decimal(request.POST.get("other_amount", "0") or "0")
 
         except (ValueError, TypeError, InvalidOperation):
 
             messages.error(
                 request,
-                "Please enter a valid payment amount."
+                "Please enter valid amounts."
+            )
+
+            return render(
+                request,
+                "fees/parent_make_payment.html",
+                {
+                    "parent": parent,
+                    "student": student,
+                    "payments": payments,
+                }
+            )
+
+        amounts = [fees, transport, lunch, uniform, other]
+
+        if any(value < 0 for value in amounts):
+
+            messages.error(
+                request,
+                "Payment amounts cannot be negative."
+            )
+
+            return render(
+                request,
+                "fees/parent_make_payment.html",
+                {
+                    "parent": parent,
+                    "student": student,
+                    "payments": payments,
+                }
+            )
+
+        if other > 0:
+            other_description = request.POST.get(
+                "other_description",
+                ""
+            ).strip()
+
+            if not other_description:
+
+                messages.error(
+                    request,
+                    "Please specify what the other payment is for."
+                )
+
+                return render(
+                    request,
+                    "fees/parent_make_payment.html",
+                    {
+                        "parent": parent,
+                        "student": student,
+                        "payments": payments,
+                    }
+                )
+        else:
+            other_description = ""
+
+        total_amount = (
+            fees +
+            transport +
+            lunch +
+            uniform +
+            other
+        )
+
+        if total_amount <= 0:
+
+            messages.error(
+                request,
+                "Please enter at least one payment amount."
             )
 
             return render(
@@ -229,7 +298,13 @@ def parent_make_payment(request, student_id):
         payment = Payment.objects.create(
             student=student,
             parent=parent,
-            amount=amount,
+            fees_amount=fees,
+            transport_amount=transport,
+            lunch_amount=lunch,
+            uniform_amount=uniform,
+            other_amount=other,
+            other_description=other_description,
+            amount=total_amount,
             method=method,
         )
 
@@ -249,8 +324,6 @@ def parent_make_payment(request, student_id):
     )
 
 
-
-
 @login_required
 def parent_payment_invoice(request, payment_id):
 
@@ -265,14 +338,16 @@ def parent_payment_invoice(request, payment_id):
     if request.method == "POST":
 
         transaction_reference = request.POST.get(
-            "transaction_reference"
-        )
+            "transaction_reference",
+            ""
+        ).strip()
 
         proof_of_payment = request.FILES.get(
             "proof_of_payment"
         )
 
         if not transaction_reference:
+
             messages.error(
                 request,
                 "Please enter the transaction reference."
@@ -288,6 +363,7 @@ def parent_payment_invoice(request, payment_id):
             )
 
         if not proof_of_payment:
+
             messages.error(
                 request,
                 "Please upload your proof of payment."
@@ -305,6 +381,7 @@ def parent_payment_invoice(request, payment_id):
         payment.transaction_reference = transaction_reference
         payment.proof_of_payment = proof_of_payment
         payment.status = "pending"
+
         payment.save()
 
         messages.success(

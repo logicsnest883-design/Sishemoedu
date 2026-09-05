@@ -34,6 +34,43 @@ class Payment(models.Model):
         related_name="payments"
     )
 
+    # Payment breakdown
+    fees_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    transport_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    lunch_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    uniform_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    other_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    other_description = models.CharField(
+        max_length=200,
+        blank=True
+    )
+
+    # Total payment
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2

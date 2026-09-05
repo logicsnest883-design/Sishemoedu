@@ -6,65 +6,71 @@
 
 <div class="min-h-screen bg-gray-50">
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+```
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
-        <!-- Header -->
-        <div class="flex flex-col sm:flex-row
-                    sm:items-center sm:justify-between
-                    gap-4 mb-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row
+                sm:items-center sm:justify-between
+                gap-4 mb-8">
 
-            <div>
+        <div>
 
-                <a href="{% url 'school_admin_dashboard' %}"
-                   class="text-sm font-medium text-gray-500
-                          hover:text-gray-900 transition">
+            <a href="{% url 'school_admin_dashboard' %}"
+               class="text-sm font-medium text-gray-500
+                      hover:text-gray-900 transition">
 
-                    ← Back to Dashboard
+                ← Back to Dashboard
 
-                </a>
+            </a>
 
-                <h1 class="text-2xl sm:text-3xl font-bold
-                           text-gray-900 mt-3">
+            <h1 class="text-2xl sm:text-3xl font-bold
+                       text-gray-900 mt-3">
 
-                    Pending Payments
+                Pending Payments
 
-                </h1>
+            </h1>
 
-                <p class="text-gray-500 mt-2">
-                    Review and verify payments submitted by parents.
-                </p>
+            <p class="text-gray-500 mt-2">
 
-            </div>
+                Review and verify payments submitted by parents.
 
-            <div class="bg-amber-100 text-amber-700
-                        px-4 py-2 rounded-xl
-                        font-semibold text-sm">
-
-                {{ payments|length }} Pending
-
-            </div>
+            </p>
 
         </div>
 
+        <div class="bg-amber-100 text-amber-700
+                    px-4 py-2 rounded-xl
+                    font-semibold text-sm">
 
-        <!-- Payments -->
-        {% if payments %}
+            {{ payments|length }} Pending
 
-            <div class="space-y-4">
+        </div>
 
-                {% for payment in payments %}
+    </div>
 
-                    <div class="bg-white rounded-2xl
-                                border border-gray-200
-                                shadow-sm p-5 sm:p-6">
+
+    <!-- Payments -->
+    {% if payments %}
+
+        <div class="space-y-4">
+
+            {% for payment in payments %}
+
+                <div class="bg-white rounded-2xl
+                            border border-gray-200
+                            shadow-sm overflow-hidden">
+
+                    <div class="p-5 sm:p-6">
 
                         <div class="flex flex-col lg:flex-row
                                     lg:items-center
                                     lg:justify-between
-                                    gap-5">
+                                    gap-6">
 
                             <!-- Student -->
-                            <div class="flex items-center gap-4">
+                            <div class="flex items-center gap-4
+                                        min-w-0">
 
                                 {% if payment.student.photo %}
 
@@ -72,7 +78,7 @@
                                         src="{{ payment.student.photo.url }}"
                                         alt="{{ payment.student.first_name }}"
                                         class="w-14 h-14 rounded-full
-                                               object-cover"
+                                               object-cover flex-shrink-0"
                                     >
 
                                 {% else %}
@@ -82,7 +88,8 @@
                                                 text-emerald-700
                                                 flex items-center
                                                 justify-center
-                                                font-bold text-xl">
+                                                font-bold text-xl
+                                                flex-shrink-0">
 
                                         {{ payment.student.first_name|first|upper }}
 
@@ -90,9 +97,10 @@
 
                                 {% endif %}
 
-                                <div>
+                                <div class="min-w-0">
 
-                                    <h2 class="font-bold text-gray-900 text-lg">
+                                    <h2 class="font-bold text-gray-900
+                                               text-lg truncate">
 
                                         {{ payment.student.first_name }}
                                         {{ payment.student.last_name }}
@@ -105,6 +113,12 @@
 
                                     </p>
 
+                                    <p class="text-xs text-gray-400 mt-1">
+
+                                        {{ payment.parent.profile.user.get_full_name|default:payment.parent.profile.user.username }}
+
+                                    </p>
+
                                 </div>
 
                             </div>
@@ -112,19 +126,22 @@
 
                             <!-- Payment Info -->
                             <div class="grid grid-cols-2
-                                        sm:grid-cols-3
-                                        gap-5">
+                                        sm:grid-cols-4
+                                        gap-x-8 gap-y-4
+                                        flex-1">
 
+                                <!-- Amount -->
                                 <div>
 
-                                    <p class="text-xs text-gray-500 uppercase
-                                              tracking-wide">
+                                    <p class="text-xs text-gray-500
+                                              uppercase tracking-wide">
 
-                                        Amount
+                                        Total Amount
 
                                     </p>
 
-                                    <p class="font-bold text-gray-900 mt-1">
+                                    <p class="font-bold text-emerald-600
+                                              text-lg mt-1">
 
                                         K{{ payment.amount|floatformat:2 }}
 
@@ -132,16 +149,19 @@
 
                                 </div>
 
+
+                                <!-- Method -->
                                 <div>
 
-                                    <p class="text-xs text-gray-500 uppercase
-                                              tracking-wide">
+                                    <p class="text-xs text-gray-500
+                                              uppercase tracking-wide">
 
                                         Method
 
                                     </p>
 
-                                    <p class="font-semibold text-gray-900 mt-1">
+                                    <p class="font-semibold text-gray-900
+                                              mt-1">
 
                                         {{ payment.get_method_display }}
 
@@ -149,18 +169,47 @@
 
                                 </div>
 
+
+                                <!-- Invoice -->
                                 <div>
 
-                                    <p class="text-xs text-gray-500 uppercase
-                                              tracking-wide">
+                                    <p class="text-xs text-gray-500
+                                              uppercase tracking-wide">
 
                                         Invoice
 
                                     </p>
 
-                                    <p class="font-semibold text-gray-900 mt-1">
+                                    <p class="font-semibold text-gray-900
+                                              mt-1 break-all">
 
                                         {{ payment.invoice_number }}
+
+                                    </p>
+
+                                </div>
+
+
+                                <!-- Date -->
+                                <div>
+
+                                    <p class="text-xs text-gray-500
+                                              uppercase tracking-wide">
+
+                                        Submitted
+
+                                    </p>
+
+                                    <p class="font-semibold text-gray-900
+                                              mt-1">
+
+                                        {{ payment.created_at|date:"d M Y" }}
+
+                                    </p>
+
+                                    <p class="text-xs text-gray-400">
+
+                                        {{ payment.created_at|date:"H:i" }}
 
                                     </p>
 
@@ -170,11 +219,12 @@
 
 
                             <!-- Action -->
-                            <div>
+                            <div class="lg:flex-shrink-0">
 
                                 <a href="{% url 'payment_verification_detail' payment.id %}"
                                    class="inline-flex items-center
                                           justify-center gap-2
+                                          w-full lg:w-auto
                                           px-5 py-3
                                           rounded-xl
                                           bg-emerald-600
@@ -184,6 +234,7 @@
                                           transition">
 
                                     Review Payment
+
                                     <span>→</span>
 
                                 </a>
@@ -192,45 +243,131 @@
 
                         </div>
 
+
+                        <!-- Transaction Reference -->
+                        <div class="mt-5 pt-5
+                                    border-t border-gray-100
+                                    flex flex-col sm:flex-row
+                                    sm:items-center
+                                    sm:justify-between
+                                    gap-3">
+
+                            <div>
+
+                                <p class="text-xs text-gray-500
+                                          uppercase tracking-wide">
+
+                                    Transaction Reference
+
+                                </p>
+
+                                {% if payment.transaction_reference %}
+
+                                    <p class="font-semibold text-gray-900
+                                              mt-1 break-all">
+
+                                        {{ payment.transaction_reference }}
+
+                                    </p>
+
+                                {% else %}
+
+                                    <p class="text-sm text-red-600 mt-1">
+
+                                        Not provided
+
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- Breakdown -->
+                            <div class="flex flex-wrap gap-2 text-xs">
+
+                                {% if payment.fees_amount > 0 %}
+                                    <span class="px-3 py-1.5 rounded-lg
+                                                 bg-gray-100 text-gray-700">
+                                        Fees: K{{ payment.fees_amount|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+
+                                {% if payment.transport_amount > 0 %}
+                                    <span class="px-3 py-1.5 rounded-lg
+                                                 bg-gray-100 text-gray-700">
+                                        Transport: K{{ payment.transport_amount|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+
+                                {% if payment.lunch_amount > 0 %}
+                                    <span class="px-3 py-1.5 rounded-lg
+                                                 bg-gray-100 text-gray-700">
+                                        Lunch: K{{ payment.lunch_amount|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+
+                                {% if payment.uniform_amount > 0 %}
+                                    <span class="px-3 py-1.5 rounded-lg
+                                                 bg-gray-100 text-gray-700">
+                                        Uniform: K{{ payment.uniform_amount|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+
+                                {% if payment.other_amount > 0 %}
+                                    <span class="px-3 py-1.5 rounded-lg
+                                                 bg-gray-100 text-gray-700">
+                                        Other: K{{ payment.other_amount|floatformat:2 }}
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
                     </div>
-
-                {% endfor %}
-
-            </div>
-
-        {% else %}
-
-            <div class="bg-white rounded-2xl
-                        border border-gray-200
-                        shadow-sm p-12 text-center">
-
-                <div class="w-16 h-16 rounded-full
-                            bg-emerald-100
-                            text-emerald-600
-                            flex items-center justify-center
-                            text-3xl mx-auto">
-
-                    ✓
 
                 </div>
 
-                <h2 class="text-xl font-bold text-gray-900 mt-5">
+            {% endfor %}
 
-                    No Pending Payments
+        </div>
 
-                </h2>
+    {% else %}
 
-                <p class="text-gray-500 mt-2">
+        <!-- Empty State -->
+        <div class="bg-white rounded-2xl
+                    border border-gray-200
+                    shadow-sm p-12 text-center">
 
-                    All submitted payments have been processed.
+            <div class="w-16 h-16 rounded-full
+                        bg-emerald-100
+                        text-emerald-600
+                        flex items-center justify-center
+                        text-3xl mx-auto">
 
-                </p>
+                ✓
 
             </div>
 
-        {% endif %}
+            <h2 class="text-xl font-bold text-gray-900 mt-5">
 
-    </div>
+                No Pending Payments
+
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+
+                All submitted payments have been processed.
+
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+```
 
 </div>
 

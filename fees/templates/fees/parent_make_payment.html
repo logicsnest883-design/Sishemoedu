@@ -11,16 +11,10 @@
 
     <!-- Back -->
     <div class="mb-6">
-
         <a href="{% url 'parents:parent_dashboard' %}"
-           class="inline-flex items-center gap-2
-                  text-sm font-medium text-gray-600
-                  hover:text-gray-900 transition">
-
+           class="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition">
             ← Back to Dashboard
-
         </a>
-
     </div>
 
 
@@ -29,17 +23,12 @@
 
         <div class="flex items-center gap-3">
 
-            <div class="w-12 h-12 rounded-xl
-                        bg-emerald-100 text-emerald-600
-                        flex items-center justify-center
-                        text-2xl">
-
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600
+                        flex items-center justify-center text-2xl">
                 💳
-
             </div>
 
             <div>
-
                 <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
                     Make a Payment
                 </h1>
@@ -47,12 +36,52 @@
                 <p class="text-gray-500 mt-1">
                     Make a school fee payment for your learner.
                 </p>
-
             </div>
 
         </div>
 
     </div>
+
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="space-y-3 mb-6">
+
+            {% for message in messages %}
+
+                <div class="rounded-xl border p-4
+                    {% if message.tags == 'error' %}
+                        bg-red-50 border-red-200 text-red-700
+                    {% elif message.tags == 'success' %}
+                        bg-emerald-50 border-emerald-200 text-emerald-700
+                    {% else %}
+                        bg-blue-50 border-blue-200 text-blue-700
+                    {% endif %}">
+
+                    <div class="flex items-start gap-3">
+
+                        <span class="text-lg">
+                            {% if message.tags == 'error' %}
+                                ⚠️
+                            {% elif message.tags == 'success' %}
+                                ✓
+                            {% else %}
+                                ℹ️
+                            {% endif %}
+                        </span>
+
+                        <p class="text-sm font-medium">
+                            {{ message }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+    {% endif %}
 
 
     <!-- Learner Card -->
@@ -71,9 +100,8 @@
 
                 {% else %}
 
-                    <div class="w-16 h-16 rounded-full
-                                bg-emerald-100 text-emerald-600
-                                flex items-center justify-center
+                    <div class="w-16 h-16 rounded-full bg-emerald-100
+                                text-emerald-600 flex items-center justify-center
                                 text-2xl font-bold">
 
                         {{ student.first_name|first|upper }}
@@ -139,7 +167,7 @@
             </h2>
 
             <p class="text-sm text-gray-500 mt-1">
-                Enter the amount and select your payment method.
+                Enter how much you are paying for each category.
             </p>
 
         </div>
@@ -150,48 +178,234 @@
             {% csrf_token %}
 
 
-            <!-- Amount -->
-            <div>
+            <!-- Payment Breakdown -->
+            <div class="space-y-5">
 
-                <label for="amount"
-                       class="block text-sm font-semibold
-                              text-gray-700 mb-2">
 
-                    Amount (K)
+                <!-- School Fees -->
+                <div>
 
-                </label>
+                    <label for="fees_amount"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+                        School Fees
+                    </label>
 
-                <div class="relative">
+                    <div class="relative">
 
-                    <span class="absolute left-4 top-1/2
-                                 -translate-y-1/2
-                                 text-gray-500 font-medium">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2
+                                     text-gray-500 font-medium">
+                            K
+                        </span>
 
-                        K
+                        <input
+                            type="number"
+                            name="fees_amount"
+                            id="fees_amount"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            class="payment-amount w-full pl-10 pr-4 py-3.5
+                                   rounded-xl border border-gray-300
+                                   text-gray-900
+                                   focus:ring-2 focus:ring-emerald-500
+                                   focus:border-emerald-500
+                                   outline-none transition">
 
-                    </span>
-
-                    <input
-                        type="number"
-                        name="amount"
-                        id="amount"
-                        step="0.01"
-                        min="1"
-                        required
-                        placeholder="0.00"
-                        class="w-full pl-10 pr-4 py-3.5
-                               rounded-xl border border-gray-300
-                               text-gray-900
-                               focus:ring-2 focus:ring-emerald-500
-                               focus:border-emerald-500
-                               outline-none transition"
-                    >
+                    </div>
 
                 </div>
 
-                <p class="text-xs text-gray-500 mt-2">
-                    Enter the amount you wish to pay.
-                </p>
+
+                <!-- Transport -->
+                <div>
+
+                    <label for="transport_amount"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+                        Transport
+                    </label>
+
+                    <div class="relative">
+
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2
+                                     text-gray-500 font-medium">
+                            K
+                        </span>
+
+                        <input
+                            type="number"
+                            name="transport_amount"
+                            id="transport_amount"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            class="payment-amount w-full pl-10 pr-4 py-3.5
+                                   rounded-xl border border-gray-300
+                                   text-gray-900
+                                   focus:ring-2 focus:ring-emerald-500
+                                   focus:border-emerald-500
+                                   outline-none transition">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Lunch -->
+                <div>
+
+                    <label for="lunch_amount"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+                        Lunch
+                    </label>
+
+                    <div class="relative">
+
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2
+                                     text-gray-500 font-medium">
+                            K
+                        </span>
+
+                        <input
+                            type="number"
+                            name="lunch_amount"
+                            id="lunch_amount"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            class="payment-amount w-full pl-10 pr-4 py-3.5
+                                   rounded-xl border border-gray-300
+                                   text-gray-900
+                                   focus:ring-2 focus:ring-emerald-500
+                                   focus:border-emerald-500
+                                   outline-none transition">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Uniform -->
+                <div>
+
+                    <label for="uniform_amount"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+                        Uniform
+                    </label>
+
+                    <div class="relative">
+
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2
+                                     text-gray-500 font-medium">
+                            K
+                        </span>
+
+                        <input
+                            type="number"
+                            name="uniform_amount"
+                            id="uniform_amount"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            class="payment-amount w-full pl-10 pr-4 py-3.5
+                                   rounded-xl border border-gray-300
+                                   text-gray-900
+                                   focus:ring-2 focus:ring-emerald-500
+                                   focus:border-emerald-500
+                                   outline-none transition">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Other -->
+                <div>
+
+                    <label for="other_amount"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+                        Other
+                    </label>
+
+                    <div class="relative">
+
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2
+                                     text-gray-500 font-medium">
+                            K
+                        </span>
+
+                        <input
+                            type="number"
+                            name="other_amount"
+                            id="other_amount"
+                            step="0.01"
+                            min="0"
+                            value="0"
+                            class="payment-amount w-full pl-10 pr-4 py-3.5
+                                   rounded-xl border border-gray-300
+                                   text-gray-900
+                                   focus:ring-2 focus:ring-emerald-500
+                                   focus:border-emerald-500
+                                   outline-none transition">
+
+                    </div>
+
+                </div>
+
+
+                <!-- Other Description -->
+                <div>
+
+                    <label for="other_description"
+                           class="block text-sm font-semibold text-gray-700 mb-2">
+
+                        What is the "Other" payment for?
+
+                        <span class="font-normal text-gray-400">
+                            (Required when Other is greater than K0)
+                        </span>
+
+                    </label>
+
+                    <input
+                        type="text"
+                        name="other_description"
+                        id="other_description"
+                        maxlength="200"
+                        placeholder="e.g. Examination fee, activity fee, etc."
+                        class="w-full px-4 py-3.5 rounded-xl
+                               border border-gray-300 text-gray-900
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-emerald-500
+                               outline-none transition">
+
+                </div>
+
+            </div>
+
+
+            <!-- Total -->
+            <div class="mt-7 rounded-2xl bg-emerald-50
+                        border border-emerald-200 p-6">
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+
+                        <p class="text-sm font-medium text-emerald-700">
+                            Total Amount
+                        </p>
+
+                        <p class="text-xs text-emerald-600 mt-1">
+                            Automatically calculated from the amounts above.
+                        </p>
+
+                    </div>
+
+                    <p class="text-2xl sm:text-3xl font-bold text-emerald-700">
+                        K<span id="totalAmount">0.00</span>
+                    </p>
+
+                </div>
 
             </div>
 
@@ -199,18 +413,15 @@
             <!-- Payment Method -->
             <div class="mt-7">
 
-                <label class="block text-sm font-semibold
-                              text-gray-700 mb-3">
-
+                <label class="block text-sm font-semibold text-gray-700 mb-3">
                     Payment Method
-
                 </label>
 
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
 
-                    <!-- Airtel Money -->
+                    <!-- Airtel -->
                     <label class="relative cursor-pointer">
 
                         <input
@@ -218,27 +429,21 @@
                             name="method"
                             value="airtel"
                             required
-                            class="peer sr-only"
-                        >
+                            class="peer sr-only">
 
-                        <div class="rounded-2xl border-2
-                                    border-gray-200
+                        <div class="rounded-2xl border-2 border-gray-200
                                     p-5
                                     peer-checked:border-red-500
                                     peer-checked:bg-red-50
-                                    hover:border-red-300
-                                    transition">
+                                    hover:border-red-300 transition">
 
                             <div class="flex items-center gap-4">
 
                                 <div class="w-12 h-12 rounded-xl
                                             bg-red-100 text-red-600
-                                            flex items-center
-                                            justify-center
+                                            flex items-center justify-center
                                             font-bold text-lg">
-
                                     A
-
                                 </div>
 
                                 <div>
@@ -260,7 +465,7 @@
                     </label>
 
 
-                    <!-- Bank Transfer -->
+                    <!-- Bank -->
                     <label class="relative cursor-pointer">
 
                         <input
@@ -268,27 +473,21 @@
                             name="method"
                             value="bank"
                             required
-                            class="peer sr-only"
-                        >
+                            class="peer sr-only">
 
-                        <div class="rounded-2xl border-2
-                                    border-gray-200
+                        <div class="rounded-2xl border-2 border-gray-200
                                     p-5
                                     peer-checked:border-blue-500
                                     peer-checked:bg-blue-50
-                                    hover:border-blue-300
-                                    transition">
+                                    hover:border-blue-300 transition">
 
                             <div class="flex items-center gap-4">
 
                                 <div class="w-12 h-12 rounded-xl
                                             bg-blue-100 text-blue-600
-                                            flex items-center
-                                            justify-center
+                                            flex items-center justify-center
                                             text-xl">
-
                                     🏦
-
                                 </div>
 
                                 <div>
@@ -309,16 +508,14 @@
 
                     </label>
 
-
                 </div>
 
             </div>
 
 
             <!-- Information -->
-            <div class="mt-7 rounded-xl
-                        bg-blue-50 border border-blue-200
-                        p-4">
+            <div class="mt-7 rounded-xl bg-blue-50
+                        border border-blue-200 p-4">
 
                 <div class="flex items-start gap-3">
 
@@ -332,14 +529,12 @@
                             What happens next?
                         </h3>
 
-                        <p class="text-sm text-blue-700 mt-1
-                                  leading-relaxed">
+                        <p class="text-sm text-blue-700 mt-1 leading-relaxed">
 
-                            Enter your amount and select how you will
-                            pay. After continuing, an invoice will be
-                            generated with the school's payment
-                            instructions. You will then make the payment
-                            and upload your proof of payment.
+                            After continuing, an invoice will be generated
+                            showing your payment breakdown and the school's
+                            payment instructions. You will then make the
+                            payment and upload your proof of payment.
 
                         </p>
 
@@ -351,32 +546,23 @@
 
 
             <!-- Buttons -->
-            <div class="mt-8 flex flex-col sm:flex-row
-                        gap-3 sm:justify-end">
+            <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:justify-end">
 
                 <a href="{% url 'parents:parent_dashboard' %}"
                    class="inline-flex items-center justify-center
-                          px-5 py-3 rounded-xl
-                          bg-gray-100 text-gray-700
-                          font-semibold
-                          hover:bg-gray-200
-                          transition">
+                          px-5 py-3 rounded-xl bg-gray-100 text-gray-700
+                          font-semibold hover:bg-gray-200 transition">
 
                     Cancel
 
                 </a>
 
-
                 <button type="submit"
-                        class="inline-flex items-center
-                               justify-center gap-2
-                               px-6 py-3 rounded-xl
-                               bg-emerald-600 text-white
-                               font-semibold
-                               shadow-sm
-                               hover:bg-emerald-700
-                               hover:shadow-md
-                               transition">
+                        id="submitButton"
+                        class="inline-flex items-center justify-center gap-2
+                               px-6 py-3 rounded-xl bg-emerald-600 text-white
+                               font-semibold shadow-sm
+                               hover:bg-emerald-700 hover:shadow-md transition">
 
                     Generate Invoice
 
@@ -399,13 +585,9 @@
 
             <div class="flex items-center gap-3">
 
-                <div class="w-10 h-10 rounded-xl
-                            bg-gray-100
-                            flex items-center justify-center
-                            text-lg">
-
+                <div class="w-10 h-10 rounded-xl bg-gray-100
+                            flex items-center justify-center text-lg">
                     📋
-
                 </div>
 
                 <div>
@@ -434,10 +616,8 @@
                     <div class="p-6">
 
                         <div class="flex flex-col sm:flex-row
-                                    sm:items-center
-                                    sm:justify-between gap-4">
+                                    sm:items-center sm:justify-between gap-4">
 
-                            <!-- Payment Information -->
                             <div>
 
                                 <div class="flex items-center gap-3">
@@ -449,35 +629,26 @@
 
                                     {% if payment.status == "pending" %}
 
-                                        <span class="inline-flex items-center
-                                                     px-2.5 py-1 rounded-full
-                                                     bg-amber-100 text-amber-700
+                                        <span class="inline-flex items-center px-2.5 py-1
+                                                     rounded-full bg-amber-100 text-amber-700
                                                      text-xs font-semibold">
-
                                             Pending
-
                                         </span>
 
                                     {% elif payment.status == "confirmed" %}
 
-                                        <span class="inline-flex items-center
-                                                     px-2.5 py-1 rounded-full
-                                                     bg-emerald-100 text-emerald-700
+                                        <span class="inline-flex items-center px-2.5 py-1
+                                                     rounded-full bg-emerald-100 text-emerald-700
                                                      text-xs font-semibold">
-
                                             Confirmed
-
                                         </span>
 
                                     {% elif payment.status == "rejected" %}
 
-                                        <span class="inline-flex items-center
-                                                     px-2.5 py-1 rounded-full
-                                                     bg-red-100 text-red-700
+                                        <span class="inline-flex items-center px-2.5 py-1
+                                                     rounded-full bg-red-100 text-red-700
                                                      text-xs font-semibold">
-
                                             Rejected
-
                                         </span>
 
                                     {% endif %}
@@ -513,7 +684,6 @@
                             </div>
 
 
-                            <!-- Status Description -->
                             <div class="sm:text-right">
 
                                 {% if payment.status == "pending" %}
@@ -544,15 +714,12 @@
                         <!-- Rejection Reason -->
                         {% if payment.status == "rejected" and payment.rejection_reason %}
 
-                            <div class="mt-4 rounded-xl
-                                        bg-red-50 border border-red-200
-                                        p-4">
+                            <div class="mt-4 rounded-xl bg-red-50
+                                        border border-red-200 p-4">
 
                                 <p class="text-xs font-bold uppercase
                                           tracking-wide text-red-600">
-
                                     Rejection Reason
-
                                 </p>
 
                                 <p class="text-sm text-red-700 mt-1">
@@ -564,18 +731,15 @@
                         {% endif %}
 
 
-                        <!-- Confirmed Information -->
+                        <!-- Confirmed -->
                         {% if payment.status == "confirmed" %}
 
-                            <div class="mt-4 rounded-xl
-                                        bg-emerald-50 border border-emerald-200
-                                        p-4">
+                            <div class="mt-4 rounded-xl bg-emerald-50
+                                        border border-emerald-200 p-4">
 
                                 <p class="text-sm text-emerald-700">
-
                                     ✓ This payment has been verified by
                                     the school.
-
                                 </p>
 
                             </div>
@@ -583,19 +747,16 @@
                         {% endif %}
 
 
-                        <!-- Pending Information -->
+                        <!-- Pending -->
                         {% if payment.status == "pending" %}
 
-                            <div class="mt-4 rounded-xl
-                                        bg-amber-50 border border-amber-200
-                                        p-4">
+                            <div class="mt-4 rounded-xl bg-amber-50
+                                        border border-amber-200 p-4">
 
                                 <p class="text-sm text-amber-700">
-
                                     Your payment proof has been submitted
                                     and is waiting for verification by
                                     the school administrator.
-
                                 </p>
 
                             </div>
@@ -610,16 +771,11 @@
 
         {% else %}
 
-            <!-- Empty History -->
             <div class="p-10 text-center">
 
-                <div class="w-14 h-14 mx-auto rounded-2xl
-                            bg-gray-100
-                            flex items-center justify-center
-                            text-2xl">
-
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-gray-100
+                            flex items-center justify-center text-2xl">
                     💳
-
                 </div>
 
                 <h3 class="font-semibold text-gray-900 mt-4">
@@ -637,7 +793,6 @@
     </div>
 
 
-    <!-- Footer -->
     <p class="text-center text-xs text-gray-400 mt-5">
         Payments are subject to verification by the school.
     </p>
@@ -646,5 +801,126 @@
 ```
 
 </div>
+
+<!-- Calculate Total -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const amountInputs = document.querySelectorAll(".payment-amount");
+        const totalDisplay = document.getElementById("totalAmount");
+        const form = document.querySelector("form");
+        const otherInput = document.getElementById("other_amount");
+        const otherDescription = document.getElementById("other_description");
+
+        function calculateTotal() {
+
+            let total = 0;
+
+            amountInputs.forEach(function (input) {
+
+                const value = parseFloat(input.value);
+
+                if (!isNaN(value) && value > 0) {
+                    total += value;
+                }
+
+            });
+
+            totalDisplay.textContent = total.toFixed(2);
+        }
+
+
+        function updateOtherDescription() {
+
+            const otherValue = parseFloat(otherInput.value) || 0;
+
+            if (otherValue > 0) {
+
+                otherDescription.required = true;
+
+                otherDescription.parentElement.classList.remove("opacity-60");
+
+            } else {
+
+                otherDescription.required = false;
+
+                otherDescription.value = "";
+
+                otherDescription.parentElement.classList.add("opacity-60");
+
+            }
+
+        }
+
+
+        amountInputs.forEach(function (input) {
+
+            input.addEventListener("input", function () {
+
+                calculateTotal();
+
+                if (input === otherInput) {
+                    updateOtherDescription();
+                }
+
+            });
+
+        });
+
+
+        form.addEventListener("submit", function (event) {
+
+            calculateTotal();
+
+            let total = 0;
+
+            amountInputs.forEach(function (input) {
+
+                const value = parseFloat(input.value);
+
+                if (!isNaN(value) && value > 0) {
+                    total += value;
+                }
+
+            });
+
+
+            if (!total || total <= 0) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please enter an amount for at least one payment category."
+                );
+
+                return;
+            }
+
+
+            const otherValue = parseFloat(otherInput.value) || 0;
+
+            if (otherValue > 0 && !otherDescription.value.trim()) {
+
+                event.preventDefault();
+
+                alert(
+                    'Please specify what the "Other" payment is for.'
+                );
+
+                otherDescription.focus();
+
+            }
+
+        });
+
+
+        calculateTotal();
+        updateOtherDescription();
+
+    });
+
+</script>
 
 {% endblock %}

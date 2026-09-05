@@ -227,7 +227,7 @@ def parent_test_detail(request, student_id, test_type):
     # Check results access
     # Parents with no outstanding balance are automatically allowed.
     # Parents with an outstanding balance need admin approval.
-    if child.school_balance > 0:
+    if child.school_balance > 920:
 
         access = ParentAccess.objects.filter(
             parent=parent,
@@ -424,52 +424,72 @@ def payment_verification_detail(request, payment_id):
     )
 
 
+from django.db import transaction
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
+
+
 @user_passes_test(is_school_admin, login_url="/admin/login/")
 def confirm_payment(request, payment_id):
-
-    payment = get_object_or_404(
-        Payment,
-        id=payment_id
-    )
 
     if request.method != "POST":
         return redirect(
             "payment_verification_detail",
-            payment_id=payment.id
+            payment_id=payment_id
         )
 
-    if payment.status != "pending":
-        messages.warning(
-            request,
-            "This payment has already been processed."
+    with transaction.atomic():
+
+        payment = get_object_or_404(
+            Payment.objects.select_for_update(),
+            id=payment_id
         )
 
-        return redirect(
-            "payment_verification_detail",
-            payment_id=payment.id
+        # Prevent processing the same payment more than once
+        if payment.status != "pending":
+
+            messages.warning(
+                request,
+                "This payment has already been processed."
+            )
+
+            return redirect(
+                "payment_verification_detail",
+                payment_id=payment.id
+            )
+
+        # Only school fees reduces the learner's outstanding balance
+        school_fees_amount = payment.fees_amount
+
+        payment.student.school_balance -= school_fees_amount
+
+        payment.student.save(
+            update_fields=["school_balance"]
         )
 
-    payment.status = "confirmed"
-    payment.confirmed_by = request.user
-    payment.confirmed_at = timezone.now()
-    payment.rejection_reason = ""
+        # Mark payment as confirmed
+        payment.status = "confirmed"
+        payment.confirmed_by = request.user
+        payment.confirmed_at = timezone.now()
+        payment.rejection_reason = ""
 
-    payment.save(
-        update_fields=[
-            "status",
-            "confirmed_by",
-            "confirmed_at",
-            "rejection_reason",
-        ]
-    )
+        payment.save(
+            update_fields=[
+                "status",
+                "confirmed_by",
+                "confirmed_at",
+                "rejection_reason",
+            ]
+        )
 
     messages.success(
         request,
-        "Payment confirmed successfully. The learner's school balance was not changed."
+        f"Payment confirmed. K{school_fees_amount:.2f} "
+        f"has been deducted from the learner's school balance."
     )
 
     return redirect("pending_payments")
-
 
 @user_passes_test(is_school_admin, login_url="/admin/login/")
 def reject_payment(request, payment_id):

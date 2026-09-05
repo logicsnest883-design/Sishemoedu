@@ -10,12 +10,16 @@
 
         <!-- Back -->
         <div class="mb-6">
+
             <a href="{% url 'parents:parent_dashboard' %}"
                class="inline-flex items-center gap-2
                       text-sm font-medium text-gray-600
                       hover:text-gray-900 transition">
+
                 ← Back to Dashboard
+
             </a>
+
         </div>
 
 
@@ -25,7 +29,9 @@
             <div class="w-14 h-14 mx-auto rounded-2xl
                         bg-emerald-100 text-emerald-600
                         flex items-center justify-center text-2xl">
+
                 🧾
+
             </div>
 
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-4">
@@ -33,7 +39,7 @@
             </h1>
 
             <p class="text-gray-500 mt-2">
-                Make your payment using the details below.
+                Review your payment details and complete your payment.
             </p>
 
         </div>
@@ -72,7 +78,9 @@
                                      px-3 py-1 rounded-full
                                      bg-white/20 text-white
                                      text-sm font-semibold mt-1">
+
                             Awaiting Payment
+
                         </span>
 
                     </div>
@@ -90,12 +98,15 @@
 
                     <h3 class="text-sm font-bold uppercase
                                tracking-wide text-gray-400 mb-4">
+
                         Learner Information
+
                     </h3>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
                         <div>
+
                             <p class="text-sm text-gray-500">
                                 Learner
                             </p>
@@ -104,9 +115,12 @@
                                 {{ student.first_name }}
                                 {{ student.last_name }}
                             </p>
+
                         </div>
 
+
                         <div>
+
                             <p class="text-sm text-gray-500">
                                 Class
                             </p>
@@ -114,6 +128,7 @@
                             <p class="font-semibold text-gray-900 mt-1">
                                 {{ student.grade.name }}
                             </p>
+
                         </div>
 
                     </div>
@@ -121,27 +136,141 @@
                 </div>
 
 
-                <!-- Amount -->
-                <div class="rounded-2xl bg-gray-50
-                            border border-gray-200 p-6 mb-8">
+                <!-- Payment Breakdown -->
+                <div class="mb-8">
 
-                    <div class="flex items-center justify-between">
+                    <h3 class="text-sm font-bold uppercase
+                               tracking-wide text-gray-400 mb-4">
 
-                        <div>
-                            <p class="text-sm text-gray-500">
-                                Amount to Pay
-                            </p>
+                        Payment Breakdown
 
-                            <p class="text-3xl font-bold text-gray-900 mt-1">
-                                K{{ payment.amount|floatformat:2 }}
-                            </p>
+                    </h3>
+
+
+                    <div class="rounded-2xl border border-gray-200
+                                overflow-hidden">
+
+                        <!-- Fees -->
+                        {% if payment.fees_amount > 0 %}
+
+                        <div class="flex items-center justify-between
+                                    px-5 py-4 border-b border-gray-100">
+
+                            <span class="text-gray-600">
+                                School Fees
+                            </span>
+
+                            <span class="font-semibold text-gray-900">
+                                K{{ payment.fees_amount|floatformat:2 }}
+                            </span>
+
                         </div>
 
-                        <div class="w-12 h-12 rounded-xl
-                                    bg-emerald-100
-                                    flex items-center justify-center
-                                    text-emerald-600 text-xl font-bold">
-                            K
+                        {% endif %}
+
+
+                        <!-- Transport -->
+                        {% if payment.transport_amount > 0 %}
+
+                        <div class="flex items-center justify-between
+                                    px-5 py-4 border-b border-gray-100">
+
+                            <span class="text-gray-600">
+                                Transport
+                            </span>
+
+                            <span class="font-semibold text-gray-900">
+                                K{{ payment.transport_amount|floatformat:2 }}
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- Lunch -->
+                        {% if payment.lunch_amount > 0 %}
+
+                        <div class="flex items-center justify-between
+                                    px-5 py-4 border-b border-gray-100">
+
+                            <span class="text-gray-600">
+                                Lunch
+                            </span>
+
+                            <span class="font-semibold text-gray-900">
+                                K{{ payment.lunch_amount|floatformat:2 }}
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- Uniform -->
+                        {% if payment.uniform_amount > 0 %}
+
+                        <div class="flex items-center justify-between
+                                    px-5 py-4 border-b border-gray-100">
+
+                            <span class="text-gray-600">
+                                Uniform
+                            </span>
+
+                            <span class="font-semibold text-gray-900">
+                                K{{ payment.uniform_amount|floatformat:2 }}
+                            </span>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- Other -->
+                        {% if payment.other_amount > 0 %}
+
+                        <div class="px-5 py-4 border-b border-gray-100">
+
+                            <div class="flex items-center justify-between">
+
+                                <span class="text-gray-600">
+                                    Other
+                                </span>
+
+                                <span class="font-semibold text-gray-900">
+                                    K{{ payment.other_amount|floatformat:2 }}
+                                </span>
+
+                            </div>
+
+
+                            {% if payment.other_description %}
+
+                            <p class="text-xs text-gray-500 mt-1">
+
+                                {{ payment.other_description }}
+
+                            </p>
+
+                            {% endif %}
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- Total -->
+                        <div class="flex items-center justify-between
+                                    px-5 py-5 bg-gray-50">
+
+                            <span class="text-lg font-bold text-gray-900">
+                                Total Amount
+                            </span>
+
+                            <span class="text-2xl font-bold text-emerald-600">
+                                K{{ payment.amount|floatformat:2 }}
+                            </span>
+
                         </div>
 
                     </div>
@@ -154,146 +283,167 @@
 
                     <h3 class="text-sm font-bold uppercase
                                tracking-wide text-gray-400 mb-4">
+
                         Payment Method
+
                     </h3>
 
 
                     {% if payment.method == "airtel" %}
 
-                        <!-- Airtel -->
-                        <div class="rounded-2xl
-                                    border-2 border-red-200
-                                    bg-red-50 p-6">
+                    <!-- Airtel -->
+                    <div class="rounded-2xl
+                                border-2 border-red-200
+                                bg-red-50 p-6">
 
-                            <div class="flex items-center gap-4 mb-5">
+                        <div class="flex items-center gap-4 mb-5">
 
-                                <div class="w-12 h-12 rounded-xl
-                                            bg-red-100 text-red-600
-                                            flex items-center justify-center
-                                            font-bold text-lg">
-                                    A
-                                </div>
+                            <div class="w-12 h-12 rounded-xl
+                                        bg-red-100 text-red-600
+                                        flex items-center justify-center
+                                        font-bold text-lg">
 
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-900">
-                                        Airtel Money
-                                    </h3>
-
-                                    <p class="text-sm text-gray-500">
-                                        Use the following details to make payment.
-                                    </p>
-                                </div>
+                                A
 
                             </div>
 
+                            <div>
 
-                            <div class="bg-white rounded-xl
-                                        border border-red-100 p-5">
+                                <h3 class="text-lg font-bold text-gray-900">
+                                    Airtel Money
+                                </h3>
 
                                 <p class="text-sm text-gray-500">
-                                    Airtel Money Agent Number
-                                </p>
-
-                                <p class="text-xl font-bold text-gray-900 mt-1">
-                                    20174291
-                                </p>
-
-                                <p class="text-sm text-gray-500 mt-4">
-                                    Account / Name
-                                </p>
-
-                                <p class="font-semibold text-gray-900 mt-1">
-                                    Towela Phiri
+                                    Use the following details to make payment.
                                 </p>
 
                             </div>
 
                         </div>
+
+
+                        <div class="bg-white rounded-xl
+                                    border border-red-100 p-5">
+
+                            <p class="text-sm text-gray-500">
+                                Airtel Money Agent Number
+                            </p>
+
+                            <p class="text-xl font-bold text-gray-900 mt-1">
+                                20174291
+                            </p>
+
+                            <p class="text-sm text-gray-500 mt-4">
+                                Account / Name
+                            </p>
+
+                            <p class="font-semibold text-gray-900 mt-1">
+                                Towela Phiri
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
                     {% elif payment.method == "bank" %}
 
-                        <!-- Bank -->
-                        <div class="rounded-2xl
-                                    border-2 border-blue-200
-                                    bg-blue-50 p-6">
+                    <!-- Bank -->
+                    <div class="rounded-2xl
+                                border-2 border-blue-200
+                                bg-blue-50 p-6">
 
-                            <div class="flex items-center gap-4 mb-5">
+                        <div class="flex items-center gap-4 mb-5">
 
-                                <div class="w-12 h-12 rounded-xl
-                                            bg-blue-100 text-blue-600
-                                            flex items-center justify-center
-                                            text-xl">
-                                    🏦
-                                </div>
+                            <div class="w-12 h-12 rounded-xl
+                                        bg-blue-100 text-blue-600
+                                        flex items-center justify-center
+                                        text-xl">
 
-                                <div>
-                                    <h3 class="text-lg font-bold text-gray-900">
-                                        Bank Transfer
-                                    </h3>
-
-                                    <p class="text-sm text-gray-500">
-                                        Use the following details to make payment.
-                                    </p>
-                                </div>
+                                🏦
 
                             </div>
 
+                            <div>
 
-                            <div class="bg-white rounded-xl
-                                        border border-blue-100 p-5
-                                        space-y-4">
+                                <h3 class="text-lg font-bold text-gray-900">
+                                    Bank Transfer
+                                </h3>
 
-                                <div>
-                                    <p class="text-sm text-gray-500">
-                                        Bank
-                                    </p>
-
-                                    <p class="font-semibold text-gray-900 mt-1">
-                                        Stanbic Bank
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">
-                                        Account Name
-                                    </p>
-
-                                    <p class="font-semibold text-gray-900 mt-1">
-                                        NORTHGATE ACADEMY
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">
-                                        Account Number
-                                    </p>
-
-                                    <p class="font-semibold text-gray-900 mt-1">
-                                        9130002333337
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p class="text-sm text-gray-500">
-                                        Branch
-                                    </p>
-
-                                    <p class="font-semibold text-gray-900 mt-1">
-                                        LUSAKA MAIN
-                                    </p>
-                                </div>
+                                <p class="text-sm text-gray-500">
+                                    Use the following details to make payment.
+                                </p>
 
                             </div>
 
                         </div>
+
+
+                        <div class="bg-white rounded-xl
+                                    border border-blue-100 p-5
+                                    space-y-4">
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+                                    Bank
+                                </p>
+
+                                <p class="font-semibold text-gray-900 mt-1">
+                                    Stanbic Bank
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+                                    Account Name
+                                </p>
+
+                                <p class="font-semibold text-gray-900 mt-1">
+                                    NORTHGATE ACADEMY
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+                                    Account Number
+                                </p>
+
+                                <p class="font-semibold text-gray-900 mt-1">
+                                    9130002333337
+                                </p>
+
+                            </div>
+
+
+                            <div>
+
+                                <p class="text-sm text-gray-500">
+                                    Branch
+                                </p>
+
+                                <p class="font-semibold text-gray-900 mt-1">
+                                    LUSAKA MAIN
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                     {% endif %}
 
                 </div>
 
 
-                <!-- Proof of Payment -->
+                <!-- Proof -->
                 <div class="rounded-2xl
                             bg-gray-50 border border-gray-200
                             p-6">
@@ -304,10 +454,11 @@
 
                     <p class="text-sm text-gray-500 mt-1">
                         After making the payment, provide your transaction
-                        details and upload the proof of payment.
+                        details and upload your proof of payment.
                     </p>
 
 
+                    <!-- Warning -->
                     <div class="mt-5 rounded-xl
                                 bg-amber-50 border border-amber-200
                                 p-4">
@@ -319,10 +470,12 @@
                             </div>
 
                             <p class="text-sm text-amber-700 leading-relaxed">
+
                                 Make sure your proof clearly shows the
                                 payment amount and transaction details.
                                 The school administrator will verify your
                                 payment before it is confirmed.
+
                             </p>
 
                         </div>
@@ -330,6 +483,7 @@
                     </div>
 
 
+                    <!-- Form -->
                     <form method="POST"
                           enctype="multipart/form-data"
                           class="mt-6">
@@ -433,8 +587,10 @@
 
 
         <p class="text-center text-xs text-gray-400 mt-5">
+
             Invoice {{ payment.invoice_number }} ·
             Your payment will remain pending until verified by the school.
+
         </p>
 
     </div>

@@ -6,230 +6,535 @@
 
 <div class="min-h-screen bg-gray-50">
 
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+```
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
 
-        <!-- Back -->
-        <div class="mb-6">
+    <!-- Back -->
+    <div class="mb-6">
 
-            <a href="{% url 'pending_payments' %}"
-               class="inline-flex items-center gap-2
-                      text-sm font-medium text-gray-600
-                      hover:text-gray-900 transition">
+        <a href="{% url 'pending_payments' %}"
+           class="inline-flex items-center gap-2
+                  text-sm font-medium text-gray-600
+                  hover:text-gray-900 transition">
 
-                ← Back to Pending Payments
+            ← Back to Pending Payments
 
-            </a>
+        </a>
+
+    </div>
+
+
+    <!-- Header -->
+    <div class="mb-8">
+
+        <div class="flex flex-col sm:flex-row
+                    sm:items-start sm:justify-between
+                    gap-4">
+
+            <div>
+
+                <h1 class="text-2xl sm:text-3xl
+                           font-bold text-gray-900">
+
+                    Verify Payment
+
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+
+                    Review the payment information and proof
+                    submitted by the parent.
+
+                </p>
+
+            </div>
+
+
+            <!-- Status -->
+            <div>
+
+                {% if payment.status == "pending" %}
+
+                    <div class="inline-flex items-center gap-2
+                                px-4 py-2 rounded-full
+                                bg-amber-100 text-amber-700
+                                font-semibold text-sm">
+
+                        <span class="w-2 h-2 rounded-full
+                                     bg-amber-500"></span>
+
+                        Pending Verification
+
+                    </div>
+
+                {% elif payment.status == "confirmed" %}
+
+                    <div class="inline-flex items-center gap-2
+                                px-4 py-2 rounded-full
+                                bg-emerald-100 text-emerald-700
+                                font-semibold text-sm">
+
+                        ✓ Confirmed
+
+                    </div>
+
+                {% elif payment.status == "rejected" %}
+
+                    <div class="inline-flex items-center gap-2
+                                px-4 py-2 rounded-full
+                                bg-red-100 text-red-700
+                                font-semibold text-sm">
+
+                        ✕ Rejected
+
+                    </div>
+
+                {% endif %}
+
+            </div>
 
         </div>
 
-
-        <!-- Header -->
-        <div class="mb-8">
-
-            <h1 class="text-2xl sm:text-3xl
-                       font-bold text-gray-900">
-
-                Verify Payment
-
-            </h1>
-
-            <p class="text-gray-500 mt-2">
-
-                Review the payment information and proof submitted
-                by the parent.
-
-            </p>
-
-        </div>
+    </div>
 
 
-        <!-- Status -->
-        <div class="mb-6">
+    <!-- Payment Information -->
+    <div class="bg-white rounded-2xl
+                border border-gray-200
+                shadow-sm overflow-hidden">
 
-            {% if payment.status == "pending" %}
+        <div class="p-6 sm:p-8">
 
-                <div class="inline-flex items-center gap-2
-                            px-4 py-2 rounded-full
-                            bg-amber-100 text-amber-700
-                            font-semibold text-sm">
+            <h2 class="text-xl font-bold text-gray-900 mb-6">
 
-                    <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                Payment Information
 
-                    Pending Verification
+            </h2>
+
+
+            <!-- Basic Information -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+                <div>
+
+                    <p class="text-sm text-gray-500">
+                        Invoice Number
+                    </p>
+
+                    <p class="font-bold text-gray-900 mt-1 break-all">
+
+                        {{ payment.invoice_number }}
+
+                    </p>
 
                 </div>
 
-            {% elif payment.status == "confirmed" %}
 
-                <div class="inline-flex items-center gap-2
-                            px-4 py-2 rounded-full
-                            bg-emerald-100 text-emerald-700
-                            font-semibold text-sm">
+                <div>
 
-                    ✓ Confirmed
+                    <p class="text-sm text-gray-500">
+                        Payment Method
+                    </p>
 
-                </div>
+                    <p class="font-semibold text-gray-900 mt-1">
 
-            {% elif payment.status == "rejected" %}
+                        {{ payment.get_method_display }}
 
-                <div class="inline-flex items-center gap-2
-                            px-4 py-2 rounded-full
-                            bg-red-100 text-red-700
-                            font-semibold text-sm">
-
-                    ✕ Rejected
+                    </p>
 
                 </div>
 
-            {% endif %}
 
-        </div>
+                <div>
 
+                    <p class="text-sm text-gray-500">
+                        Learner
+                    </p>
 
-        <!-- Payment Information -->
-        <div class="bg-white rounded-2xl
-                    border border-gray-200
-                    shadow-sm overflow-hidden">
+                    <p class="font-semibold text-gray-900 mt-1">
 
-            <div class="p-6 sm:p-8">
+                        {{ payment.student.first_name }}
+                        {{ payment.student.last_name }}
 
-                <h2 class="text-xl font-bold text-gray-900 mb-6">
+                    </p>
 
-                    Payment Information
-
-                </h2>
+                </div>
 
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Invoice Number
-                        </p>
+                    <p class="text-sm text-gray-500">
+                        Class
+                    </p>
 
-                        <p class="font-bold text-gray-900 mt-1">
-                            {{ payment.invoice_number }}
-                        </p>
-                    </div>
+                    <p class="font-semibold text-gray-900 mt-1">
 
+                        {{ payment.student.grade.name }}
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Amount
-                        </p>
+                    </p>
 
-                        <p class="font-bold text-emerald-600
-                                  text-xl mt-1">
-
-                            K{{ payment.amount|floatformat:2 }}
-
-                        </p>
-                    </div>
+                </div>
 
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Payment Method
-                        </p>
+                <div>
 
-                        <p class="font-semibold text-gray-900 mt-1">
-                            {{ payment.get_method_display }}
-                        </p>
-                    </div>
+                    <p class="text-sm text-gray-500">
+                        Parent
+                    </p>
 
+                    <p class="font-semibold text-gray-900 mt-1">
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Submitted On
-                        </p>
+                        {{ payment.parent.profile.user.get_full_name|default:payment.parent.profile.user.username }}
 
-                        <p class="font-semibold text-gray-900 mt-1">
-                            {{ payment.created_at|date:"d M Y, H:i" }}
-                        </p>
-                    </div>
+                    </p>
+
+                </div>
 
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Learner
-                        </p>
+                <div>
 
-                        <p class="font-semibold text-gray-900 mt-1">
+                    <p class="text-sm text-gray-500">
+                        Submitted On
+                    </p>
 
-                            {{ payment.student.first_name }}
-                            {{ payment.student.last_name }}
+                    <p class="font-semibold text-gray-900 mt-1">
 
-                        </p>
-                    </div>
+                        {{ payment.created_at|date:"d M Y, H:i" }}
+
+                    </p>
+
+                </div>
 
 
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Class
-                        </p>
+                <div class="sm:col-span-2">
 
-                        <p class="font-semibold text-gray-900 mt-1">
+                    <p class="text-sm text-gray-500">
+                        Transaction Reference
+                    </p>
 
-                            {{ payment.student.grade.name }}
+                    {% if payment.transaction_reference %}
+
+                        <div class="mt-2 bg-gray-50
+                                    border border-gray-200
+                                    rounded-xl px-4 py-3">
+
+                            <p class="font-semibold text-gray-900
+                                      break-all">
+
+                                {{ payment.transaction_reference }}
+
+                            </p>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="font-semibold text-red-600 mt-1">
+
+                            Not provided
 
                         </p>
-                    </div>
 
-
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Parent
-                        </p>
-
-                        <p class="font-semibold text-gray-900 mt-1">
-
-                            {{ payment.parent.profile.user.get_full_name }}
-
-                        </p>
-                    </div>
-
-
-                    <div>
-                        <p class="text-sm text-gray-500">
-                            Transaction Reference
-                        </p>
-
-                        <p class="font-semibold text-gray-900 mt-1 break-all">
-
-                            {{ payment.transaction_reference|default:"Not provided" }}
-
-                        </p>
-                    </div>
+                    {% endif %}
 
                 </div>
 
             </div>
 
+        </div>
 
-            <!-- Proof -->
-            <div class="border-t border-gray-100
-                        p-6 sm:p-8">
 
-                <h2 class="text-xl font-bold text-gray-900">
+<!-- Payment Breakdown -->
 
-                    Proof of Payment
+<div class="border-t border-gray-100
+            p-6 sm:p-8">
 
-                </h2>
+```
+<div class="flex flex-col sm:flex-row
+            sm:items-center sm:justify-between
+            gap-4 mb-6">
 
-                {% if payment.proof_of_payment %}
+    <div>
 
-                    <p class="text-sm text-gray-500 mt-2">
+        <h2 class="text-xl font-bold text-gray-900">
 
-                        Review the uploaded document before
-                        confirming the payment.
+            Payment Breakdown
+
+        </h2>
+
+        <p class="text-sm text-gray-500 mt-1">
+
+            Complete breakdown of the amounts submitted by the parent.
+
+        </p>
+
+    </div>
+
+    <div class="sm:text-right">
+
+        <p class="text-xs text-gray-500 uppercase
+                  tracking-wide">
+
+            Total Payment
+
+        </p>
+
+        <p class="text-2xl font-bold text-emerald-600 mt-1">
+
+            K{{ payment.amount|floatformat:2 }}
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="space-y-3">
+
+    <!-- School Fees -->
+    <div class="flex items-center justify-between
+                gap-4 p-4 rounded-xl
+                bg-gray-50 border border-gray-100">
+
+        <div>
+
+            <p class="font-medium text-gray-700">
+
+                School Fees
+
+            </p>
+
+            <p class="text-xs text-gray-400 mt-1">
+
+                Amount allocated to school fees
+
+            </p>
+
+        </div>
+
+        <p class="font-semibold text-gray-900 whitespace-nowrap">
+
+            K{{ payment.fees_amount|floatformat:2 }}
+
+        </p>
+
+    </div>
+
+
+    <!-- Transport -->
+    <div class="flex items-center justify-between
+                gap-4 p-4 rounded-xl
+                bg-gray-50 border border-gray-100">
+
+        <div>
+
+            <p class="font-medium text-gray-700">
+
+                Transport
+
+            </p>
+
+            <p class="text-xs text-gray-400 mt-1">
+
+                Amount allocated to transport
+
+            </p>
+
+        </div>
+
+        <p class="font-semibold text-gray-900 whitespace-nowrap">
+
+            K{{ payment.transport_amount|floatformat:2 }}
+
+        </p>
+
+    </div>
+
+
+    <!-- Lunch -->
+    <div class="flex items-center justify-between
+                gap-4 p-4 rounded-xl
+                bg-gray-50 border border-gray-100">
+
+        <div>
+
+            <p class="font-medium text-gray-700">
+
+                Lunch
+
+            </p>
+
+            <p class="text-xs text-gray-400 mt-1">
+
+                Amount allocated to lunch
+
+            </p>
+
+        </div>
+
+        <p class="font-semibold text-gray-900 whitespace-nowrap">
+
+            K{{ payment.lunch_amount|floatformat:2 }}
+
+        </p>
+
+    </div>
+
+
+    <!-- Uniform -->
+    <div class="flex items-center justify-between
+                gap-4 p-4 rounded-xl
+                bg-gray-50 border border-gray-100">
+
+        <div>
+
+            <p class="font-medium text-gray-700">
+
+                Uniform
+
+            </p>
+
+            <p class="text-xs text-gray-400 mt-1">
+
+                Amount allocated to uniform
+
+            </p>
+
+        </div>
+
+        <p class="font-semibold text-gray-900 whitespace-nowrap">
+
+            K{{ payment.uniform_amount|floatformat:2 }}
+
+        </p>
+
+    </div>
+
+
+    <!-- Other -->
+    <div class="p-4 rounded-xl
+                bg-gray-50 border border-gray-100">
+
+        <div class="flex items-center
+                    justify-between gap-4">
+
+            <div>
+
+                <p class="font-medium text-gray-700">
+
+                    Other
+
+                </p>
+
+                {% if payment.other_description %}
+
+                    <p class="text-xs text-gray-500 mt-1">
+
+                        {{ payment.other_description }}
 
                     </p>
 
-                    <div class="mt-5">
+                {% else %}
+
+                    <p class="text-xs text-gray-400 mt-1">
+
+                        No additional description
+
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            <p class="font-semibold text-gray-900 whitespace-nowrap">
+
+                K{{ payment.other_amount|floatformat:2 }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Total -->
+    <div class="flex items-center justify-between
+                gap-4 p-4 mt-5
+                rounded-xl
+                bg-emerald-50
+                border border-emerald-200">
+
+        <span class="font-bold text-emerald-800">
+
+            Total Payment
+
+        </span>
+
+        <span class="font-bold text-emerald-700 text-lg">
+
+            K{{ payment.amount|floatformat:2 }}
+
+        </span>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+
+        <!-- Proof -->
+        <div class="border-t border-gray-100
+                    p-6 sm:p-8">
+
+            <h2 class="text-xl font-bold text-gray-900">
+
+                Proof of Payment
+
+            </h2>
+
+            {% if payment.proof_of_payment %}
+
+                <p class="text-sm text-gray-500 mt-2">
+
+                    Review the uploaded proof carefully before
+                    confirming the payment.
+
+                </p>
+
+                <div class="mt-5 p-4 rounded-xl
+                            bg-gray-50
+                            border border-gray-200">
+
+                    <div class="flex flex-col sm:flex-row
+                                sm:items-center
+                                sm:justify-between
+                                gap-4">
+
+                        <div>
+
+                            <p class="font-semibold text-gray-900">
+
+                                Payment proof uploaded
+
+                            </p>
+
+                            <p class="text-sm text-gray-500 mt-1">
+
+                                Open the document to verify the
+                                transaction details.
+
+                            </p>
+
+                        </div>
 
                         <a href="{{ payment.proof_of_payment.url }}"
                            target="_blank"
-                           class="inline-flex items-center gap-2
+                           rel="noopener noreferrer"
+                           class="inline-flex items-center
+                                  justify-center gap-2
                                   px-5 py-3
                                   rounded-xl
                                   bg-gray-900
@@ -238,220 +543,257 @@
                                   hover:bg-gray-800
                                   transition">
 
-                            📄 View Proof of Payment
+                            📄 View Proof
 
                         </a>
 
                     </div>
 
-                {% else %}
+                </div>
 
-                    <div class="mt-4 rounded-xl
-                                bg-red-50 border border-red-200
-                                p-4">
+            {% else %}
 
-                        <p class="text-sm font-medium text-red-700">
+                <div class="mt-4 rounded-xl
+                            bg-red-50 border border-red-200
+                            p-4">
 
-                            No proof of payment has been uploaded.
+                    <p class="text-sm font-medium text-red-700">
 
-                        </p>
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-
-            {% if payment.status == "pending" %}
-
-                <!-- Actions -->
-                <div class="border-t border-gray-100
-                            p-6 sm:p-8">
-
-                    <h2 class="text-xl font-bold text-gray-900">
-
-                        Verification
-
-                    </h2>
-
-                    <p class="text-sm text-gray-500 mt-2">
-
-                        Confirm only after verifying that the payment
-                        was actually received.
+                        No proof of payment has been uploaded.
 
                     </p>
 
+                </div>
 
-                    <div class="mt-6
-                                flex flex-col sm:flex-row
-                                gap-3">
+            {% endif %}
 
-                        <!-- Confirm -->
-                        <form method="POST"
-                              action="{% url 'confirm_payment' payment.id %}"
-                              class="flex-1">
-
-                            {% csrf_token %}
-
-                            <button type="submit"
-                                    onclick="return confirm('Are you sure you want to confirm this payment?');"
-                                    class="w-full inline-flex
-                                           items-center justify-center
-                                           gap-2 px-5 py-3
-                                           rounded-xl
-                                           bg-emerald-600
-                                           text-white
-                                           font-semibold
-                                           hover:bg-emerald-700
-                                           transition">
-
-                                ✓ Confirm Payment
-
-                            </button>
-
-                        </form>
+        </div>
 
 
-                        <!-- Reject -->
-                        <button type="button"
-                                onclick="document.getElementById('rejectForm').classList.toggle('hidden')"
-                                class="flex-1 inline-flex
-                                       items-center justify-center
-                                       gap-2 px-5 py-3
-                                       rounded-xl
-                                       bg-red-100
-                                       text-red-700
-                                       font-semibold
-                                       hover:bg-red-200
-                                       transition">
+        {% if payment.status == "pending" %}
 
-                            ✕ Reject Payment
+            <!-- Verification Actions -->
+            <div class="border-t border-gray-100
+                        p-6 sm:p-8">
 
-                        </button>
+                <div class="rounded-xl
+                            bg-amber-50
+                            border border-amber-200
+                            p-4 mb-6">
 
-                    </div>
+                    <p class="text-sm font-semibold text-amber-800">
+
+                        Before confirming
+
+                    </p>
+
+                    <p class="text-sm text-amber-700 mt-1">
+
+                        Confirm only after checking the transaction
+                        reference and proof of payment and verifying
+                        that the money was actually received.
+
+                    </p>
+
+                    <p class="text-sm text-amber-700 mt-2">
+
+                        Confirming this payment will <strong>not</strong>
+                        automatically change the learner's school balance.
+
+                    </p>
+
+                </div>
 
 
-                    <!-- Reject Form -->
+                <h2 class="text-xl font-bold text-gray-900">
+
+                    Verification
+
+                </h2>
+
+
+                <div class="mt-6 flex flex-col sm:flex-row gap-3">
+
+                    <!-- Confirm -->
                     <form method="POST"
-                          action="{% url 'reject_payment' payment.id %}"
-                          id="rejectForm"
-                          class="hidden mt-6
-                                 bg-red-50
-                                 border border-red-200
-                                 rounded-2xl p-5">
+                          action="{% url 'confirm_payment' payment.id %}"
+                          class="flex-1">
 
                         {% csrf_token %}
 
-                        <label for="rejection_reason"
-                               class="block text-sm
-                                      font-semibold text-red-800 mb-2">
-
-                            Reason for Rejection
-
-                        </label>
-
-                        <textarea
-                            name="rejection_reason"
-                            id="rejection_reason"
-                            rows="4"
-                            required
-                            placeholder="Explain why this payment is being rejected..."
-                            class="w-full rounded-xl
-                                   border border-red-300
-                                   px-4 py-3
-                                   text-gray-900
-                                   focus:ring-2
-                                   focus:ring-red-500
-                                   focus:border-red-500
-                                   outline-none"
-                        ></textarea>
-
                         <button type="submit"
-                                class="mt-4 inline-flex
+                                onclick="return confirm('Are you sure you want to confirm this payment?');"
+                                class="w-full inline-flex
                                        items-center justify-center
-                                       px-5 py-3
+                                       gap-2 px-5 py-3
                                        rounded-xl
-                                       bg-red-600
+                                       bg-emerald-600
                                        text-white
                                        font-semibold
-                                       hover:bg-red-700
+                                       hover:bg-emerald-700
                                        transition">
 
-                            Confirm Rejection
+                            ✓ Confirm Payment
 
                         </button>
 
                     </form>
 
-                </div>
 
-            {% endif %}
+                    <!-- Reject -->
+                    <button type="button"
+                            onclick="document.getElementById('rejectForm').classList.toggle('hidden')"
+                            class="flex-1 inline-flex
+                                   items-center justify-center
+                                   gap-2 px-5 py-3
+                                   rounded-xl
+                                   bg-red-100
+                                   text-red-700
+                                   font-semibold
+                                   hover:bg-red-200
+                                   transition">
 
+                        ✕ Reject Payment
 
-            {% if payment.status == "confirmed" %}
-
-                <div class="border-t border-gray-100
-                            p-6 sm:p-8
-                            bg-emerald-50">
-
-                    <h3 class="font-bold text-emerald-800">
-
-                        Payment Confirmed
-
-                    </h3>
-
-                    <p class="text-sm text-emerald-700 mt-2">
-
-                        Confirmed by
-                        {{ payment.confirmed_by.get_full_name|default:payment.confirmed_by.username }}
-                        on
-                        {{ payment.confirmed_at|date:"d M Y, H:i" }}.
-
-                    </p>
-
-                    <p class="text-sm text-emerald-700 mt-3">
-
-                        The learner's school balance was not automatically
-                        changed. Update the balance manually using the
-                        existing balance management feature.
-
-                    </p>
+                    </button>
 
                 </div>
 
-            {% endif %}
+
+                <!-- Reject Form -->
+                <form method="POST"
+                      action="{% url 'reject_payment' payment.id %}"
+                      id="rejectForm"
+                      class="hidden mt-6
+                             bg-red-50
+                             border border-red-200
+                             rounded-2xl p-5">
+
+                    {% csrf_token %}
+
+                    <label for="rejection_reason"
+                           class="block text-sm
+                                  font-semibold text-red-800 mb-2">
+
+                        Reason for Rejection
+
+                    </label>
+
+                    <textarea
+                        name="rejection_reason"
+                        id="rejection_reason"
+                        rows="4"
+                        required
+                        placeholder="Explain why this payment is being rejected..."
+                        class="w-full rounded-xl
+                               border border-red-300
+                               px-4 py-3
+                               text-gray-900
+                               focus:ring-2
+                               focus:ring-red-500
+                               focus:border-red-500
+                               outline-none"
+                    ></textarea>
+
+                    <button type="submit"
+                            class="mt-4 inline-flex
+                                   items-center justify-center
+                                   px-5 py-3
+                                   rounded-xl
+                                   bg-red-600
+                                   text-white
+                                   font-semibold
+                                   hover:bg-red-700
+                                   transition">
+
+                        Confirm Rejection
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endif %}
 
 
-            {% if payment.status == "rejected" %}
+        <!-- Confirmed -->
+        {% if payment.status == "confirmed" %}
 
-                <div class="border-t border-gray-100
-                            p-6 sm:p-8
-                            bg-red-50">
+            <div class="border-t border-gray-100
+                        p-6 sm:p-8
+                        bg-emerald-50">
 
-                    <h3 class="font-bold text-red-800">
+                <h3 class="font-bold text-emerald-800">
 
-                        Payment Rejected
+                    Payment Confirmed
 
-                    </h3>
+                </h3>
 
-                    <p class="text-sm text-red-700 mt-2">
+                <p class="text-sm text-emerald-700 mt-2">
 
-                        Rejected by
-                        {{ payment.confirmed_by.get_full_name|default:payment.confirmed_by.username }}
-                        on
-                        {{ payment.confirmed_at|date:"d M Y, H:i" }}.
+                    Confirmed by
+                    {{ payment.confirmed_by.get_full_name|default:payment.confirmed_by.username }}
+                    on
+                    {{ payment.confirmed_at|date:"d M Y, H:i" }}.
+
+                </p>
+
+                <div class="mt-4 p-4 rounded-xl
+                            bg-white/70
+                            border border-emerald-100">
+
+                    <p class="text-sm text-emerald-700">
+
+                        The learner's school balance was
+                        <strong>not automatically changed</strong>.
+                        Update the balance manually using the existing
+                        balance management feature.
 
                     </p>
 
-                    <div class="mt-4">
+                </div>
 
-                        <p class="text-sm font-semibold text-red-800">
-                            Reason:
-                        </p>
+            </div>
 
-                        <p class="text-sm text-red-700 mt-1">
+        {% endif %}
+
+
+        <!-- Rejected -->
+        {% if payment.status == "rejected" %}
+
+            <div class="border-t border-gray-100
+                        p-6 sm:p-8
+                        bg-red-50">
+
+                <h3 class="font-bold text-red-800">
+
+                    Payment Rejected
+
+                </h3>
+
+                <p class="text-sm text-red-700 mt-2">
+
+                    Rejected by
+                    {{ payment.confirmed_by.get_full_name|default:payment.confirmed_by.username }}
+                    on
+                    {{ payment.confirmed_at|date:"d M Y, H:i" }}.
+
+                </p>
+
+                <div class="mt-4">
+
+                    <p class="text-sm font-semibold text-red-800">
+
+                        Reason:
+
+                    </p>
+
+                    <div class="mt-2 p-4 rounded-xl
+                                bg-white/70
+                                border border-red-100">
+
+                        <p class="text-sm text-red-700">
 
                             {{ payment.rejection_reason }}
 
@@ -461,11 +803,14 @@
 
                 </div>
 
-            {% endif %}
+            </div>
 
-        </div>
+        {% endif %}
 
     </div>
+
+</div>
+```
 
 </div>
 

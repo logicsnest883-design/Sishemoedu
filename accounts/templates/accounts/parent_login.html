@@ -4,35 +4,101 @@
 
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
 
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+```
+<div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
 
-        <h2 class="text-3xl font-bold text-center mb-6">
-            Parent Login
-        </h2>
+    <h2 class="text-3xl font-bold text-center mb-6">
+        Parent Login
+    </h2>
 
-        {% if messages %}
-            {% for message in messages %}
-                <p class="text-red-500 text-center mb-3">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <p class="text-red-500 text-center mb-3">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 
-        <form method="POST" class="space-y-4">
-            {% csrf_token %}
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
 
-            <input type="text" name="username" placeholder="Username"
-                   class="w-full border px-4 py-2 rounded-lg">
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               class="w-full border px-4 py-2 rounded-lg">
 
-            <input type="password" name="password" placeholder="Password"
-                   class="w-full border px-4 py-2 rounded-lg">
+        <!-- Password -->
+        <div class="relative">
 
-            <button type="submit"
-                    class="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700">
-                Login
+            <input type="password"
+                   name="password"
+                   id="password"
+                   placeholder="Password"
+                   class="w-full border px-4 py-2 pr-12 rounded-lg">
+
+            <button type="button"
+                    id="togglePassword"
+                    class="absolute right-3 top-1/2 -translate-y-1/2
+                           text-gray-500 hover:text-gray-800">
+
+                <!-- Eye -->
+                <svg id="eyeIcon"
+                     xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="1.8"
+                     stroke="currentColor"
+                     class="w-5 h-5">
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M2.036 12.322a1.012 1.012 0 010-.644
+                             C3.423 7.51 7.36 5 12 5c4.64 0
+                             8.577 2.51 9.964 6.678a1.012
+                             1.012 0 010 .644C20.577 16.49
+                             16.64 19 12 19c-4.64 0-8.577-2.51
+                             -9.964-6.678z" />
+
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                </svg>
+
             </button>
-        </form>
 
-    </div>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-teal-600 text-white py-2 rounded-lg
+                       hover:bg-teal-700">
+
+            Login
+
+        </button>
+
+    </form>
 
 </div>
+```
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const password = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    togglePassword.addEventListener("click", function () {
+
+        if (password.type === "password") {
+            password.type = "text";
+        } else {
+            password.type = "password";
+        }
+
+    });
+
+});
+</script>
 
 {% endblock %}

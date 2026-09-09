@@ -14,6 +14,7 @@ class Payment(models.Model):
     METHOD_CHOICES = [
         ("airtel", "Airtel Money"),
         ("bank", "Bank Transfer"),
+        ("cash", "Cash"),
     ]
 
     STATUS_CHOICES = [

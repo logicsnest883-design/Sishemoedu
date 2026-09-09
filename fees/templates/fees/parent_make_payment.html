@@ -17,10 +17,8 @@
         </a>
     </div>
 
-
     <!-- Header -->
     <div class="mb-8">
-
         <div class="flex items-center gap-3">
 
             <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600
@@ -39,9 +37,7 @@
             </div>
 
         </div>
-
     </div>
-
 
     <!-- Messages -->
     {% if messages %}
@@ -83,7 +79,6 @@
         </div>
     {% endif %}
 
-
     <!-- Learner Card -->
     <div class="bg-white rounded-2xl border border-gray-200
                 shadow-sm overflow-hidden mb-6">
@@ -124,7 +119,6 @@
 
             </div>
 
-
             <!-- Balance -->
             <div class="mt-6 pt-5 border-t border-gray-100">
 
@@ -155,7 +149,6 @@
 
     </div>
 
-
     <!-- Payment Form -->
     <div class="bg-white rounded-2xl border border-gray-200
                 shadow-sm p-6 sm:p-8">
@@ -172,15 +165,12 @@
 
         </div>
 
-
         <form method="POST">
 
             {% csrf_token %}
 
-
             <!-- Payment Breakdown -->
             <div class="space-y-5">
-
 
                 <!-- School Fees -->
                 <div>
@@ -215,7 +205,6 @@
 
                 </div>
 
-
                 <!-- Transport -->
                 <div>
 
@@ -248,7 +237,6 @@
                     </div>
 
                 </div>
-
 
                 <!-- Lunch -->
                 <div>
@@ -283,7 +271,6 @@
 
                 </div>
 
-
                 <!-- Uniform -->
                 <div>
 
@@ -316,7 +303,6 @@
                     </div>
 
                 </div>
-
 
                 <!-- Other -->
                 <div>
@@ -351,7 +337,6 @@
 
                 </div>
 
-
                 <!-- Other Description -->
                 <div>
 
@@ -382,7 +367,6 @@
 
             </div>
 
-
             <!-- Total -->
             <div class="mt-7 rounded-2xl bg-emerald-50
                         border border-emerald-200 p-6">
@@ -409,7 +393,6 @@
 
             </div>
 
-
             <!-- Payment Method -->
             <div class="mt-7">
 
@@ -417,9 +400,7 @@
                     Payment Method
                 </label>
 
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
                     <!-- Airtel -->
                     <label class="relative cursor-pointer">
@@ -464,7 +445,6 @@
 
                     </label>
 
-
                     <!-- Bank -->
                     <label class="relative cursor-pointer">
 
@@ -508,10 +488,52 @@
 
                     </label>
 
+                    <!-- Cash -->
+                    <label class="relative cursor-pointer">
+
+                        <input
+                            type="radio"
+                            name="method"
+                            value="cash"
+                            required
+                            class="peer sr-only">
+
+                        <div class="rounded-2xl border-2 border-gray-200
+                                    p-5
+                                    peer-checked:border-emerald-500
+                                    peer-checked:bg-emerald-50
+                                    hover:border-emerald-300 transition">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-12 h-12 rounded-xl
+                                            bg-emerald-100 text-emerald-600
+                                            flex items-center justify-center
+                                            text-xl">
+                                    💵
+                                </div>
+
+                                <div>
+
+                                    <h3 class="font-bold text-gray-900">
+                                        Cash
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Pay with cash
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </label>
+
                 </div>
 
             </div>
-
 
             <!-- Information -->
             <div class="mt-7 rounded-xl bg-blue-50
@@ -544,7 +566,6 @@
 
             </div>
 
-
             <!-- Buttons -->
             <div class="mt-8 flex flex-col sm:flex-row gap-3 sm:justify-end">
 
@@ -576,7 +597,6 @@
 
     </div>
 
-
     <!-- Payment History -->
     <div class="bg-white rounded-2xl border border-gray-200
                 shadow-sm overflow-hidden mt-6">
@@ -606,7 +626,6 @@
 
         </div>
 
-
         {% if payments %}
 
             <div class="divide-y divide-gray-100">
@@ -625,7 +644,6 @@
                                     <p class="text-lg font-bold text-gray-900">
                                         K{{ payment.amount|floatformat:2 }}
                                     </p>
-
 
                                     {% if payment.status == "pending" %}
 
@@ -655,7 +673,6 @@
 
                                 </div>
 
-
                                 <p class="text-sm text-gray-500 mt-2">
 
                                     {{ payment.get_method_display }}
@@ -666,11 +683,9 @@
 
                                 </p>
 
-
                                 <p class="text-xs text-gray-400 mt-1">
                                     Invoice: {{ payment.invoice_number }}
                                 </p>
-
 
                                 {% if payment.transaction_reference %}
 
@@ -682,7 +697,6 @@
                                 {% endif %}
 
                             </div>
-
 
                             <div class="sm:text-right">
 
@@ -710,7 +724,6 @@
 
                         </div>
 
-
                         <!-- Rejection Reason -->
                         {% if payment.status == "rejected" and payment.rejection_reason %}
 
@@ -730,7 +743,6 @@
 
                         {% endif %}
 
-
                         <!-- Confirmed -->
                         {% if payment.status == "confirmed" %}
 
@@ -745,7 +757,6 @@
                             </div>
 
                         {% endif %}
-
 
                         <!-- Pending -->
                         {% if payment.status == "pending" %}
@@ -792,7 +803,6 @@
 
     </div>
 
-
     <p class="text-center text-xs text-gray-400 mt-5">
         Payments are subject to verification by the school.
     </p>
@@ -801,8 +811,6 @@
 ```
 
 </div>
-
-<!-- Calculate Total -->
 
 <script>
 
@@ -831,7 +839,6 @@
             totalDisplay.textContent = total.toFixed(2);
         }
 
-
         function updateOtherDescription() {
 
             const otherValue = parseFloat(otherInput.value) || 0;
@@ -854,7 +861,6 @@
 
         }
 
-
         amountInputs.forEach(function (input) {
 
             input.addEventListener("input", function () {
@@ -868,7 +874,6 @@
             });
 
         });
-
 
         form.addEventListener("submit", function (event) {
 
@@ -886,7 +891,6 @@
 
             });
 
-
             if (!total || total <= 0) {
 
                 event.preventDefault();
@@ -897,7 +901,6 @@
 
                 return;
             }
-
 
             const otherValue = parseFloat(otherInput.value) || 0;
 
@@ -914,7 +917,6 @@
             }
 
         });
-
 
         calculateTotal();
         updateOtherDescription();

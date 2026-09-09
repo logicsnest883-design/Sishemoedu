@@ -278,7 +278,7 @@ def parent_make_payment(request, student_id):
                 }
             )
 
-        if method not in ["airtel", "bank"]:
+        if method not in ["airtel", "bank", "cash"]:
 
             messages.error(
                 request,
@@ -346,11 +346,13 @@ def parent_payment_invoice(request, payment_id):
             "proof_of_payment"
         )
 
+        # Reference is required for ALL payment methods,
+        # including Cash.
         if not transaction_reference:
 
             messages.error(
                 request,
-                "Please enter the transaction reference."
+                "Please enter the transaction reference or receipt reference."
             )
 
             return render(
@@ -362,11 +364,12 @@ def parent_payment_invoice(request, payment_id):
                 }
             )
 
+        # Proof/receipt is required for ALL payment methods.
         if not proof_of_payment:
 
             messages.error(
                 request,
-                "Please upload your proof of payment."
+                "Please upload your proof of payment or receipt."
             )
 
             return render(
@@ -382,7 +385,13 @@ def parent_payment_invoice(request, payment_id):
         payment.proof_of_payment = proof_of_payment
         payment.status = "pending"
 
-        payment.save()
+        payment.save(
+            update_fields=[
+                "transaction_reference",
+                "proof_of_payment",
+                "status",
+            ]
+        )
 
         messages.success(
             request,

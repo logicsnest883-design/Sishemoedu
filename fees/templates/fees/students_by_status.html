@@ -2,62 +2,171 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+
 <div class="pt-6 px-4 sm:px-6 lg:px-8">
 
-    <h1 class="text-3xl font-bold text-teal-700 mb-6">
+```
+<!-- Page Header -->
+<div class="mb-6">
+
+    <h1 class="text-3xl font-bold text-teal-700">
         {{ title }}
     </h1>
 
-    <div class="bg-white shadow rounded-lg p-6">
+    <p class="text-sm text-gray-500 mt-1">
+        View learners and their current school fee balances.
+    </p>
+
+</div>
+
+
+<!-- Students Table -->
+<div class="bg-white shadow rounded-xl overflow-hidden">
+
+    <div class="overflow-x-auto">
 
         <table class="min-w-full divide-y divide-gray-200">
+
             <thead>
+
                 <tr class="bg-teal-50 text-left text-sm font-semibold text-gray-600">
-                    <th class="px-4 py-2">Student</th>
-                    <th class="px-4 py-2">Grade</th>
-                    <th class="px-4 py-2">Balance</th>
-                    <th class="px-4 py-2">Action</th>
+
+                    <th class="px-4 py-3">
+                        Student
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Grade
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Balance
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Action
+                    </th>
+
                 </tr>
+
             </thead>
 
+
             <tbody class="divide-y divide-gray-100 text-sm">
+
                 {% for student in students %}
-                <tr>
-                    <td class="px-4 py-2">
-                        {{ student.profile.user.get_full_name }}
+
+                <tr class="hover:bg-gray-50 transition">
+
+                    <!-- Student -->
+                    <td class="px-4 py-4">
+
+                        <div class="font-semibold text-gray-900">
+
+                            {% if student.profile and student.profile.user %}
+
+                                {{ student.profile.user.get_full_name|default:student.profile.user.username }}
+
+                            {% else %}
+
+                                Name not available
+
+                            {% endif %}
+
+                        </div>
+
                     </td>
 
-                    <td class="px-4 py-2">
+
+                    <!-- Grade -->
+                    <td class="px-4 py-4 text-gray-600">
+
                         {{ student.grade.name|default:"—" }}
+
                     </td>
 
-                    <td class="px-4 py-2">
-                        K {{ student.school_balance }}
+
+                    <!-- Balance -->
+                    <td class="px-4 py-4">
+
+                        {% if student.school_balance > 0 %}
+
+                            <span class="font-semibold text-red-600">
+                                K {{ student.school_balance|floatformat:2 }}
+                            </span>
+
+                        {% elif student.school_balance == 0 %}
+
+                            <span class="font-semibold text-green-600">
+                                K 0.00
+                            </span>
+
+                        {% else %}
+
+                            <span class="font-semibold text-blue-600">
+                                K {{ student.school_balance|floatformat:2 }}
+                            </span>
+
+                        {% endif %}
+
                     </td>
 
-                    <td class="px-4 py-2 space-x-3">
 
-    <a href="{% url 'fees:record_payment' student.id %}"
-       class="text-teal-600 hover:underline">
-       Record Payment
-    </a>
+                    <!-- Actions -->
+                    <td class="px-4 py-4">
 
-    <a href="{% url 'fees:update_balance' student.id %}"
-       class="text-blue-600 hover:underline">
-        Edit Balance
-    </a>
+                        <div class="flex flex-wrap gap-3">
 
-</td>
+                            <a
+                                href="{% url 'fees:record_payment' student.id %}"
+                                class="inline-flex items-center px-3 py-2
+                                       rounded-lg bg-teal-600 text-white
+                                       text-xs font-semibold
+                                       hover:bg-teal-700 transition"
+                            >
+                                Record Payment
+                            </a>
+
+
+                            <a
+                                href="{% url 'fees:update_balance' student.id %}"
+                                class="inline-flex items-center px-3 py-2
+                                       rounded-lg bg-blue-600 text-white
+                                       text-xs font-semibold
+                                       hover:bg-blue-700 transition"
+                            >
+                                Edit Balance
+                            </a>
+
+                        </div>
+
+                    </td>
 
                 </tr>
+
                 {% empty %}
+
                 <tr>
-                    <td colspan="4" class="text-center py-4 text-gray-500">
-                        No students found.
+
+                    <td
+                        colspan="4"
+                        class="text-center py-10 text-gray-500"
+                    >
+
+                        <div class="text-3xl mb-2">
+                            📚
+                        </div>
+
+                        <p class="font-medium">
+                            No students found.
+                        </p>
+
                     </td>
+
                 </tr>
 
                 {% endfor %}
+
             </tbody>
 
         </table>
@@ -65,4 +174,8 @@
     </div>
 
 </div>
+```
+
+</div>
+
 {% endblock %}

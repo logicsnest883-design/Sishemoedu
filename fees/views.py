@@ -1,11 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from students.models import Student
-from .models import Payment
 
-
-from django.db.models import Sum
 from students.models import Student
 from .models import Payment
 
@@ -13,11 +9,11 @@ from .models import Payment
 @login_required
 def fees_dashboard(request):
 
-    total_students = Student.objects.count()
+    # --------------------------------------------------
+    # STUDENT STATISTICS
+    # --------------------------------------------------
 
-    total_collected = Payment.objects.aggregate(
-        total=Sum("amount")
-    )["total"] or 0
+    total_students = Student.objects.count()
 
     students_with_balance = Student.objects.filter(
         school_balance__gt=0
@@ -31,41 +27,169 @@ def fees_dashboard(request):
         school_balance__lt=0
     ).count()
 
-    recent_payments = Payment.objects.select_related(
-        "student", "student__profile"
-    ).order_by("-payment_date")[:10]
+
+    # --------------------------------------------------
+    # PAYMENT STATISTICS
+    # --------------------------------------------------
+
+    # Only CONFIRMED payments count as money collected.
+    total_collected = Payment.objects.filter(
+        status="confirmed"
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+
+    # Payments waiting for admin approval.
+    pending_payments = Payment.objects.filter(
+        status="pending"
+    ).select_related(
+        "student",
+        "student__profile",
+        "parent",
+        "parent__profile",
+        "parent__profile__user",
+    ).order_by(
+        "-created_at"
+    )
+
+
+    # Payments already approved by admin.
+    approved_payments = Payment.objects.filter(
+        status="confirmed"
+    ).select_related(
+        "student",
+        "student__profile",
+        "parent",
+        "parent__profile",
+        "parent__profile__user",
+    ).order_by(
+        "-confirmed_at"
+    )
+
+
+    # Payments declined by admin.
+    declined_payments = Payment.objects.filter(
+        status="rejected"
+    ).select_related(
+        "student",
+        "student__profile",
+        "parent",
+        "parent__profile",
+        "parent__profile__user",
+    ).order_by(
+        "-confirmed_at"
+    )
+
+
+    # --------------------------------------------------
+    # COUNTS
+    # --------------------------------------------------
+
+    pending_count = pending_payments.count()
+
+    approved_count = approved_payments.count()
+
+    declined_count = declined_payments.count()
+
+
+    # --------------------------------------------------
+    # RECENT APPROVED PAYMENTS
+    # --------------------------------------------------
+
+    recent_payments = approved_payments[:10]
+
+
+    # --------------------------------------------------
+    # TOTALS
+    # --------------------------------------------------
+
+    pending_total = Payment.objects.filter(
+        status="pending"
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+
+    approved_total = Payment.objects.filter(
+        status="confirmed"
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
+
+    declined_total = Payment.objects.filter(
+        status="rejected"
+    ).aggregate(
+        total=Sum("amount")
+    )["total"] or 0
+
 
     return render(
         request,
         "fees/dashboard.html",
         {
+            # Student statistics
             "total_students": total_students,
-            "total_collected": total_collected,
             "students_with_balance": students_with_balance,
             "settled_students": settled_students,
             "overpaid_students": overpaid_students,
+
+            # Payment totals
+            "total_collected": total_collected,
+            "pending_total": pending_total,
+            "approved_total": approved_total,
+            "declined_total": declined_total,
+
+            # Payment counts
+            "pending_count": pending_count,
+            "approved_count": approved_count,
+            "declined_count": declined_count,
+
+            # Payment lists
+            "pending_payments": pending_payments,
+            "approved_payments": approved_payments,
+            "declined_payments": declined_payments,
+
+            # Recent approved payments
             "recent_payments": recent_payments,
         }
     )
+
 
 @login_required
 def students_by_status(request, status):
 
     if status == "owing":
-        students = Student.objects.filter(school_balance__gt=0)
+
+        students = Student.objects.filter(
+            school_balance__gt=0
+        )
+
         title = "Students With Balance"
 
     elif status == "settled":
-        students = Student.objects.filter(school_balance=0)
+
+        students = Student.objects.filter(
+            school_balance=0
+        )
+
         title = "Settled Students"
 
     elif status == "overpaid":
-        students = Student.objects.filter(school_balance__lt=0)
+
+        students = Student.objects.filter(
+            school_balance__lt=0
+        )
+
         title = "Overpaid Students"
 
     else:
+
         students = Student.objects.all()
+
         title = "All Students"
+
 
     return render(
         request,
@@ -75,7 +199,6 @@ def students_by_status(request, status):
             "title": title,
         }
     )
-
 
 
 from django.shortcuts import get_object_or_404, redirect

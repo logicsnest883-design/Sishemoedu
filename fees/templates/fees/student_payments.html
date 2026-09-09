@@ -2,49 +2,191 @@
 {% block title %}Payment History{% endblock %}
 
 {% block content %}
+
 <div class="pt-6 px-4 sm:px-6 lg:px-8">
 
-    <h1 class="text-3xl font-bold text-teal-700 mb-6">
+```
+<!-- Header -->
+<div class="mb-6">
+
+    <h1 class="text-3xl font-bold text-teal-700">
         Payment History
     </h1>
 
-    <p class="mb-6 text-gray-600">
+    <p class="mt-1 text-gray-600">
+
         Student:
-        <strong>{{ student.profile.user.get_full_name }}</strong>
+
+        <strong class="text-gray-900">
+
+            {% if student.profile and student.profile.user %}
+
+                {{ student.profile.user.get_full_name|default:student.profile.user.username }}
+
+            {% else %}
+
+                Name not available
+
+            {% endif %}
+
+        </strong>
+
     </p>
 
-    <div class="bg-white shadow rounded-lg p-6">
+</div>
+
+
+<!-- Payment History -->
+<div class="bg-white shadow rounded-xl overflow-hidden">
+
+    <div class="overflow-x-auto">
+
         <table class="min-w-full divide-y divide-gray-200">
+
             <thead>
+
                 <tr class="bg-teal-50 text-left text-sm font-semibold text-gray-600">
-                    <th class="px-4 py-2">Amount</th>
-                    <th class="px-4 py-2">Date</th>
-                    <th class="px-4 py-2">Reference</th>
+
+                    <th class="px-4 py-3">
+                        Amount
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Payment Date
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Method
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Reference
+                    </th>
+
+                    <th class="px-4 py-3">
+                        Status
+                    </th>
+
                 </tr>
+
             </thead>
+
+
             <tbody class="divide-y divide-gray-100 text-sm">
+
                 {% for payment in payments %}
-                <tr>
-                    <td class="px-4 py-2 text-green-600">
-                        K {{ payment.amount }}
+
+                <tr class="hover:bg-gray-50 transition">
+
+                    <!-- Amount -->
+                    <td class="px-4 py-4">
+
+                        <span class="font-semibold text-green-600">
+                            K {{ payment.amount|floatformat:2 }}
+                        </span>
+
                     </td>
-                    <td class="px-4 py-2">
+
+
+                    <!-- Date -->
+                    <td class="px-4 py-4 text-gray-600">
+
                         {{ payment.payment_date|date:"d M Y" }}
+
                     </td>
-                    <td class="px-4 py-2">
-                        {{ payment.reference|default:"—" }}
+
+
+                    <!-- Method -->
+                    <td class="px-4 py-4 text-gray-700">
+
+                        {{ payment.get_method_display }}
+
                     </td>
+
+
+                    <!-- Reference -->
+                    <td class="px-4 py-4 text-gray-600">
+
+                        {{ payment.transaction_reference|default:"—" }}
+
+                    </td>
+
+
+                    <!-- Status -->
+                    <td class="px-4 py-4">
+
+                        {% if payment.status == "confirmed" %}
+
+                            <span class="inline-flex items-center px-3 py-1
+                                         rounded-full text-xs font-semibold
+                                         bg-green-100 text-green-700">
+
+                                Approved
+
+                            </span>
+
+                        {% elif payment.status == "pending" %}
+
+                            <span class="inline-flex items-center px-3 py-1
+                                         rounded-full text-xs font-semibold
+                                         bg-yellow-100 text-yellow-700">
+
+                                Pending
+
+                            </span>
+
+                        {% elif payment.status == "rejected" %}
+
+                            <span class="inline-flex items-center px-3 py-1
+                                         rounded-full text-xs font-semibold
+                                         bg-red-100 text-red-700">
+
+                                Declined
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
                 </tr>
+
                 {% empty %}
+
                 <tr>
-                    <td colspan="3" class="px-4 py-4 text-center text-gray-500">
-                        No payments found.
+
+                    <td
+                        colspan="5"
+                        class="px-4 py-10 text-center text-gray-500"
+                    >
+
+                        <div class="text-3xl mb-2">
+                            💳
+                        </div>
+
+                        <p class="font-medium">
+                            No payment history found.
+                        </p>
+
+                        <p class="text-sm mt-1">
+                            Approved payments will appear here.
+                        </p>
+
                     </td>
+
                 </tr>
+
                 {% endfor %}
+
             </tbody>
+
         </table>
+
     </div>
 
 </div>
+```
+
+</div>
+
 {% endblock %}

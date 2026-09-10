@@ -40,8 +40,8 @@ class Event(models.Model):
 
 class Activity(models.Model):
     title = models.CharField(max_length=200)
-    short_description = models.TextField()
-    description = models.TextField()
+    short_description = models.TextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     cover_image = models.ImageField(upload_to="activities/covers/")
     date = models.DateField(null=True, blank=True)
     location = models.CharField(max_length=200, blank=True)

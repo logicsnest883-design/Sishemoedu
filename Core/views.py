@@ -6,9 +6,23 @@ from .models import Section, Subject, Topic, Note, Grade
 # school/views.py
 from django.shortcuts import render
 
+from django.shortcuts import render
+from .models import Section
+from events.models import Activity
+
+
 def home(request):
-    sections = Section.objects.all()  # Will give Lower, Upper, Secondary
-    return render(request, "frontpage.html", {"sections": sections})
+    sections = Section.objects.all()
+
+    featured_activity = Activity.objects.filter(
+        featured=True,
+        published=True
+    ).first()
+
+    return render(request, "frontpage.html", {
+        "sections": sections,
+        "featured_activity": featured_activity,
+    })
 
 def section_grades(request, section_id):
     section = get_object_or_404(Section, id=section_id)

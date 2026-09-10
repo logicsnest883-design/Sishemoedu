@@ -21,3 +21,19 @@ def event_detail(request, slug):
     return render(request, 'events/event_detail.html', {
         'event': event
     })
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Event, Activity
+
+
+def activity_detail(request, activity_id):
+    activity = get_object_or_404(
+        Activity.objects.prefetch_related('images'),
+        id=activity_id,
+        published=True
+    )
+
+    return render(request, 'events/activity_detail.html', {
+        'activity': activity
+    })

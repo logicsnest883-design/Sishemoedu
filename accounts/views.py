@@ -408,6 +408,7 @@ def payment_verification_detail(request, payment_id):
         Payment.objects.select_related(
             "student",
             "student__profile",
+            "student__profile__user",
             "parent",
             "parent__profile",
             "parent__profile__user",

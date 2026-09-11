@@ -625,6 +625,72 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Attendance
 from students.models import Student
+from django.urls import reverse
+
+
+
+
+
+@login_required
+def teacher_attendance(request):
+    profile = request.user.userprofile
+
+    if profile.role != "teacher":
+        messages.error(request, "Access denied.")
+        return redirect("teacher_login")
+
+    grade = profile.assigned_grade
+
+    if not grade:
+        messages.error(request, "No grade assigned to you.")
+        return redirect("teacher_dashboard")
+
+    years = range(2026, 2031)
+
+    terms = [
+        ("Term 1", "Term 1"),
+        ("Term 2", "Term 2"),
+        ("Term 3", "Term 3"),
+    ]
+
+    weeks = range(1, 14)
+
+    if request.method == "POST":
+        year = request.POST.get("year")
+        term = request.POST.get("term")
+        week = request.POST.get("week")
+
+        if not year or not term or not week:
+            messages.error(
+                request,
+                "Please select the year, term and week."
+            )
+            return redirect("teacher_attendance")
+
+        try:
+            year = int(year)
+            week = int(week)
+        except (ValueError, TypeError):
+            messages.error(
+                request,
+                "Invalid year or week."
+            )
+            return redirect("teacher_attendance")
+
+        return redirect(
+            f"{reverse('class_register')}?year={year}&term={term}&week={week}"
+        )
+
+    return render(
+        request,
+        "teachers/attendance_select.html",
+        {
+            "grade": grade,
+            "years": years,
+            "terms": terms,
+            "weeks": weeks,
+        }
+    )
 
 
 @login_required
@@ -636,11 +702,17 @@ def class_register(request):
         return redirect("teacher_login")
 
     grade = profile.assigned_grade
-    students = Student.objects.filter(grade=grade)
 
-    weeks = range(1, 14)
+    if not grade:
+        messages.error(
+            request,
+            "No grade assigned to you."
+        )
+        return redirect("teacher_dashboard")
 
-    selected_week = int(request.POST.get("week", 1)) if request.method == "POST" else 1
+    students = Student.objects.filter(
+        grade=grade
+    )
 
     days = [
         ("1", "Monday"),
@@ -650,70 +722,144 @@ def class_register(request):
         ("5", "Friday"),
     ]
 
-    # ======================
-    # SAVE ATTENDANCE
-    # ======================
+    weeks = range(1, 14)
+
     if request.method == "POST":
+
+        year = request.POST.get("year")
+        term = request.POST.get("term")
+        selected_week = request.POST.get("week")
+
+        if not year or not term or not selected_week:
+            messages.error(
+                request,
+                "Year, term and week are required."
+            )
+            return redirect("teacher_attendance")
+
+        try:
+            year = int(year)
+            selected_week = int(selected_week)
+        except (ValueError, TypeError):
+            messages.error(
+                request,
+                "Invalid year or week."
+            )
+            return redirect("teacher_attendance")
+
         for student in students:
+
             for day_num, day_name in days:
+
                 field_name = f"attendance_{student.id}_{day_num}"
                 value = request.POST.get(field_name)
 
                 if value in ["P", "A"]:
+
                     Attendance.objects.update_or_create(
                         student=student,
+                        year=year,
+                        term=term,
                         week=selected_week,
                         day=day_name,
-                        defaults={"status": value}
+                        defaults={
+                            "status": value
+                        }
                     )
 
-        messages.success(request, "Attendance saved successfully.")
-        return redirect(f"{request.path}?week={selected_week}")
+        messages.success(
+            request,
+            "Attendance saved successfully."
+        )
 
-    # ======================
-    # LOAD DATA + RUNNING %
-    # ======================
+        return redirect(
+            f"{reverse('class_register')}?year={year}&term={term}&week={selected_week}"
+        )
+
+    year = request.GET.get("year")
+    term = request.GET.get("term")
+    selected_week = request.GET.get("week")
+
+    if not year or not term or not selected_week:
+        messages.error(
+            request,
+            "Please select the year, term and week first."
+        )
+        return redirect("teacher_attendance")
+
+    try:
+        year = int(year)
+        selected_week = int(selected_week)
+    except (ValueError, TypeError):
+        messages.error(
+            request,
+            "Invalid attendance period."
+        )
+        return redirect("teacher_attendance")
+
     for student in students:
-        # default values for current week display
+
         student.mon = ""
         student.tue = ""
         student.wed = ""
         student.thu = ""
         student.fri = ""
 
-        # 🔹 CURRENT WEEK RECORDS (for table display)
         current_week_records = Attendance.objects.filter(
             student=student,
+            year=year,
+            term=term,
             week=selected_week
         )
 
         for record in current_week_records:
+
             if record.day == "Monday":
                 student.mon = record.status
+
             elif record.day == "Tuesday":
                 student.tue = record.status
+
             elif record.day == "Wednesday":
                 student.wed = record.status
+
             elif record.day == "Thursday":
                 student.thu = record.status
+
             elif record.day == "Friday":
                 student.fri = record.status
 
-        # 🔹 ALL TERM RECORDS (Week 1 → current week)
         all_records = Attendance.objects.filter(
             student=student,
+            year=year,
+            term=term,
             week__lte=selected_week
         )
 
         total_days = all_records.count()
-        present_days = all_records.filter(status="P").count()
 
-        student.attendance_percentage = round(
-            (present_days / total_days) * 100, 2
-        ) if total_days > 0 else 0
+        present_days = all_records.filter(
+            status="P"
+        ).count()
 
-    return render(request, "teachers/class_register.html", {
-        "students": students,
-        "weeks": weeks,
-        "selected_week": selected_week,
-    })
+        student.attendance_percentage = (
+            round(
+                (present_days / total_days) * 100,
+                2
+            )
+            if total_days > 0
+            else 0
+        )
+
+    return render(
+        request,
+        "teachers/class_register.html",
+        {
+            "students": students,
+            "weeks": weeks,
+            "selected_week": selected_week,
+            "year": year,
+            "term": term,
+            "days": days,
+        }
+    )

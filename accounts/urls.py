@@ -71,4 +71,39 @@ urlpatterns = [
     views.parent_test_detail,
     name="parent_test_detail"
 ),
+    path(
+        "school-admin/tests/",
+        views.admin_tests,
+        name="admin_tests"
+    ),
+
+    path(
+        "school-admin/tests/<int:grade_id>/",
+        views.admin_grade_tests,
+        name="admin_grade_tests"
+    ),
+
+    path(
+        "school-admin/tests/<int:grade_id>/<str:test_type>/schedule/",
+        views.admin_mark_schedule,
+        name="admin_mark_schedule"
+    ),
+
+    path(
+        "school-admin/attendance/",
+        views.admin_attendance,
+        name="admin_attendance"
+    ),
+
+    path(
+        "school-admin/attendance/<int:grade_id>/",
+        views.admin_grade_attendance,
+        name="admin_grade_attendance"
+    ),
+
+    path(
+        "school-admin/attendance/<int:grade_id>/<int:year>/<str:term>/<int:week>/",
+        views.admin_attendance_detail,
+        name="admin_attendance_detail"
+    ),
 ]

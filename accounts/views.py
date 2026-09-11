@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import UserProfile
 from django.contrib.auth.decorators import user_passes_test
+from django.urls import reverse
 
 def admin_login(request):
     if request.method == "POST":
@@ -688,4 +689,396 @@ def update_parent_access(request, parent_id):
             "HTTP_REFERER",
             "parent_access_control"
         )
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render, get_object_or_404
+
+from students.models import Student, Grade
+from fees.models import Payment
+from teachers.models import Test, StudentScore, Attendance
+from Core.models import Subject
+
+
+def is_school_admin(user):
+    return user.is_authenticated and user.is_staff
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def school_admin_dashboard(request):
+
+    pending_payments_count = Payment.objects.filter(
+        status="pending"
+    ).count()
+
+    return render(
+        request,
+        "accounts/school_admin_dashboard.html",
+        {
+            "pending_payments_count": pending_payments_count,
+        }
+    )
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_tests(request):
+
+    grades = Grade.objects.all().order_by("name")
+
+    return render(
+        request,
+        "accounts/admin_tests.html",
+        {
+            "grades": grades,
+        }
+    )
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_grade_tests(request, grade_id):
+
+    grade = get_object_or_404(Grade, id=grade_id)
+
+    tests = (
+        Test.objects
+        .filter(grade=grade)
+        .values(
+            "test_type",
+            "term",
+            "year",
+        )
+        .distinct()
+        .order_by("-year", "term", "test_type")
+    )
+
+    return render(
+        request,
+        "accounts/admin_grade_tests.html",
+        {
+            "grade": grade,
+            "tests": tests,
+        }
+    )
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_mark_schedule(request, grade_id, test_type):
+
+    grade = get_object_or_404(Grade, id=grade_id)
+
+    year = request.GET.get("year")
+    term = request.GET.get("term")
+
+    if not year or not term:
+        return render(
+            request,
+            "accounts/admin_mark_schedule.html",
+            {
+                "grade": grade,
+                "test_type": test_type,
+                "error": "Year and term are required.",
+            }
+        )
+
+    try:
+        year = int(year)
+    except (ValueError, TypeError):
+        return render(
+            request,
+            "accounts/admin_mark_schedule.html",
+            {
+                "grade": grade,
+                "test_type": test_type,
+                "error": "Invalid academic year.",
+            }
+        )
+
+    subjects = (
+        Subject.objects
+        .filter(section__grades__name=grade.name)
+        .distinct()
+        .order_by("name")
+    )
+
+    tests = (
+        Test.objects
+        .filter(
+            grade=grade,
+            test_type=test_type,
+            term=term,
+            year=year,
+        )
+        .select_related("subject")
+    )
+
+    students = (
+        Student.objects
+        .filter(grade=grade)
+        .select_related("profile__user")
+        .order_by("first_name", "last_name")
+    )
+
+    rows = []
+
+    for student in students:
+
+        subject_scores = []
+        total = 0
+        count = 0
+
+        for subject in subjects:
+
+            test = tests.filter(subject=subject).first()
+
+            score = None
+
+            if test:
+                score_obj = (
+                    StudentScore.objects
+                    .filter(
+                        student=student,
+                        test=test,
+                    )
+                    .first()
+                )
+
+                if score_obj and score_obj.score is not None:
+                    score = score_obj.score
+                    total += score
+                    count += 1
+
+            subject_scores.append({
+                "subject": subject,
+                "score": score,
+            })
+
+        average = round(total / count, 2) if count else 0
+
+        rows.append({
+            "student": student,
+            "subject_scores": subject_scores,
+            "total": total,
+            "average": average,
+        })
+
+    rows.sort(
+        key=lambda x: x["total"],
+        reverse=True
+    )
+
+    return render(
+        request,
+        "accounts/admin_mark_schedule.html",
+        {
+            "grade": grade,
+            "subjects": subjects,
+            "rows": rows,
+            "test_type": test_type,
+            "year": year,
+            "term": term,
+        }
+    )
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_attendance(request):
+    grades = Grade.objects.all().order_by("name")
+
+    return render(
+        request,
+        "accounts/admin_attendance.html",
+        {
+            "grades": grades,
+        }
+    )
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_grade_attendance(request, grade_id):
+    grade = get_object_or_404(
+        Grade,
+        id=grade_id
+    )
+
+    years = range(2026, 2031)
+
+    terms = [
+        ("Term 1", "Term 1"),
+        ("Term 2", "Term 2"),
+        ("Term 3", "Term 3"),
+    ]
+
+    weeks = range(1, 14)
+
+    if request.method == "POST":
+
+        year = request.POST.get("year")
+        term = request.POST.get("term")
+        week = request.POST.get("week")
+
+        if not year or not term or not week:
+            messages.error(
+                request,
+                "Please select the year, term and week."
+            )
+            return redirect(
+                "admin_grade_attendance",
+                grade_id=grade.id
+            )
+
+        try:
+            year = int(year)
+            week = int(week)
+        except (ValueError, TypeError):
+            messages.error(
+                request,
+                "Invalid year or week."
+            )
+            return redirect(
+                "admin_grade_attendance",
+                grade_id=grade.id
+            )
+
+        return redirect(
+            f"{reverse('admin_attendance_detail', kwargs={'grade_id': grade.id, 'year': year, 'term': term, 'week': week})}"
+        )
+
+    return render(
+        request,
+        "accounts/admin_grade_attendance.html",
+        {
+            "grade": grade,
+            "years": years,
+            "terms": terms,
+            "weeks": weeks,
+        }
+    )
+
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_attendance_detail(
+    request,
+    grade_id,
+    year,
+    term,
+    week
+):
+    grade = get_object_or_404(
+        Grade,
+        id=grade_id
+    )
+
+    students = list(
+        Student.objects
+        .filter(grade=grade)
+        .select_related("profile__user")
+        .order_by("first_name", "last_name")
+    )
+
+    days = [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+    ]
+
+    rows = []
+
+    total_present = 0
+    total_days = 0
+
+    for student in students:
+
+        current_week_records = Attendance.objects.filter(
+            student=student,
+            year=year,
+            term=term,
+            week=week
+        )
+
+        attendance_map = {}
+
+        for record in current_week_records:
+            attendance_map[record.day] = record.status
+
+        day_records = []
+
+        for day in days:
+            day_records.append({
+                "day": day,
+                "status": attendance_map.get(day, "")
+            })
+
+        all_records = Attendance.objects.filter(
+            student=student,
+            year=year,
+            term=term,
+            week__lte=week
+        )
+
+        present = all_records.filter(
+            status="P"
+        ).count()
+
+        absent = all_records.filter(
+            status="A"
+        ).count()
+
+        recorded = all_records.count()
+
+        percentage = (
+            round(
+                (present / recorded) * 100,
+                2
+            )
+            if recorded > 0
+            else 0
+        )
+
+        total_present += present
+        total_days += recorded
+
+        rows.append({
+            "student": student,
+            "days": day_records,
+            "present": present,
+            "absent": absent,
+            "percentage": percentage,
+        })
+
+    overall_percentage = (
+        round(
+            (total_present / total_days) * 100,
+            2
+        )
+        if total_days > 0
+        else 0
+    )
+
+    return render(
+        request,
+        "accounts/admin_attendance_detail.html",
+        {
+            "grade": grade,
+            "year": year,
+            "term": term,
+            "week": week,
+            "days": days,
+            "rows": rows,
+            "overall_percentage": overall_percentage,
+        }
     )

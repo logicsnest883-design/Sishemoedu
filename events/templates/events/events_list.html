@@ -5,66 +5,128 @@
 {% block content %}
 
 <section class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-100 py-16 px-6">
-
-  <div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto">
 
     <div class="text-center mb-16">
-      <h1 class="text-5xl font-extrabold text-gray-800 mb-4">
-        School Events
-      </h1>
+        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-semibold mb-5">
+            <span>✨</span>
+            <span>Sishemo Education Trust</span>
+        </div>
 
-      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-        Stay updated with the latest activities, programs, and special events happening at Sishemo School.
-      </p>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-800 mb-5">
+            School Events
+        </h1>
+
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Stay updated with the latest activities, programs, and special events
+            happening at Sishemo School.
+        </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-      {% for event in events %}
+        {% for event in events %}
 
-      <div class="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
+        <article class="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
 
-        {% if event.image %}
-        <img src="{{ event.image.url }}"
-             class="w-full h-56 object-cover">
-        {% endif %}
+            {% if event.image %}
 
-        <div class="p-6">
+            <div class="relative h-60 overflow-hidden bg-gray-100">
 
-          <h2 class="text-2xl font-bold text-gray-800 mb-3">
-            {{ event.title }}
-          </h2>
+                <img
+                    src="{{ event.image.url }}"
+                    alt="{{ event.title }}"
+                    class="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                >
 
-          <p class="text-gray-600 mb-4">
-            {{ event.description|truncatewords:25 }}
-          </p>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
 
-          <div class="space-y-2 text-gray-500 text-sm mb-5">
-            <p>📍 {{ event.location }}</p>
-            <p>📅 {{ event.start_date }}</p>
-            <p>⏰ {{ event.start_time }}</p>
-          </div>
+                <div class="absolute top-4 left-4">
+                    <span class="bg-white/95 backdrop-blur-sm text-blue-700 px-3 py-1.5 rounded-full text-xs font-bold shadow">
+                        School Event
+                    </span>
+                </div>
 
-          <a href="{% url 'events:event_detail' event.slug %}"
-             class="inline-block bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700 transition">
-             View Event
-          </a>
+            </div>
+
+            {% else %}
+
+            <div class="h-60 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                <div class="text-center text-white">
+                    <div class="text-5xl mb-3">📅</div>
+                    <p class="font-semibold">Sishemo School</p>
+                </div>
+            </div>
+
+            {% endif %}
+
+            <div class="p-7">
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-3 leading-tight group-hover:text-blue-600 transition">
+                    {{ event.title }}
+                </h2>
+
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    {{ event.description|truncatewords:25 }}
+                </p>
+
+                <div class="space-y-3 text-gray-500 text-sm mb-6">
+
+                    <div class="flex items-start gap-3">
+                        <span class="text-lg">📍</span>
+                        <span>{{ event.location }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">📅</span>
+                        <span>{{ event.start_date }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span class="text-lg">⏰</span>
+                        <span>{{ event.start_time }}</span>
+                    </div>
+
+                </div>
+
+                <a
+                    href="{% url 'events:event_detail' event.slug %}"
+                    class="inline-flex items-center justify-center gap-2 w-full bg-blue-600 text-white px-5 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                    View Event
+                    <span class="transition-transform duration-300 group-hover:translate-x-1">
+                        →
+                    </span>
+                </a>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <div class="col-span-full text-center py-20">
+
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-blue-100 flex items-center justify-center">
+                <span class="text-4xl">📅</span>
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                No Events Available
+            </h2>
+
+            <p class="text-gray-500">
+                There are no school events available at the moment.
+                Please check back later.
+            </p>
 
         </div>
 
-      </div>
-
-      {% empty %}
-
-      <p class="text-center text-gray-500 col-span-3">
-        No events available yet.
-      </p>
-
-      {% endfor %}
+        {% endfor %}
 
     </div>
 
-  </div>
+</div>
 
 </section>
 

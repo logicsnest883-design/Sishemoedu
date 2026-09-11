@@ -3,15 +3,19 @@ from . import views
 
 urlpatterns = [
     path("dashboard/", views.teacher_dashboard, name="teacher_dashboard"),
+
+    path("attendance/", views.teacher_attendance, name="teacher_attendance"),
+
     path("enter-scores/<int:test_id>/", views.enter_scores_grid, name="enter_scores"),
     path("tests/", views.view_tests, name="view_tests"),
     path("enter-scores/", views.enter_scores_list, name="enter_scores_list"),
     path("enter-scores/<str:test_type>/", views.enter_scores_grid, name="enter_scores"),
-    path("class-register/", views.class_register, name="class_register"),
-    path(
-    "generate-mark-schedule/<str:test_type>/",
-    views.generate_mark_schedule,
-    name="generate_mark_schedule"
-),
 
+    path("class-register/", views.class_register, name="class_register"),
+
+    path(
+        "generate-mark-schedule/<str:test_type>/",
+        views.generate_mark_schedule,
+        name="generate_mark_schedule"
+    ),
 ]

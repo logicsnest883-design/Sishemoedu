@@ -985,7 +985,7 @@ def admin_attendance_detail(
         Student.objects
         .filter(grade=grade)
         .select_related("profile__user")
-        .order_by("first_name", "last_name")
+        .order_by("profile__user__first_name", "profile__user__last_name")
     )
 
     days = [

@@ -103,10 +103,14 @@ def teacher_dashboard(request):
 
 def parent_login(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
 
         if user is not None:
             try:
@@ -116,15 +120,23 @@ def parent_login(request):
                     login(request, user)
                     return redirect("parent_dashboard")
                 else:
-                    messages.error(request, "You are not allowed to access the parent portal.")
+                    messages.error(
+                        request,
+                        "You are not allowed to access the parent portal."
+                    )
 
             except UserProfile.DoesNotExist:
-                messages.error(request, "Profile not found. Contact system administrator.")
+                messages.error(
+                    request,
+                    "Profile not found. Contact system administrator."
+                )
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(
+                request,
+                "Invalid username or password."
+            )
 
     return render(request, "accounts/parent_login.html")
-
 
 from django.contrib.auth.decorators import login_required
 from students.models import Student

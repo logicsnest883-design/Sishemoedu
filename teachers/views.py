@@ -100,19 +100,178 @@ def teacher_dashboard(request):
     )
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from students.models import Student
+
+
+
+
+def secondary_points(percentage):
+    """
+    Convert a percentage into the secondary-school points system.
+    """
+
+    if percentage >= 85:
+        return 1
+    elif percentage >= 75:
+        return 2
+    elif percentage >= 70:
+        return 3
+    elif percentage >= 65:
+        return 4
+    elif percentage >= 60:
+        return 5
+    elif percentage >= 55:
+        return 6
+    elif percentage >= 50:
+        return 7
+    elif percentage >= 45:
+        return 8
+    elif percentage >= 40:
+        return 9
+
+    return None
+
+
+
+
+def calculate_secondary_best6(subject_scores):
+
+    entered_subjects = [
+        item
+        for item in subject_scores
+        if item.get("score") is not None
+        and item.get("points") is not None
+    ]
+
+    entered_subjects.sort(
+        key=lambda item: item["points"]
+    )
+
+    selected = entered_subjects[:6]
+
+    total_points = sum(
+        item["points"]
+        for item in selected
+    )
+
+    return {
+        "subjects": selected,
+        "total": total_points,
+        "count": len(selected),
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def calculate_grade7_best6(subject_scores):
+    """
+    Grade 7 Best 6:
+
+    1. Special Paper 1 is compulsory.
+    2. Special Paper 2 is compulsory.
+    3. Four highest remaining subjects are selected.
+    4. Best 6 is calculated using the actual marks entered.
+    5. Percentages are calculated only for display purposes.
+    """
+
+    compulsory = []
+    other_subjects = []
+
+    for item in subject_scores:
+
+        score = item.get("score")
+        max_score = item.get("max_score")
+        subject = item.get("subject")
+
+        if score is None or not max_score:
+            continue
+
+        percentage = round(
+            (score / max_score) * 100,
+            2
+        )
+
+        item["percentage"] = percentage
+
+        subject_name = subject.name.strip().lower()
+
+        if subject_name in [
+            "special paper 1",
+            "special paper 2",
+        ]:
+            compulsory.append(item)
+
+        else:
+            other_subjects.append(item)
+
+    # Sort remaining subjects by actual marks
+    other_subjects.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    # Select four highest remaining subjects
+    selected_other = other_subjects[:4]
+
+    # Special Paper 1 + Special Paper 2 + four highest subjects
+    selected = compulsory + selected_other
+
+    # Sort selected subjects by actual marks
+    selected.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    # Best 6 total uses the actual marks entered
+    total = sum(
+        item["score"]
+        for item in selected
+    )
+
+    # Average is also based on the actual marks
+    best6_average = (
+        round(total / len(selected), 2)
+        if selected
+        else 0
+    )
+
+    return {
+        "subjects": selected,
+        "total": total,
+        "average": best6_average,
+        "count": len(selected),
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 @login_required
 def enter_scores_grid(request, test_type):
 
     profile = request.user.userprofile
 
-    # =========================
-    # TEACHER ACCESS
-    # =========================
     if profile.role != "teacher":
         messages.error(request, "Access denied.")
         return redirect("teacher_login")
@@ -123,9 +282,6 @@ def enter_scores_grid(request, test_type):
         messages.error(request, "No grade assigned to you.")
         return redirect("teacher_dashboard")
 
-    # =========================
-    # GET YEAR AND TERM
-    # =========================
     year = request.GET.get("year")
     term = request.GET.get("term")
 
@@ -142,35 +298,20 @@ def enter_scores_grid(request, test_type):
         messages.error(request, "Invalid academic year.")
         return redirect("enter_scores_list")
 
-    # =========================
-    # STUDENTS
-    # =========================
     students = Student.objects.filter(
         grade=grade
     ).select_related("profile__user")
 
-    # =========================
-    # SUBJECTS
-    # =========================
     subjects = Subject.objects.filter(
         section__grades__name=grade.name
     ).order_by("name")
 
-    # =========================
-    # CORRECT MAX SCORE
-    # GRADE 7 = 150
-    # ALL OTHER GRADES = 100
-    # =========================
     correct_max_score = (
         150
         if grade.name.strip().lower() == "grade 7"
         else 100
     )
 
-    # =========================
-    # ENSURE TESTS EXIST
-    # FOR THIS YEAR + TERM
-    # =========================
     for subject in subjects:
 
         test, created = Test.objects.get_or_create(
@@ -184,7 +325,6 @@ def enter_scores_grid(request, test_type):
             }
         )
 
-        # Fix existing tests that may have the wrong max score
         if test.max_score != correct_max_score:
 
             test.max_score = correct_max_score
@@ -193,9 +333,6 @@ def enter_scores_grid(request, test_type):
                 update_fields=["max_score"]
             )
 
-    # =========================
-    # GET TESTS
-    # =========================
     tests = Test.objects.filter(
         grade=grade,
         test_type=test_type,
@@ -203,9 +340,6 @@ def enter_scores_grid(request, test_type):
         year=year
     ).select_related("subject")
 
-    # =========================
-    # HANDLE FORM SUBMISSION
-    # =========================
     if request.method == "POST":
 
         errors = []
@@ -222,12 +356,9 @@ def enter_scores_grid(request, test_type):
                     subject=subject
                 ).first()
 
-                # No test should normally occur because
-                # we created them above.
                 if not test:
                     continue
 
-                # Empty input means leave it unchanged
                 if value in (None, ""):
                     continue
 
@@ -245,9 +376,6 @@ def enter_scores_grid(request, test_type):
 
                     continue
 
-                # =========================
-                # VALIDATE SCORE
-                # =========================
                 if score_value < 0 or score_value > test.max_score:
 
                     errors.append(
@@ -260,9 +388,6 @@ def enter_scores_grid(request, test_type):
 
                     continue
 
-                # =========================
-                # SAVE SCORE
-                # =========================
                 score_obj, created = StudentScore.objects.get_or_create(
                     student=student,
                     test=test
@@ -271,9 +396,6 @@ def enter_scores_grid(request, test_type):
                 score_obj.score = score_value
                 score_obj.save()
 
-        # =========================
-        # DISPLAY ERRORS
-        # =========================
         if errors:
 
             for error in errors:
@@ -291,17 +413,15 @@ def enter_scores_grid(request, test_type):
             f"/enter-scores/{test_type}/?year={year}&term={term}"
         )
 
-    # =========================
-    # PREPARE DISPLAY DATA
-    # =========================
     rows = []
+
+    is_grade7 = (
+        grade.name.strip().lower() == "grade 7"
+    )
 
     for student in students:
 
         subject_scores = []
-
-        total = 0
-        count = 0
 
         for subject in subjects:
 
@@ -322,18 +442,29 @@ def enter_scores_grid(request, test_type):
                     else None
                 )
 
+                percentage = None
+                points = None
+
+                if score_value is not None:
+
+                    percentage = round(
+                        (score_value / test.max_score) * 100,
+                        2
+                    )
+
+                    if not is_grade7:
+                        points = secondary_points(
+                            percentage
+                        )
+
                 subject_scores.append({
                     "subject": subject,
                     "score": score_value,
                     "max_score": test.max_score,
+                    "percentage": percentage,
+                    "points": points,
                     "test_id": test.id,
                 })
-
-                # Only calculate using entered marks
-                if score_value is not None:
-
-                    total += score_value
-                    count += 1
 
             else:
 
@@ -341,37 +472,69 @@ def enter_scores_grid(request, test_type):
                     "subject": subject,
                     "score": None,
                     "max_score": None,
+                    "percentage": None,
+                    "points": None,
                     "test_id": None,
                 })
 
-        # =========================
-        # CALCULATE AVERAGE
-        # =========================
-        average = (
-            round(total / count, 2)
-            if count > 0
-            else 0
-        )
+        if is_grade7:
+
+            best6 = calculate_grade7_best6(
+                subject_scores
+            )
+
+            total = best6["total"]
+            average = best6["average"]
+            best6_subjects = best6["subjects"]
+
+            secondary_total_points = None
+
+        else:
+
+            entered = [
+                item
+                for item in subject_scores
+                if item["score"] is not None
+            ]
+
+            total = sum(
+                item["score"]
+                for item in entered
+            )
+
+            average = (
+                round(
+                    sum(item["percentage"] for item in entered)
+                    / len(entered),
+                    2
+                )
+                if entered
+                else 0
+            )
+
+            secondary_best6 = calculate_secondary_best6(
+                subject_scores
+            )
+
+            secondary_total_points = secondary_best6["total"]
+
+            best6_subjects = secondary_best6["subjects"]
 
         rows.append({
             "student": student,
             "subject_scores": subject_scores,
             "total": total,
             "average": average,
+            "best6_subjects": best6_subjects,
+            "secondary_total_points": secondary_total_points,
         })
 
-    # =========================
-    # HIGHEST TOTAL FIRST
-    # =========================
     rows = sorted(
         rows,
         key=lambda x: x["total"],
         reverse=True
     )
 
-    # =========================
-    # RENDER
-    # =========================
     return render(
         request,
         "teachers/enter_scores_grid.html",
@@ -382,14 +545,21 @@ def enter_scores_grid(request, test_type):
             "grade": grade,
             "year": year,
             "term": term,
+            "is_grade7": is_grade7,
         }
     )
+
+
+
+
+
+
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Test
-
 
 @login_required
 def generate_mark_schedule(request, test_type):
@@ -419,6 +589,8 @@ def generate_mark_schedule(request, test_type):
         messages.error(request, "Invalid academic year.")
         return redirect("enter_scores_list")
 
+    is_grade7 = grade.name.strip().lower() == "grade 7"
+
     subjects = Subject.objects.filter(
         section__grades__name=grade.name
     ).order_by("name")
@@ -432,52 +604,145 @@ def generate_mark_schedule(request, test_type):
 
     students = Student.objects.filter(
         grade=grade
-    )
+    ).select_related("profile__user")
 
     rows = []
 
     for student in students:
 
         subject_scores = []
-        total = 0
-        count = 0
 
         for subject in subjects:
 
-            test = tests.filter(subject=subject).first()
+            test = tests.filter(
+                subject=subject
+            ).first()
 
             score = None
+            percentage = None
+            points = None
 
             if test:
+
                 score_obj = StudentScore.objects.filter(
                     student=student,
                     test=test
                 ).first()
 
-                if score_obj:
+                if score_obj and score_obj.score is not None:
+
                     score = score_obj.score
-                    total += score
-                    count += 1
+
+                    percentage = round(
+                        (score / test.max_score) * 100,
+                        2
+                    )
+
+                    if not is_grade7:
+                        points = secondary_points(
+                            percentage
+                        )
 
             subject_scores.append({
                 "subject": subject,
                 "score": score,
+                "max_score": test.max_score if test else None,
+                "percentage": percentage,
+                "points": points,
             })
 
-        average = round(total / count, 2) if count else 0
+        if is_grade7:
+
+            best6 = calculate_grade7_best6(
+                subject_scores
+            )
+
+            best6_subjects = best6["subjects"]
+            total = best6["total"]
+            average = best6["average"]
+
+            secondary_total_points = None
+
+        else:
+
+            entered_subjects = [
+                item
+                for item in subject_scores
+                if item["score"] is not None
+            ]
+
+            total = sum(
+                item["score"]
+                for item in entered_subjects
+            )
+
+            average = (
+                round(
+                    sum(
+                        item["percentage"]
+                        for item in entered_subjects
+                    ) / len(entered_subjects),
+                    2
+                )
+                if entered_subjects
+                else 0
+            )
+
+            secondary_best6 = calculate_secondary_best6(
+                subject_scores
+            )
+
+            best6_subjects = secondary_best6["subjects"]
+            secondary_total_points = secondary_best6["total"]
 
         rows.append({
             "student": student,
             "subject_scores": subject_scores,
             "total": total,
             "average": average,
+            "best6_subjects": best6_subjects,
+            "secondary_total_points": secondary_total_points,
         })
+
+    if is_grade7:
 
         rows = sorted(
             rows,
             key=lambda x: x["total"],
             reverse=True
         )
+
+    else:
+
+        rows = sorted(
+            rows,
+            key=lambda x: (
+                x["secondary_total_points"]
+                if x["secondary_total_points"] is not None
+                else 9999
+            )
+        )
+
+    current_position = 0
+    previous_value = None
+
+    for index, row in enumerate(rows, start=1):
+
+        if is_grade7:
+            current_value = row["total"]
+        else:
+            current_value = row["secondary_total_points"]
+
+        if current_value != previous_value:
+            current_position = index
+
+        row["position"] = (
+            current_position
+            if current_value is not None
+            else None
+        )
+
+        previous_value = current_value
 
     return render(
         request,
@@ -489,10 +754,9 @@ def generate_mark_schedule(request, test_type):
             "test_type": test_type,
             "year": year,
             "term": term,
+            "is_grade7": is_grade7,
         }
     )
-
-
 
 
 

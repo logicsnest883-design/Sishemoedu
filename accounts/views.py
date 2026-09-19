@@ -843,21 +843,28 @@ def admin_mark_schedule(request, grade_id, test_type):
         .order_by("first_name", "last_name")
     )
 
+    is_grade7 = (
+        grade.name.strip().lower() == "grade 7"
+    )
+
     rows = []
 
     for student in students:
 
         subject_scores = []
-        total = 0
-        count = 0
 
         for subject in subjects:
 
-            test = tests.filter(subject=subject).first()
+            test = tests.filter(
+                subject=subject
+            ).first()
 
             score = None
+            percentage = None
+            points = None
 
             if test:
+
                 score_obj = (
                     StudentScore.objects
                     .filter(
@@ -868,28 +875,122 @@ def admin_mark_schedule(request, grade_id, test_type):
                 )
 
                 if score_obj and score_obj.score is not None:
+
                     score = score_obj.score
-                    total += score
-                    count += 1
+
+                    percentage = round(
+                        (score / test.max_score) * 100,
+                        2
+                    )
+
+                    if not is_grade7:
+                        points = secondary_points(
+                            percentage
+                        )
 
             subject_scores.append({
                 "subject": subject,
                 "score": score,
+                "max_score": test.max_score if test else None,
+                "percentage": percentage,
+                "points": points,
             })
 
-        average = round(total / count, 2) if count else 0
+        if is_grade7:
+
+            best6 = calculate_grade7_best6(
+                subject_scores
+            )
+
+            total = best6["total"]
+            average = best6["average"]
+            best6_subjects = best6["subjects"]
+
+            secondary_total_points = None
+
+        else:
+
+            entered_subjects = [
+                item
+                for item in subject_scores
+                if item["score"] is not None
+            ]
+
+            total = sum(
+                item["score"]
+                for item in entered_subjects
+            )
+
+            average = (
+                round(
+                    sum(
+                        item["percentage"]
+                        for item in entered_subjects
+                    ) / len(entered_subjects),
+                    2
+                )
+                if entered_subjects
+                else 0
+            )
+
+            secondary_best6 = calculate_secondary_best6(
+                subject_scores
+            )
+
+            best6_subjects = secondary_best6["subjects"]
+
+            secondary_total_points = (
+                secondary_best6["total"]
+                if secondary_best6["count"] > 0
+                else None
+            )
 
         rows.append({
             "student": student,
             "subject_scores": subject_scores,
             "total": total,
             "average": average,
+            "best6_subjects": best6_subjects,
+            "secondary_total_points": secondary_total_points,
         })
 
-    rows.sort(
-        key=lambda x: x["total"],
-        reverse=True
-    )
+    if is_grade7:
+
+        rows.sort(
+            key=lambda x: x["total"],
+            reverse=True
+        )
+
+    else:
+
+        rows.sort(
+            key=lambda x: (
+                x["secondary_total_points"]
+                if x["secondary_total_points"] is not None
+                else 9999
+            )
+        )
+
+    current_position = 0
+    previous_value = None
+
+    for index, row in enumerate(rows, start=1):
+
+        if is_grade7:
+            current_value = row["total"]
+        else:
+            current_value = row["secondary_total_points"]
+
+        if current_value != previous_value:
+            current_position = index
+
+        row["position"] = (
+            current_position
+            if current_value is not None
+            else None
+        )
+
+        previous_value = current_value
 
     return render(
         request,
@@ -901,6 +1002,7 @@ def admin_mark_schedule(request, grade_id, test_type):
             "test_type": test_type,
             "year": year,
             "term": term,
+            "is_grade7": is_grade7,
         }
     )
 

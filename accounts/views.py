@@ -8,6 +8,11 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse
+from teachers.views import (
+    calculate_grade7_best6,
+    calculate_secondary_best6,
+    secondary_points,
+)
 
 def admin_login(request):
     if request.method == "POST":

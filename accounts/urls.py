@@ -106,4 +106,10 @@ urlpatterns = [
         views.admin_attendance_detail,
         name="admin_attendance_detail"
     ),
+
+    path(
+    "admin/mark-schedule/<int:grade_id>/<str:test_type>/download/",
+    views.download_mark_schedule_pdf,
+    name="download_mark_schedule_pdf",
+    ),
 ]

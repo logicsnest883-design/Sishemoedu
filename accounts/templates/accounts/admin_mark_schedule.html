@@ -20,6 +20,29 @@
                class="text-sm text-blue-600 hover:text-blue-800 font-semibold">
                 ← Back to {{ grade.name }} Tests
             </a>
+            <a href="{% url 'download_mark_schedule_pdf' grade.id test_type %}?year={{ year }}&term={{ term }}"
+   class="inline-flex items-center justify-center gap-2
+          px-4 py-2.5 rounded-xl
+          bg-teal-700 hover:bg-teal-800
+          text-white font-bold text-sm
+          shadow-sm transition">
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="w-5 h-5"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor">
+
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/>
+
+    </svg>
+
+    Download PDF
+
+</a>
 
             <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mt-4">
                 Mark Schedule

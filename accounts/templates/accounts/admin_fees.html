@@ -243,8 +243,7 @@
                             <td class="px-6 py-4">
 
                                 <div class="font-semibold text-gray-900">
-                                    {{ student.first_name }}
-                                    {{ student.last_name }}
+                                    {{ student.profile.user.get_full_name }}
                                 </div>
 
                             </td>

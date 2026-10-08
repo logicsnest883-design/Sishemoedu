@@ -1995,15 +1995,18 @@ def admin_attendance_detail(
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
 
+
 @user_passes_test(is_school_admin, login_url="/admin/login/")
 def admin_fees(request):
 
     students = Student.objects.select_related(
         "grade",
-        "parent"
+        "parent",
+        "profile",
+        "profile__user"
     ).order_by(
-        "first_name",
-        "last_name"
+        "profile__user__first_name",
+        "profile__user__last_name"
     )
 
     total_school_balance = students.aggregate(
@@ -2037,7 +2040,6 @@ def admin_fees(request):
             "pending_payments_count": pending_payments_count,
         }
     )
-
 
 
 

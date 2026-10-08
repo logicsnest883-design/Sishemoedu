@@ -193,8 +193,7 @@
                         <td class="px-5 py-5">
 
                             <div class="font-semibold text-gray-900">
-                                {{ payment.student.first_name }}
-                                {{ payment.student.last_name }}
+                                {{ payment.student.profile.user.get_full_name }}
                             </div>
 
                             <div class="text-xs text-gray-500 mt-1">

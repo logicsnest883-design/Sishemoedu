@@ -2065,6 +2065,8 @@ def payment_history(request):
         Payment.objects
         .select_related(
             "student",
+            "student__profile",
+            "student__profile__user",
             "parent",
             "confirmed_by"
         )

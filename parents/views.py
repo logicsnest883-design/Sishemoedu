@@ -122,7 +122,7 @@ from teachers.models import Attendance
 def parent_dashboard(request):
     # get parent from userprofile
     profile = request.user.userprofile
-    parent = profile.parent_profile  # <-- THIS is your correct link
+    parent = profile.parent_profile  
 
     # children linked to parent (adjust field if needed)
     children = Student.objects.filter(parent=parent)

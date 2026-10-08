@@ -1,5 +1,9 @@
 from django.shortcuts import render
 
+from students.models import Student
+from fees.models import Payment
+from django.db.models import Sum
+
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
@@ -226,15 +230,18 @@ def parent_dashboard(request):
         # RESULTS ACCESS
         # -------------------------
         if child.school_balance <= 0:
-            # No outstanding balance
             child.can_view_results = True
-
         else:
-            # Outstanding balance - check admin approval
             child.can_view_results = ParentAccess.objects.filter(
                 parent=parent,
                 results_access=True
             ).exists()
+
+        # -------------------------
+        # TRANSPORT & LUNCH
+        # -------------------------
+        child.has_transport = child.on_transport
+        child.has_lunch = child.on_school_lunch
 
     return render(
         request,
@@ -473,7 +480,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 
 
-@user_passes_test(is_school_admin, login_url="/admin/login/")
 def confirm_payment(request, payment_id):
 
     if request.method != "POST":
@@ -502,16 +508,62 @@ def confirm_payment(request, payment_id):
                 payment_id=payment.id
             )
 
-        # Only school fees reduces the learner's outstanding balance
-        school_fees_amount = payment.fees_amount
-
-        payment.student.school_balance -= school_fees_amount
-
-        payment.student.save(
-            update_fields=["school_balance"]
+        # Lock the learner record while updating balances
+        student = Student.objects.select_for_update().get(
+            id=payment.student_id
         )
 
-        # Mark payment as confirmed
+        # Payment amounts
+        school_fees_amount = payment.fees_amount
+        transport_amount = payment.transport_amount
+        lunch_amount = payment.lunch_amount
+
+        # -------------------------
+        # SCHOOL FEES
+        # -------------------------
+        if school_fees_amount > 0:
+
+            student.school_balance -= school_fees_amount
+
+            if student.school_balance < 0:
+                student.school_balance = 0
+
+
+        # -------------------------
+        # TRANSPORT
+        # -------------------------
+        if transport_amount > 0:
+
+            student.transport_balance -= transport_amount
+
+            if student.transport_balance < 0:
+                student.transport_balance = 0
+
+
+        # -------------------------
+        # SCHOOL LUNCH
+        # -------------------------
+        if lunch_amount > 0:
+
+            student.lunch_balance -= lunch_amount
+
+            if student.lunch_balance < 0:
+                student.lunch_balance = 0
+
+
+        # Save all affected balances
+        student.save(
+            update_fields=[
+                "school_balance",
+                "transport_balance",
+                "lunch_balance",
+            ]
+        )
+
+
+        # -------------------------
+        # CONFIRM PAYMENT
+        # -------------------------
         payment.status = "confirmed"
         payment.confirmed_by = request.user
         payment.confirmed_at = timezone.now()
@@ -526,14 +578,42 @@ def confirm_payment(request, payment_id):
             ]
         )
 
+
+    # -------------------------
+    # SUCCESS MESSAGE
+    # -------------------------
+
+    deducted_items = []
+
+    if school_fees_amount > 0:
+        deducted_items.append(
+            f"School Fees: K{school_fees_amount:.2f}"
+        )
+
+    if transport_amount > 0:
+        deducted_items.append(
+            f"Transport: K{transport_amount:.2f}"
+        )
+
+    if lunch_amount > 0:
+        deducted_items.append(
+            f"Lunch: K{lunch_amount:.2f}"
+        )
+
+    message = "Payment confirmed successfully."
+
+    if deducted_items:
+        message += " " + " | ".join(deducted_items)
+
     messages.success(
         request,
-        f"Payment confirmed. K{school_fees_amount:.2f} "
-        f"has been deducted from the learner's school balance."
+        message
     )
 
-    return redirect("pending_payments")
-
+    return redirect(
+        "payment_verification_detail",
+        payment_id=payment.id
+    )
 @user_passes_test(is_school_admin, login_url="/admin/login/")
 def reject_payment(request, payment_id):
 
@@ -1896,5 +1976,109 @@ def admin_attendance_detail(
             "days": days,
             "rows": rows,
             "overall_percentage": overall_percentage,
+        }
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Sum
+
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def admin_fees(request):
+
+    students = Student.objects.select_related(
+        "grade",
+        "parent"
+    ).order_by(
+        "first_name",
+        "last_name"
+    )
+
+    total_school_balance = students.aggregate(
+        total=Sum("school_balance")
+    )["total"] or 0
+
+    total_transport_balance = students.filter(
+        on_transport=True
+    ).aggregate(
+        total=Sum("transport_balance")
+    )["total"] or 0
+
+    total_lunch_balance = students.filter(
+        on_school_lunch=True
+    ).aggregate(
+        total=Sum("lunch_balance")
+    )["total"] or 0
+
+    pending_payments_count = Payment.objects.filter(
+        status="pending"
+    ).count()
+
+    return render(
+        request,
+        "accounts/admin_fees.html",
+        {
+            "students": students,
+            "total_school_balance": total_school_balance,
+            "total_transport_balance": total_transport_balance,
+            "total_lunch_balance": total_lunch_balance,
+            "pending_payments_count": pending_payments_count,
+        }
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@login_required
+@user_passes_test(is_school_admin, login_url="/admin/login/")
+def payment_history(request):
+
+    payments = (
+        Payment.objects
+        .select_related(
+            "student",
+            "parent",
+            "confirmed_by"
+        )
+        .order_by("-created_at")
+    )
+
+    status = request.GET.get("status")
+
+    if status in ["pending", "confirmed", "rejected"]:
+        payments = payments.filter(status=status)
+
+    return render(
+        request,
+        "accounts/payment_history.html",
+        {
+            "payments": payments,
+            "current_status": status,
         }
     )

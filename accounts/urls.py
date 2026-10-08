@@ -6,7 +6,17 @@ urlpatterns = [
     path("system-admin/dashboard/", views.admin_dashboard, name="admin_dashboard"),
     path("logout/", views.user_logout, name="logout"),
     path("teacher/login/", views.teacher_login, name="teacher_login"),
+    path(
+    "admin/payment-history/",
+    views.payment_history,
+    name="payment_history"
+),
     path("teacher/dashboard/", views.teacher_dashboard, name="teacher_dashboard"),
+    path(
+    "admin/fees/",
+    views.admin_fees,
+    name="admin_fees"
+),
     path("parent/login/", views.parent_login, name="parent_login"),
     path("admin/pending-payments/",
     views.pending_payments,

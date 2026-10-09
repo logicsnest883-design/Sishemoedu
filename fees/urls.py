@@ -12,6 +12,11 @@ urlpatterns = [
         views.fees_dashboard,
         name="fees_dashboard"
     ),
+    path(
+    "payments/<int:payment_id>/receipt-issued/",
+    views.mark_receipt_issued,
+    name="mark_receipt_issued"
+),
 
     path(
     "parent/payment/<int:student_id>/",

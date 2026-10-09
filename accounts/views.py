@@ -1996,17 +1996,48 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Sum
 
 
+from django.contrib.auth.decorators import user_passes_test
+from django.db.models import Sum, Case, When, Value, IntegerField
+from django.shortcuts import render
+
+
 @user_passes_test(is_school_admin, login_url="/admin/login/")
 def admin_fees(request):
+
+    grade_names = [
+        "Beginners",
+        "Reception",
+        "Grade 1",
+        "Grade 2",
+        "Grade 3",
+        "Grade 4",
+        "Grade 5",
+        "Grade 6",
+        "Grade 7",
+        "Form 1",
+        "Form 2",
+    ]
+
+    grade_order = Case(
+        *[
+            When(grade__name=name, then=Value(position))
+            for position, name in enumerate(grade_names)
+        ],
+        default=Value(99),
+        output_field=IntegerField(),
+    )
 
     students = Student.objects.select_related(
         "grade",
         "parent",
         "profile",
-        "profile__user"
+        "profile__user",
+    ).annotate(
+        grade_position=grade_order,
     ).order_by(
+        "grade_position",
         "profile__user__first_name",
-        "profile__user__last_name"
+        "profile__user__last_name",
     )
 
     total_school_balance = students.aggregate(
@@ -2038,7 +2069,7 @@ def admin_fees(request):
             "total_transport_balance": total_transport_balance,
             "total_lunch_balance": total_lunch_balance,
             "pending_payments_count": pending_payments_count,
-        }
+        },
     )
 
 
@@ -2057,20 +2088,46 @@ def admin_fees(request):
 
 
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Case, When, Value, IntegerField
+
+
+def grade_order():
+    grade_names = [
+        "Beginners",
+        "Middle Class"
+        "Reception",
+        "Grade 1",
+        "Grade 2",
+        "Grade 3",
+        "Grade 4",
+        "Grade 5",
+        "Grade 6",
+        "Grade 7",
+        "Form 1",
+        "Form 2",
+    ]
+
+    return Case(
+        *[
+            When(student__grade__name=name, then=Value(position))
+            for position, name in enumerate(grade_names)
+        ],
+        default=Value(99),
+        output_field=IntegerField(),
+    )
+
+
 @login_required
 @user_passes_test(is_school_admin, login_url="/admin/login/")
 def payment_history(request):
-
-    payments = (
-        Payment.objects
-        .select_related(
-            "student",
-            "student__profile",
-            "student__profile__user",
-            "parent",
-            "confirmed_by"
-        )
-        .order_by("-created_at")
+    payments = Payment.objects.select_related(
+        "student",
+        "student__grade",
+        "student__profile",
+        "student__profile__user",
+        "parent",
+        "confirmed_by",
     )
 
     status = request.GET.get("status")
@@ -2078,11 +2135,20 @@ def payment_history(request):
     if status in ["pending", "confirmed", "rejected"]:
         payments = payments.filter(status=status)
 
+    payments = payments.annotate(
+        grade_position=grade_order()
+    ).order_by(
+        "grade_position",
+        "student__profile__user__first_name",
+        "student__profile__user__last_name",
+        "-created_at",
+    )
+
     return render(
         request,
         "accounts/payment_history.html",
         {
             "payments": payments,
             "current_status": status,
-        }
+        },
     )

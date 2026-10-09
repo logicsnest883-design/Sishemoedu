@@ -6,409 +6,318 @@
 
 <div class="min-h-screen bg-gray-50">
 
-<div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
-    <!-- HEADER -->
-    <div class="flex flex-col lg:flex-row lg:items-center
-                lg:justify-between gap-4 mb-8">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Payment History
+                </h1>
+                <p class="text-gray-500 mt-2">
+                    View learner payments, payment status and receipt issuance.
+                </p>
+            </div>
 
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
-                Payment History
-            </h1>
-
-            <p class="text-gray-500 mt-2">
-                View all learner payments and their current status.
-            </p>
+            <a href="{% url 'admin_fees' %}"
+               class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gray-800 text-white font-semibold hover:bg-gray-900 transition">
+                ← Back to Fees
+            </a>
         </div>
 
-        <a href="{% url 'admin_fees' %}"
-           class="inline-flex items-center justify-center gap-2
-                  px-5 py-3 rounded-xl
-                  bg-gray-800 text-white
-                  font-semibold
-                  hover:bg-gray-900
-                  transition">
+        <!-- FILTERS -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
+            <div class="flex flex-wrap gap-3">
 
-            ← Back to Fees
+                <a href="{% url 'payment_history' %}"
+                   class="px-4 py-2.5 rounded-xl font-semibold text-sm transition
+                   {% if not current_status %}
+                       bg-blue-600 text-white
+                   {% else %}
+                       bg-gray-100 text-gray-700 hover:bg-gray-200
+                   {% endif %}">
+                    All Payments
+                </a>
 
-        </a>
+                <a href="?status=confirmed"
+                   class="px-4 py-2.5 rounded-xl font-semibold text-sm transition
+                   {% if current_status == 'confirmed' %}
+                       bg-green-600 text-white
+                   {% else %}
+                       bg-gray-100 text-gray-700 hover:bg-gray-200
+                   {% endif %}">
+                    ✓ Confirmed
+                </a>
 
-    </div>
+                <a href="?status=pending"
+                   class="px-4 py-2.5 rounded-xl font-semibold text-sm transition
+                   {% if current_status == 'pending' %}
+                       bg-amber-500 text-white
+                   {% else %}
+                       bg-gray-100 text-gray-700 hover:bg-gray-200
+                   {% endif %}">
+                    ⏳ Pending
+                </a>
 
+                <a href="?status=rejected"
+                   class="px-4 py-2.5 rounded-xl font-semibold text-sm transition
+                   {% if current_status == 'rejected' %}
+                       bg-red-600 text-white
+                   {% else %}
+                       bg-gray-100 text-gray-700 hover:bg-gray-200
+                   {% endif %}">
+                    ✕ Rejected
+                </a>
 
-    <!-- FILTERS -->
-    <div class="bg-white border border-gray-200
-                rounded-2xl shadow-sm p-4 sm:p-5 mb-6">
-
-        <div class="flex flex-wrap gap-3">
-
-            <a href="{% url 'payment_history' %}"
-               class="px-4 py-2.5 rounded-xl font-semibold text-sm
-               {% if not current_status %}
-                   bg-blue-600 text-white
-               {% else %}
-                   bg-gray-100 text-gray-700 hover:bg-gray-200
-               {% endif %}
-               transition">
-
-                All Payments
-
-            </a>
-
-
-            <a href="?status=confirmed"
-               class="px-4 py-2.5 rounded-xl font-semibold text-sm
-               {% if current_status == 'confirmed' %}
-                   bg-green-600 text-white
-               {% else %}
-                   bg-gray-100 text-gray-700 hover:bg-gray-200
-               {% endif %}
-               transition">
-
-                ✓ Confirmed
-
-            </a>
-
-
-            <a href="?status=pending"
-               class="px-4 py-2.5 rounded-xl font-semibold text-sm
-               {% if current_status == 'pending' %}
-                   bg-amber-500 text-white
-               {% else %}
-                   bg-gray-100 text-gray-700 hover:bg-gray-200
-               {% endif %}
-               transition">
-
-                ⏳ Pending
-
-            </a>
-
-
-            <a href="?status=rejected"
-               class="px-4 py-2.5 rounded-xl font-semibold text-sm
-               {% if current_status == 'rejected' %}
-                   bg-red-600 text-white
-               {% else %}
-                   bg-gray-100 text-gray-700 hover:bg-gray-200
-               {% endif %}
-               transition">
-
-                ✕ Rejected
-
-            </a>
-
+            </div>
         </div>
 
-    </div>
+        <!-- PAYMENT TABLE -->
+        <div class="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
 
+            <div class="p-5 sm:p-6 border-b border-gray-200">
+                <h2 class="text-xl font-bold text-gray-900">
+                    Payment Records
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">
+                    Complete record of payments submitted by parents.
+                </p>
+            </div>
 
-    <!-- PAYMENT TABLE -->
-    <div class="bg-white border border-gray-200
-                rounded-2xl shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
 
-        <div class="p-5 sm:p-6 border-b border-gray-200">
+                <table class="w-full text-left">
 
-            <h2 class="text-xl font-bold text-gray-900">
-                Payment Records
-            </h2>
+                    <thead class="bg-gray-50 border-b">
+                        <tr>
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Date
+                            </th>
 
-            <p class="text-sm text-gray-500 mt-1">
-                Complete record of payments submitted by parents.
-            </p>
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Learner
+                            </th>
 
-        </div>
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Payment Breakdown
+                            </th>
 
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Method
+                            </th>
 
-        <div class="overflow-x-auto">
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Reference
+                            </th>
 
-            <table class="w-full text-left">
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Status
+                            </th>
 
-                <thead class="bg-gray-50 border-b">
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Receipt Issued
+                            </th>
 
-                    <tr>
+                            <th class="px-5 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
+                                Total
+                            </th>
+                        </tr>
+                    </thead>
 
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Date
-                        </th>
+                    <tbody class="divide-y divide-gray-100">
 
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Learner
-                        </th>
+                        {% for payment in payments %}
 
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Payment Breakdown
-                        </th>
+                        <tr class="hover:bg-gray-50 transition">
 
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Method
-                        </th>
-
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Reference
-                        </th>
-
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Status
-                        </th>
-
-                        <th class="px-5 py-4 text-xs font-semibold
-                                   text-gray-500 uppercase whitespace-nowrap">
-                            Total
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody class="divide-y divide-gray-100">
-
-                    {% for payment in payments %}
-
-                    <tr class="hover:bg-gray-50 transition">
-
-
-                        <!-- DATE -->
-                        <td class="px-5 py-5 whitespace-nowrap">
-
-                            <div class="font-medium text-gray-900">
-                                {{ payment.created_at|date:"d M Y" }}
-                            </div>
-
-                            <div class="text-xs text-gray-500 mt-1">
-                                {{ payment.created_at|date:"H:i" }}
-                            </div>
-
-                        </td>
-
-
-                        <!-- LEARNER -->
-                        <td class="px-5 py-5">
-
-                            <div class="font-semibold text-gray-900">
-                                {{ payment.student.profile.user.get_full_name }}
-                            </div>
-
-                            <div class="text-xs text-gray-500 mt-1">
-                                {{ payment.student.grade.name|default:"-" }}
-                            </div>
-
-                            <div class="text-xs text-gray-400 mt-1">
-                                Parent:
-                                {{ payment.parent.full_name }}
-                            </div>
-
-                        </td>
-
-
-                        <!-- PAYMENT BREAKDOWN -->
-                        <td class="px-5 py-5 min-w-[220px]">
-
-                            <div class="space-y-1 text-sm">
-
-                                {% if payment.fees_amount > 0 %}
-                                <div class="flex justify-between gap-4">
-                                    <span class="text-gray-600">
-                                        School Fees
-                                    </span>
-                                    <span class="font-medium text-gray-900">
-                                        K{{ payment.fees_amount|floatformat:2 }}
-                                    </span>
+                            <!-- DATE -->
+                            <td class="px-5 py-5 whitespace-nowrap">
+                                <div class="font-medium text-gray-900">
+                                    {{ payment.created_at|date:"d M Y" }}
                                 </div>
-                                {% endif %}
-
-
-                                {% if payment.transport_amount > 0 %}
-                                <div class="flex justify-between gap-4">
-                                    <span class="text-gray-600">
-                                        Transport
-                                    </span>
-                                    <span class="font-medium text-gray-900">
-                                        K{{ payment.transport_amount|floatformat:2 }}
-                                    </span>
+                                <div class="text-xs text-gray-500 mt-1">
+                                    {{ payment.created_at|date:"H:i" }}
                                 </div>
-                                {% endif %}
+                            </td>
 
-
-                                {% if payment.lunch_amount > 0 %}
-                                <div class="flex justify-between gap-4">
-                                    <span class="text-gray-600">
-                                        Lunch
-                                    </span>
-                                    <span class="font-medium text-gray-900">
-                                        K{{ payment.lunch_amount|floatformat:2 }}
-                                    </span>
-                                </div>
-                                {% endif %}
-
-
-                                {% if payment.uniform_amount > 0 %}
-                                <div class="flex justify-between gap-4">
-                                    <span class="text-gray-600">
-                                        Uniform
-                                    </span>
-                                    <span class="font-medium text-gray-900">
-                                        K{{ payment.uniform_amount|floatformat:2 }}
-                                    </span>
-                                </div>
-                                {% endif %}
-
-
-                                {% if payment.other_amount > 0 %}
-                                <div class="flex justify-between gap-4">
-                                    <span class="text-gray-600">
-                                        Other
-                                    </span>
-                                    <span class="font-medium text-gray-900">
-                                        K{{ payment.other_amount|floatformat:2 }}
-                                    </span>
+                            <!-- LEARNER -->
+                            <td class="px-5 py-5">
+                                <div class="font-semibold text-gray-900">
+                                    {% if payment.student.profile and payment.student.profile.user %}
+                                        {{ payment.student.profile.user.get_full_name|default:payment.student.profile.user.username }}
+                                    {% else %}
+                                        {{ payment.student.first_name|default:"" }}
+                                        {{ payment.student.last_name|default:"" }}
+                                        {% if not payment.student.first_name and not payment.student.last_name %}
+                                            Name not available
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
 
-                                {% if payment.other_description %}
-                                <div class="text-xs text-gray-400">
-                                    {{ payment.other_description }}
+                                <div class="text-xs text-gray-500 mt-1">
+                                    {{ payment.student.grade.name|default:"Grade not assigned" }}
+                                </div>
+
+                                <div class="text-xs text-gray-400 mt-1">
+                                    Parent:
+                                    {{ payment.parent.full_name|default:"Not available" }}
+                                </div>
+                            </td>
+
+                            <!-- PAYMENT BREAKDOWN -->
+                            <td class="px-5 py-5 min-w-[220px]">
+                                <div class="space-y-1 text-sm">
+
+                                    {% if payment.fees_amount > 0 %}
+                                    <div class="flex justify-between gap-4">
+                                        <span class="text-gray-600">School Fees</span>
+                                        <span class="font-medium text-gray-900">
+                                            K{{ payment.fees_amount|floatformat:2 }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if payment.transport_amount > 0 %}
+                                    <div class="flex justify-between gap-4">
+                                        <span class="text-gray-600">Transport</span>
+                                        <span class="font-medium text-gray-900">
+                                            K{{ payment.transport_amount|floatformat:2 }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if payment.lunch_amount > 0 %}
+                                    <div class="flex justify-between gap-4">
+                                        <span class="text-gray-600">Lunch</span>
+                                        <span class="font-medium text-gray-900">
+                                            K{{ payment.lunch_amount|floatformat:2 }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if payment.uniform_amount > 0 %}
+                                    <div class="flex justify-between gap-4">
+                                        <span class="text-gray-600">Uniform</span>
+                                        <span class="font-medium text-gray-900">
+                                            K{{ payment.uniform_amount|floatformat:2 }}
+                                        </span>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if payment.other_amount > 0 %}
+                                    <div class="flex justify-between gap-4">
+                                        <span class="text-gray-600">Other</span>
+                                        <span class="font-medium text-gray-900">
+                                            K{{ payment.other_amount|floatformat:2 }}
+                                        </span>
+                                    </div>
+
+                                    {% if payment.other_description %}
+                                    <div class="text-xs text-gray-400">
+                                        {{ payment.other_description }}
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
+
+                                </div>
+                            </td>
+
+                            <!-- METHOD -->
+                            <td class="px-5 py-5 whitespace-nowrap">
+                                <span class="font-medium text-gray-800">
+                                    {{ payment.get_method_display }}
+                                </span>
+                            </td>
+
+                            <!-- REFERENCE -->
+                            <td class="px-5 py-5">
+                                <div class="text-sm font-medium text-gray-800">
+                                    {{ payment.invoice_number }}
+                                </div>
+
+                                {% if payment.transaction_reference %}
+                                <div class="text-xs text-gray-500 mt-1">
+                                    Ref: {{ payment.transaction_reference }}
                                 </div>
                                 {% endif %}
+                            </td>
 
-                                {% endif %}
+                            <!-- STATUS -->
+                            <td class="px-5 py-5 whitespace-nowrap">
 
-                            </div>
-
-                        </td>
-
-
-                        <!-- METHOD -->
-                        <td class="px-5 py-5 whitespace-nowrap">
-
-                            <span class="font-medium text-gray-800">
-                                {{ payment.get_method_display }}
-                            </span>
-
-                        </td>
-
-
-                        <!-- REFERENCE -->
-                        <td class="px-5 py-5">
-
-                            <div class="text-sm font-medium text-gray-800">
-                                {{ payment.invoice_number }}
-                            </div>
-
-                            {% if payment.transaction_reference %}
-
-                            <div class="text-xs text-gray-500 mt-1">
-                                Ref:
-                                {{ payment.transaction_reference }}
-                            </div>
-
-                            {% endif %}
-
-                        </td>
-
-
-                        <!-- STATUS -->
-                        <td class="px-5 py-5 whitespace-nowrap">
-
-                            {% if payment.status == "confirmed" %}
-
-                                <span class="inline-flex items-center gap-1
-                                             px-3 py-1.5 rounded-full
-                                             bg-green-100 text-green-700
-                                             text-xs font-bold">
-
+                                {% if payment.status == "confirmed" %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-700 text-xs font-bold">
                                     ✓ Confirmed
-
                                 </span>
 
-                            {% elif payment.status == "pending" %}
-
-                                <span class="inline-flex items-center gap-1
-                                             px-3 py-1.5 rounded-full
-                                             bg-amber-100 text-amber-700
-                                             text-xs font-bold">
-
+                                {% elif payment.status == "pending" %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">
                                     ⏳ Pending
-
                                 </span>
 
-                            {% elif payment.status == "rejected" %}
-
-                                <span class="inline-flex items-center gap-1
-                                             px-3 py-1.5 rounded-full
-                                             bg-red-100 text-red-700
-                                             text-xs font-bold">
-
+                                {% elif payment.status == "rejected" %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-red-100 text-red-700 text-xs font-bold">
                                     ✕ Rejected
-
                                 </span>
+                                {% endif %}
 
-                            {% endif %}
-
-                            {% if payment.status == "rejected" and payment.rejection_reason %}
-
+                                {% if payment.status == "rejected" and payment.rejection_reason %}
                                 <div class="text-xs text-red-500 mt-2 max-w-[180px]">
                                     {{ payment.rejection_reason }}
                                 </div>
+                                {% endif %}
 
-                            {% endif %}
+                            </td>
 
-                        </td>
+                            <!-- RECEIPT ISSUED: READ ONLY -->
+                            <td class="px-5 py-5 whitespace-nowrap">
 
+                                {% if payment.receipt_issued %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-green-100 text-green-700 text-xs font-bold">
+                                    ✓ Yes
+                                </span>
+                                {% else %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold">
+                                    No
+                                </span>
+                                {% endif %}
 
-                        <!-- TOTAL -->
-                        <td class="px-5 py-5 whitespace-nowrap">
+                            </td>
 
-                            <span class="text-lg font-bold text-gray-900">
-                                K{{ payment.amount|floatformat:2 }}
-                            </span>
+                            <!-- TOTAL -->
+                            <td class="px-5 py-5 whitespace-nowrap">
+                                <span class="text-lg font-bold text-gray-900">
+                                    K{{ payment.amount|floatformat:2 }}
+                                </span>
+                            </td>
 
-                        </td>
+                        </tr>
 
-                    </tr>
+                        {% empty %}
 
+                        <tr>
+                            <td colspan="8" class="px-6 py-16 text-center">
+                                <div class="text-4xl mb-3">💳</div>
 
-                    {% empty %}
+                                <h3 class="text-lg font-semibold text-gray-800">
+                                    No payments found
+                                </h3>
 
-                    <tr>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    There are no payment records matching the selected filter.
+                                </p>
+                            </td>
+                        </tr>
 
-                        <td colspan="7"
-                            class="px-6 py-16 text-center">
+                        {% endfor %}
 
-                            <div class="text-4xl mb-3">
-                                💳
-                            </div>
+                    </tbody>
 
-                            <h3 class="text-lg font-semibold text-gray-800">
-                                No payments found
-                            </h3>
+                </table>
 
-                            <p class="text-sm text-gray-500 mt-1">
-                                There are no payment records matching
-                                the selected filter.
-                            </p>
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
+            </div>
         </div>
 
     </div>
-
-</div>
 
 </div>
 

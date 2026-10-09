@@ -125,9 +125,12 @@ class Payment(models.Model):
         blank=True
     )
 
+    receipt_issued = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
+
 
     def save(self, *args, **kwargs):
 

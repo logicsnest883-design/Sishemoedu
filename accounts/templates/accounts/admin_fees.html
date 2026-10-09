@@ -8,78 +8,49 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
-       <!-- HEADER -->
-<div class="flex flex-col md:flex-row md:items-center
-            md:justify-between gap-4 mb-8">
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
 
-    <div>
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Fees Management
+                </h1>
 
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
-            Fees Management
-        </h1>
+                <p class="text-gray-500 mt-2">
+                    Monitor learner balances and school payments.
+                </p>
+            </div>
 
-        <p class="text-gray-500 mt-2">
-            Monitor learner balances and school payments.
-        </p>
+            <div class="flex flex-col sm:flex-row gap-3">
 
-    </div>
+                <a href="{% url 'payment_history' %}"
+                   class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gray-800 text-white font-semibold hover:bg-gray-900 transition">
+                    📜 Payment History
+                </a>
 
+                <a href="{% url 'pending_payments' %}"
+                   class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
 
-    <div class="flex flex-col sm:flex-row gap-3">
+                    💳 Pending Payments
 
-        <!-- PAYMENT HISTORY -->
-        <a href="{% url 'payment_history' %}"
-           class="inline-flex items-center justify-center gap-2
-                  px-5 py-3 rounded-xl
-                  bg-gray-800 text-white
-                  font-semibold
-                  hover:bg-gray-900
-                  transition">
+                    {% if pending_payments_count > 0 %}
+                    <span class="bg-white text-purple-700 rounded-full px-2 py-0.5 text-xs font-bold">
+                        {{ pending_payments_count }}
+                    </span>
+                    {% endif %}
 
-            📜 Payment History
+                </a>
 
-        </a>
+            </div>
 
-
-        <!-- PENDING PAYMENTS -->
-        <a href="{% url 'pending_payments' %}"
-           class="inline-flex items-center justify-center gap-2
-                  px-5 py-3 rounded-xl
-                  bg-purple-600 text-white
-                  font-semibold
-                  hover:bg-purple-700
-                  transition">
-
-            💳 Pending Payments
-
-            {% if pending_payments_count > 0 %}
-
-                <span class="bg-white text-purple-700
-                             rounded-full px-2 py-0.5
-                             text-xs font-bold">
-
-                    {{ pending_payments_count }}
-
-                </span>
-
-            {% endif %}
-
-        </a>
-
-    </div>
-
-</div>
-
+        </div>
 
         <!-- SUMMARY CARDS -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
 
-
             <!-- SCHOOL FEES -->
-            <div class="bg-white rounded-2xl border border-gray-200
-                        shadow-sm p-6">
-
-                <div class="flex items-center justify-between">
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                <div class="flex items-center justify-between gap-4">
 
                     <div>
                         <p class="text-sm text-gray-500">
@@ -91,22 +62,16 @@
                         </p>
                     </div>
 
-                    <div class="w-12 h-12 rounded-xl bg-blue-100
-                                flex items-center justify-center
-                                text-xl">
+                    <div class="w-12 h-12 shrink-0 rounded-xl bg-blue-100 flex items-center justify-center text-xl">
                         🎓
                     </div>
 
                 </div>
-
             </div>
 
-
             <!-- TRANSPORT -->
-            <div class="bg-white rounded-2xl border border-gray-200
-                        shadow-sm p-6">
-
-                <div class="flex items-center justify-between">
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                <div class="flex items-center justify-between gap-4">
 
                     <div>
                         <p class="text-sm text-gray-500">
@@ -118,22 +83,16 @@
                         </p>
                     </div>
 
-                    <div class="w-12 h-12 rounded-xl bg-purple-100
-                                flex items-center justify-center
-                                text-xl">
+                    <div class="w-12 h-12 shrink-0 rounded-xl bg-purple-100 flex items-center justify-center text-xl">
                         🚌
                     </div>
 
                 </div>
-
             </div>
 
-
             <!-- LUNCH -->
-            <div class="bg-white rounded-2xl border border-gray-200
-                        shadow-sm p-6">
-
-                <div class="flex items-center justify-between">
+            <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+                <div class="flex items-center justify-between gap-4">
 
                     <div>
                         <p class="text-sm text-gray-500">
@@ -145,54 +104,48 @@
                         </p>
                     </div>
 
-                    <div class="w-12 h-12 rounded-xl bg-orange-100
-                                flex items-center justify-center
-                                text-xl">
+                    <div class="w-12 h-12 shrink-0 rounded-xl bg-orange-100 flex items-center justify-center text-xl">
                         🍽️
                     </div>
 
                 </div>
-
             </div>
 
         </div>
 
-
         <!-- LEARNER BALANCES -->
-        <div class="bg-white rounded-2xl border border-gray-200
-                    shadow-sm overflow-hidden">
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
 
-            <div class="p-6 border-b border-gray-200">
-
+            <div class="p-5 sm:p-6 border-b border-gray-200">
                 <h2 class="text-xl font-bold text-gray-900">
                     Learner Balances
                 </h2>
 
                 <p class="text-sm text-gray-500 mt-1">
-                    Current outstanding balances for each learner.
+                    Current outstanding balances for each learner, arranged by grade.
                 </p>
-
             </div>
-
 
             <!-- SEARCH -->
             <div class="p-4 sm:p-6 border-b border-gray-100">
 
+                <label for="studentSearch" class="block text-sm font-medium text-gray-700 mb-2">
+                    Search learners
+                </label>
+
                 <input
                     type="text"
                     id="studentSearch"
-                    placeholder="Search learner..."
-                    class="w-full sm:max-w-md
-                           px-4 py-3
-                           rounded-xl
-                           border border-gray-300
-                           focus:ring-2
-                           focus:ring-blue-500
-                           focus:border-blue-500
-                           outline-none">
+                    placeholder="Search by learner name or grade..."
+                    autocomplete="off"
+                    class="w-full sm:max-w-md px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                >
+
+                <p id="searchCount" class="text-xs text-gray-500 mt-2">
+                    Showing all learners
+                </p>
 
             </div>
-
 
             <!-- TABLE -->
             <div class="overflow-x-auto">
@@ -200,154 +153,123 @@
                 <table class="w-full text-left">
 
                     <thead class="bg-gray-50 border-b">
-
                         <tr>
-
-                            <th class="px-6 py-4 text-xs font-semibold
-                                       text-gray-500 uppercase">
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                 Learner
                             </th>
 
-                            <th class="px-6 py-4 text-xs font-semibold
-                                       text-gray-500 uppercase">
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                 Class
                             </th>
 
-                            <th class="px-6 py-4 text-xs font-semibold
-                                       text-gray-500 uppercase">
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                 School Fees
                             </th>
 
-                            <th class="px-6 py-4 text-xs font-semibold
-                                       text-gray-500 uppercase">
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                 Transport
                             </th>
 
-                            <th class="px-6 py-4 text-xs font-semibold
-                                       text-gray-500 uppercase">
+                            <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">
                                 Lunch
                             </th>
-
                         </tr>
-
                     </thead>
 
-
-                    <tbody id="studentTable"
-                           class="divide-y divide-gray-100">
+                    <tbody id="studentTable" class="divide-y divide-gray-100">
 
                         {% for student in students %}
 
                         <tr class="student-row hover:bg-gray-50 transition">
 
+                            <!-- LEARNER NAME -->
                             <td class="px-6 py-4">
-
                                 <div class="font-semibold text-gray-900">
-                                    {{ student.profile.user.get_full_name }}
-                                </div>
-
-                            </td>
-
-
-                            <td class="px-6 py-4 text-gray-600">
-
-                                {{ student.grade.name|default:"-" }}
-
-                            </td>
-
-
-                            <td class="px-6 py-4">
-
-                                <span class="
-                                    font-semibold
-                                    {% if student.school_balance > 0 %}
-                                        text-red-600
+                                    {% if student.profile and student.profile.user %}
+                                        {{ student.profile.user.get_full_name|default:student.profile.user.username }}
+                                    {% elif student.first_name or student.last_name %}
+                                        {{ student.first_name }} {{ student.last_name }}
                                     {% else %}
-                                        text-green-600
+                                        Name not available
                                     {% endif %}
-                                ">
-
-                                    K{{ student.school_balance|floatformat:2 }}
-
-                                </span>
-
+                                </div>
                             </td>
 
+                            <!-- GRADE -->
+                            <td class="px-6 py-4 text-gray-600 whitespace-nowrap">
+                                {{ student.grade.name|default:"Not assigned" }}
+                            </td>
 
-                            <td class="px-6 py-4">
+                            <!-- SCHOOL FEES -->
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="font-semibold {% if student.school_balance > 0 %}text-red-600{% else %}text-green-600{% endif %}">
+                                    K{{ student.school_balance|floatformat:2 }}
+                                </span>
+                            </td>
+
+                            <!-- TRANSPORT -->
+                            <td class="px-6 py-4 whitespace-nowrap">
 
                                 {% if student.on_transport %}
-
-                                    <span class="
-                                        font-semibold
-                                        {% if student.transport_balance > 0 %}
-                                            text-red-600
-                                        {% else %}
-                                            text-green-600
-                                        {% endif %}
-                                    ">
-
+                                    <span class="font-semibold {% if student.transport_balance > 0 %}text-red-600{% else %}text-green-600{% endif %}">
                                         K{{ student.transport_balance|floatformat:2 }}
-
                                     </span>
-
                                 {% else %}
-
-                                    <span class="text-gray-400">
+                                    <span class="text-gray-400 text-sm">
                                         Not enrolled
                                     </span>
-
                                 {% endif %}
 
                             </td>
 
-
-                            <td class="px-6 py-4">
+                            <!-- LUNCH -->
+                            <td class="px-6 py-4 whitespace-nowrap">
 
                                 {% if student.on_school_lunch %}
-
-                                    <span class="
-                                        font-semibold
-                                        {% if student.lunch_balance > 0 %}
-                                            text-red-600
-                                        {% else %}
-                                            text-green-600
-                                        {% endif %}
-                                    ">
-
+                                    <span class="font-semibold {% if student.lunch_balance > 0 %}text-red-600{% else %}text-green-600{% endif %}">
                                         K{{ student.lunch_balance|floatformat:2 }}
-
                                     </span>
-
                                 {% else %}
-
-                                    <span class="text-gray-400">
+                                    <span class="text-gray-400 text-sm">
                                         Not enrolled
                                     </span>
-
                                 {% endif %}
 
                             </td>
 
                         </tr>
-
 
                         {% empty %}
 
-                        <tr>
+                        <tr id="noLearnersRow">
+                            <td colspan="5" class="px-6 py-12 text-center">
+                                <div class="text-4xl mb-3">🎓</div>
 
-                            <td colspan="5"
-                                class="px-6 py-12 text-center">
-
-                                <p class="text-gray-500">
-                                    No learners found.
+                                <p class="text-gray-700 font-semibold">
+                                    No learners found
                                 </p>
 
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Learner balances will appear here when learners are available.
+                                </p>
                             </td>
-
                         </tr>
 
                         {% endfor %}
+
+                        <tr id="noSearchResults" style="display: none;">
+                            <td colspan="5" class="px-6 py-12 text-center">
+                                <div class="text-3xl mb-3">🔎</div>
+
+                                <p class="text-gray-700 font-semibold">
+                                    No matching learners
+                                </p>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Try searching with a different name or grade.
+                                </p>
+                            </td>
+                        </tr>
 
                     </tbody>
 
@@ -361,32 +283,50 @@
 
 </div>
 
-
-<!-- SEARCH SCRIPT -->
+<!-- LEARNER SEARCH -->
 <script>
-
 document.addEventListener("DOMContentLoaded", function () {
-
     const searchInput = document.getElementById("studentSearch");
     const rows = document.querySelectorAll(".student-row");
+    const searchCount = document.getElementById("searchCount");
+    const noSearchResults = document.getElementById("noSearchResults");
 
-    searchInput.addEventListener("input", function () {
+    if (!searchInput) {
+        return;
+    }
 
-        const search = this.value.toLowerCase().trim();
+    function filterStudents() {
+        const search = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
 
         rows.forEach(function (row) {
-
             const text = row.textContent.toLowerCase();
+            const matches = text.includes(search);
 
-            row.style.display =
-                text.includes(search) ? "" : "none";
+            row.style.display = matches ? "" : "none";
 
+            if (matches) {
+                visibleCount++;
+            }
         });
 
-    });
+        if (searchCount) {
+            if (search === "") {
+                searchCount.textContent = "Showing all " + rows.length + " learners";
+            } else {
+                searchCount.textContent = "Showing " + visibleCount + " of " + rows.length + " learners";
+            }
+        }
 
+        if (noSearchResults) {
+            noSearchResults.style.display =
+                search !== "" && visibleCount === 0 ? "" : "none";
+        }
+    }
+
+    searchInput.addEventListener("input", filterStudents);
+    filterStudents();
 });
-
 </script>
 
 {% endblock %}

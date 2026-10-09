@@ -533,3 +533,30 @@ def parent_payment_invoice(request, payment_id):
             "student": payment.student,
         }
     )
+
+
+
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
+
+@login_required
+def mark_receipt_issued(request, payment_id):
+
+    payment = get_object_or_404(
+        Payment,
+        id=payment_id,
+        status="confirmed"
+    )
+
+    payment.receipt_issued = True
+    payment.save(update_fields=["receipt_issued"])
+
+    messages.success(
+        request,
+        f"Receipt for invoice {payment.invoice_number} marked as issued."
+    )
+
+    return redirect("fees:fees_dashboard")

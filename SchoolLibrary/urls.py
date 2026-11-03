@@ -10,6 +10,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("", include("accounts.urls")),
+    path("admin/timetables/", include("timetables.urls")),
 
     path('admin/', admin.site.urls),
 
@@ -20,6 +21,7 @@ urlpatterns = [
     path("", include("teachers.urls")),
     path('events/', include('events.urls')),
     path("games/", include("games.urls")),
+    path("admin/timetables/", include("timetables.urls")),
 ]
 
 # Serve media files during development

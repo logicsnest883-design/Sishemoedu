@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Select Timetable | School Management{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800">Timetable Management</h1>
+                <p class="text-sm text-slate-500 mt-1">Select a grade, academic year and term to manage its timetable.</p>
+            </div>
+
+            <a href="{% url 'timetables:timetable_create' %}"
+               class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+                + Create Timetable
+            </a>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mb-8">
+            <h2 class="text-lg font-semibold text-slate-800 mb-4">Find a Timetable</h2>
+
+            <form method="GET" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Grade</label>
+                    <select name="grade" class="w-full rounded-xl border border-slate-300 px-3 py-3">
+                        <option value="">All Grades</option>
+                        {% for grade in grades %}
+                            <option value="{{ grade.id }}" {% if selected_grade == grade.id|stringformat:"s" %}selected{% endif %}>
+                                {{ grade.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Academic Year</label>
+                    <input type="number" name="year" min="2026" max="4000"
+                           value="{{ selected_year }}"
+                           placeholder="e.g. 2026"
+                           class="w-full rounded-xl border border-slate-300 px-3 py-3">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Term</label>
+                    <select name="term" class="w-full rounded-xl border border-slate-300 px-3 py-3">
+                        <option value="">All Terms</option>
+                        {% for value, label in term_choices %}
+                            <option value="{{ value }}" {% if selected_term == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="flex items-end gap-2">
+                    <button type="submit"
+                            class="flex-1 rounded-xl bg-slate-800 px-4 py-3 text-sm font-semibold text-white hover:bg-slate-900">
+                        Search
+                    </button>
+                    <a href="{% url 'timetables:timetable_list' %}"
+                       class="rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                        Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-slate-800">Available Timetables</h2>
+            <span class="text-sm text-slate-500">{{ timetables|length }} found</span>
+        </div>
+
+        {% if timetables %}
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                {% for timetable in timetables %}
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hover:shadow-md transition">
+                        <div class="flex items-start justify-between">
+                            <div>
+                                <p class="text-xs font-semibold uppercase tracking-wide text-blue-600">Class Timetable</p>
+                                <h3 class="text-xl font-bold text-slate-800 mt-2">{{ timetable.grade.name }}</h3>
+                            </div>
+                            <span class="rounded-lg bg-blue-50 text-blue-700 px-3 py-2 text-sm font-semibold">
+                                {{ timetable.year }}
+                            </span>
+                        </div>
+
+                        <div class="mt-5 flex items-center justify-between text-sm">
+                            <span class="text-slate-500">Academic term</span>
+                            <span class="font-semibold text-slate-800">{{ timetable.term }}</span>
+                        </div>
+
+                        <div class="mt-3 flex items-center justify-between text-sm">
+                            <span class="text-slate-500">Lesson duration</span>
+                            <span class="font-semibold text-slate-800">{{ timetable.grade.lesson_duration }} minutes</span>
+                        </div>
+
+                        <div class="mt-5 border-t border-slate-100 pt-4 flex gap-2">
+                            <a href="{% url 'timetables:timetable_detail' timetable.pk %}"
+                               class="flex-1 text-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+                                Open Timetable
+                            </a>
+
+                            <a href="{% url 'timetables:timetable_edit' timetable.pk %}"
+                               class="rounded-xl border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-600 hover:bg-slate-50">
+                                Edit
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-white border border-dashed border-slate-300 rounded-2xl p-10 text-center">
+                <div class="text-4xl mb-3">📅</div>
+                <h3 class="text-lg font-semibold text-slate-800">No timetable found</h3>
+                <p class="text-sm text-slate-500 mt-2">Create a timetable for your selected grade, year and term.</p>
+                <a href="{% url 'timetables:timetable_create' %}"
+                   class="inline-block mt-5 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white hover:bg-blue-700">
+                    Create Timetable
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

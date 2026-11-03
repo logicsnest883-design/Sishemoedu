@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Timetable Management | School Admin{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-slate-50 py-8">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">Timetable Management</h1>
+                <p class="mt-1 text-sm text-slate-500">
+                    Select a grade and manage its weekly teaching schedule.
+                </p>
+            </div>
+
+            <a href="{% url 'timetables:timetable_list' %}"
+               class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-100">
+                View All Timetables
+            </a>
+        </div>
+
+        <div class="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <p class="text-sm text-slate-500">Available Grades</p>
+                <h2 class="mt-2 text-3xl font-bold text-slate-900">{{ grades_count }}</h2>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <p class="text-sm text-slate-500">Available Teachers</p>
+                <h2 class="mt-2 text-3xl font-bold text-slate-900">{{ teachers_count }}</h2>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <p class="text-sm text-slate-500">Created Timetables</p>
+                <h2 class="mt-2 text-3xl font-bold text-slate-900">{{ timetables_count }}</h2>
+            </div>
+
+        </div>
+
+        <div class="mb-5">
+            <h2 class="text-lg font-bold text-slate-900">Your Class Timetables</h2>
+            <p class="mt-1 text-sm text-slate-500">
+                Select an existing timetable or create one for a grade.
+            </p>
+        </div>
+
+        {% if recent_timetables %}
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {% for timetable in recent_timetables %}
+                    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition">
+
+                        <div class="flex items-center justify-between">
+                            <span class="rounded-lg bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+                                {{ timetable.year }}
+                            </span>
+                            <span class="text-sm text-slate-500">{{ timetable.term }}</span>
+                        </div>
+
+                        <h3 class="mt-5 text-xl font-bold text-slate-900">
+                            {{ timetable.grade.name }}
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            {{ timetable.grade.lesson_duration }}-minute lessons
+                        </p>
+
+                        <a href="{% url 'timetables:timetable_detail' timetable.pk %}"
+                           class="mt-6 block rounded-xl bg-indigo-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-indigo-700">
+                            Open Timetable
+                        </a>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+                <div class="text-4xl mb-4">📅</div>
+                <h3 class="text-lg font-bold text-slate-800">No timetables created yet</h3>
+                <p class="mt-2 text-sm text-slate-500">
+                    Start by selecting a grade, academic year and term.
+                </p>
+            </div>
+        {% endif %}
+
+        <div class="mt-8">
+            <a href="{% url 'timetables:timetable_create' %}"
+               class="inline-flex rounded-xl bg-indigo-600 px-6 py-3 font-semibold text-white hover:bg-indigo-700">
+                + Create New Timetable
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

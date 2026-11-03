@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}School Admin Dashboard{% endblock %}
@@ -27,7 +28,6 @@
 
 
         <!-- CLASS LISTS -->
-
         <a href="{% url 'class_lists' %}"
            class="group block rounded-2xl bg-gradient-to-br
                   from-teal-500 to-teal-700
@@ -36,21 +36,13 @@
 
             <div class="flex items-start justify-between">
 
-                <div class="w-14 h-14 rounded-2xl
-                            bg-white/20
-                            flex items-center justify-center
-                            text-3xl">
-
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
                     👨‍🎓
-
                 </div>
 
-                <span class="text-white/70 text-xl
-                             group-hover:text-white
-                             transition">
-
+                <span class="text-white/70 text-xl group-hover:text-white transition">
                     →
-
                 </span>
 
             </div>
@@ -67,7 +59,6 @@
 
 
         <!-- TESTS -->
-
         <a href="{% url 'admin_tests' %}"
            class="group block rounded-2xl bg-gradient-to-br
                   from-blue-500 to-blue-700
@@ -76,21 +67,13 @@
 
             <div class="flex items-start justify-between">
 
-                <div class="w-14 h-14 rounded-2xl
-                            bg-white/20
-                            flex items-center justify-center
-                            text-3xl">
-
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
                     📝
-
                 </div>
 
-                <span class="text-white/70 text-xl
-                             group-hover:text-white
-                             transition">
-
+                <span class="text-white/70 text-xl group-hover:text-white transition">
                     →
-
                 </span>
 
             </div>
@@ -107,7 +90,6 @@
 
 
         <!-- ATTENDANCE -->
-
         <a href="{% url 'admin_attendance' %}"
            class="group block rounded-2xl bg-gradient-to-br
                   from-emerald-500 to-emerald-700
@@ -116,21 +98,13 @@
 
             <div class="flex items-start justify-between">
 
-                <div class="w-14 h-14 rounded-2xl
-                            bg-white/20
-                            flex items-center justify-center
-                            text-3xl">
-
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
                     📋
-
                 </div>
 
-                <span class="text-white/70 text-xl
-                             group-hover:text-white
-                             transition">
-
+                <span class="text-white/70 text-xl group-hover:text-white transition">
                     →
-
                 </span>
 
             </div>
@@ -147,7 +121,6 @@
 
 
         <!-- PARENT ACCESS -->
-
         <a href="{% url 'parent_access_control' %}"
            class="group block rounded-2xl bg-gradient-to-br
                   from-indigo-500 to-indigo-700
@@ -156,21 +129,13 @@
 
             <div class="flex items-start justify-between">
 
-                <div class="w-14 h-14 rounded-2xl
-                            bg-white/20
-                            flex items-center justify-center
-                            text-3xl">
-
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
                     🔐
-
                 </div>
 
-                <span class="text-white/70 text-xl
-                             group-hover:text-white
-                             transition">
-
+                <span class="text-white/70 text-xl group-hover:text-white transition">
                     →
-
                 </span>
 
             </div>
@@ -187,7 +152,6 @@
 
 
         <!-- PENDING PAYMENTS -->
-
         <a href="{% url 'pending_payments' %}"
            class="group block rounded-2xl bg-gradient-to-br
                   from-purple-500 to-purple-700
@@ -196,13 +160,9 @@
 
             <div class="flex items-start justify-between">
 
-                <div class="w-14 h-14 rounded-2xl
-                            bg-white/20
-                            flex items-center justify-center
-                            text-3xl">
-
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
                     💳
-
                 </div>
 
                 {% if pending_payments_count > 0 %}
@@ -211,19 +171,13 @@
                                  bg-white text-purple-700
                                  flex items-center justify-center
                                  font-bold text-sm">
-
                         {{ pending_payments_count }}
-
                     </span>
 
                 {% else %}
 
-                    <span class="text-white/70 text-xl
-                                 group-hover:text-white
-                                 transition">
-
+                    <span class="text-white/70 text-xl group-hover:text-white transition">
                         →
-
                     </span>
 
                 {% endif %}
@@ -242,43 +196,68 @@
         </a>
 
 
+        <!-- FEES MANAGEMENT -->
         <a href="{% url 'admin_fees' %}"
-   class="group block rounded-2xl bg-gradient-to-br
-          from-amber-500 to-orange-600
-          p-6 shadow-md hover:shadow-xl
-          hover:-translate-y-1 transition-all duration-200">
+           class="group block rounded-2xl bg-gradient-to-br
+                  from-amber-500 to-orange-600
+                  p-6 shadow-md hover:shadow-xl
+                  hover:-translate-y-1 transition-all duration-200">
 
-    <div class="flex items-start justify-between">
+            <div class="flex items-start justify-between">
 
-        <div class="w-14 h-14 rounded-2xl
-                    bg-white/20
-                    flex items-center justify-center
-                    text-3xl">
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
+                    💰
+                </div>
 
-            💰
+                <span class="text-white/70 text-xl group-hover:text-white transition">
+                    →
+                </span>
 
-        </div>
+            </div>
 
-        <span class="text-white/70 text-xl
-                     group-hover:text-white
-                     transition">
+            <h2 class="text-xl font-bold text-white mt-6">
+                Fees Management
+            </h2>
 
-            →
+            <p class="text-sm text-amber-50 mt-2 leading-relaxed">
+                View learner balances, transport, lunch fees,
+                payments, and outstanding amounts.
+            </p>
 
-        </span>
+        </a>
 
-    </div>
 
-    <h2 class="text-xl font-bold text-white mt-6">
-        Fees Management
-    </h2>
+        <!-- TIMETABLE MANAGEMENT -->
+        <a href="{% url 'timetables:dashboard' %}"
+           class="group block rounded-2xl bg-gradient-to-br
+                  from-cyan-500 to-blue-700
+                  p-6 shadow-md hover:shadow-xl
+                  hover:-translate-y-1 transition-all duration-200">
 
-    <p class="text-sm text-amber-50 mt-2 leading-relaxed">
-        View learner balances, transport, lunch fees,
-        payments, and outstanding amounts.
-    </p>
+            <div class="flex items-start justify-between">
 
-</a>
+                <div class="w-14 h-14 rounded-2xl bg-white/20
+                            flex items-center justify-center text-3xl">
+                    📅
+                </div>
+
+                <span class="text-white/70 text-xl group-hover:text-white transition">
+                    →
+                </span>
+
+            </div>
+
+            <h2 class="text-xl font-bold text-white mt-6">
+                Timetable Management
+            </h2>
+
+            <p class="text-sm text-cyan-50 mt-2 leading-relaxed">
+                Create weekly class timetables, assign teachers to subjects,
+                and manage schedules by grade, term and year.
+            </p>
+
+        </a>
 
 
     </div>

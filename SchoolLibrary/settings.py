@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'teachers',
     'events',
     "games",
+    'timetables',
 ]
 
 MIDDLEWARE = [
@@ -96,8 +97,8 @@ DATABASES = {
 
 #DATABASES = {
     #"default": {
-        #"ENGINE": "django.db.backends.sqlite3",
-        #"NAME": BASE_DIR / "db.sqlite3",
+       # "ENGINE": "django.db.backends.sqlite3",
+       # "NAME": BASE_DIR / "db.sqlite3",
     #}
 #}
 

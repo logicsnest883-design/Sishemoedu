@@ -795,4 +795,18 @@
 
 </style>
 
+
+
+<script>
+function downloadSchedule() {
+    const originalTitle = document.title;
+
+    document.title = "Mark Schedule - {{ grade.name|escapejs }} - {{ year }} - {{ term|escapejs }}";
+
+    window.print();
+
+    document.title = originalTitle;
+}
+</script>
+
 {% endblock %}

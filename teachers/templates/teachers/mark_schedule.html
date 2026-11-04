@@ -49,16 +49,29 @@
 
             </div>
 
-            <button type="button"
-                    onclick="window.print()"
-                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2
-                           px-5 py-3 bg-teal-600 hover:bg-teal-700
-                           text-white font-bold rounded-xl shadow-sm transition">
+            <div class="flex flex-col sm:flex-row gap-3">
 
-                <span>🖨</span>
-                Print Mark Schedule
+    <button type="button"
+            onclick="window.print()"
+            class="inline-flex items-center justify-center gap-2
+                   px-5 py-3 bg-teal-600 hover:bg-teal-700
+                   text-white font-bold rounded-xl shadow-sm transition">
 
-            </button>
+        🖨 Print Schedule
+
+    </button>
+
+    <button type="button"
+            onclick="downloadSchedule()"
+            class="inline-flex items-center justify-center gap-2
+                   px-5 py-3 bg-blue-600 hover:bg-blue-700
+                   text-white font-bold rounded-xl shadow-sm transition">
+
+        ⬇ Download PDF
+
+    </button>
+
+</div>
 
         </div>
 

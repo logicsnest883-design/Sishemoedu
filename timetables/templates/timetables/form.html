@@ -1,10 +1,11 @@
+
 {% extends "base.html" %}
 
 {% block title %}{{ page_title }} | Timetable Management{% endblock %}
 
 {% block content %}
 <div class="min-h-screen bg-slate-50 py-10">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
 
         <div class="mb-8">
             <a href="{% url 'timetables:timetable_list' %}"
@@ -16,9 +17,15 @@
                 {{ page_title }}
             </h1>
 
-            <p class="mt-2 text-sm text-slate-500">
-                Select the grade, academic year and term for this timetable.
-            </p>
+            {% if formset %}
+                <p class="mt-2 text-sm text-slate-500">
+                    Add multiple lessons for the same timetable period. Each lesson can have its own option group, subject, teacher and classroom.
+                </p>
+            {% else %}
+                <p class="mt-2 text-sm text-slate-500">
+                    Select the grade, academic year and term for this timetable.
+                </p>
+            {% endif %}
         </div>
 
         <div class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
@@ -26,48 +33,160 @@
             <form method="POST">
                 {% csrf_token %}
 
-                {% if form.non_field_errors %}
-                    <div class="mb-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">
-                        {{ form.non_field_errors }}
-                    </div>
-                {% endif %}
+                {% if formset %}
 
-                <div class="space-y-6">
+                    {{ formset.management_form }}
 
-                    {% for field in form %}
-                        <div>
-                            <label for="{{ field.id_for_label }}"
-                                   class="mb-2 block text-sm font-semibold text-slate-700">
-                                {{ field.label }}
-                            </label>
-
-                            {{ field }}
-
-                            {% if field.help_text %}
-                                <p class="mt-1 text-xs text-slate-500">
-                                    {{ field.help_text }}
-                                </p>
-                            {% endif %}
-
-                            {% for error in field.errors %}
-                                <p class="mt-2 text-sm text-red-600">{{ error }}</p>
-                            {% endfor %}
+                    {% if formset.non_form_errors %}
+                        <div class="mb-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                            {{ formset.non_form_errors }}
                         </div>
-                    {% endfor %}
+                    {% endif %}
 
-                </div>
+                    <div id="lesson-forms" class="space-y-5">
 
-                <div class="mt-8 flex flex-col-reverse sm:flex-row gap-3">
-                    <a href="{{ cancel_url }}"
-                       class="flex-1 rounded-xl border border-slate-300 px-5 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                        Cancel
-                    </a>
+                        {% for form in formset %}
+                            <div class="lesson-row rounded-xl border border-slate-200 bg-slate-50 p-5">
 
-                    <button type="submit"
-                            class="flex-1 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
-                        Save Timetable
+                                <div class="mb-5 flex items-center justify-between">
+                                    <h3 class="font-bold text-slate-800">
+                                        Lesson <span class="lesson-number">{{ forloop.counter }}</span>
+                                    </h3>
+
+                                    <button type="button"
+                                            class="remove-lesson text-sm font-semibold text-red-600 hover:text-red-800">
+                                        Remove
+                                    </button>
+                                </div>
+
+                                {% if form.non_field_errors %}
+                                    <div class="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+                                        {{ form.non_field_errors }}
+                                    </div>
+                                {% endif %}
+
+                                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                                    {% for field in form %}
+                                        <div>
+                                            <label for="{{ field.id_for_label }}"
+                                                   class="mb-2 block text-sm font-semibold text-slate-700">
+                                                {{ field.label }}
+                                            </label>
+
+                                            {{ field }}
+
+                                            {% for error in field.errors %}
+                                                <p class="mt-2 text-sm text-red-600">
+                                                    {{ error }}
+                                                </p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <template id="empty-lesson-form">
+                        <div class="lesson-row rounded-xl border border-slate-200 bg-slate-50 p-5">
+
+                            <div class="mb-5 flex items-center justify-between">
+                                <h3 class="font-bold text-slate-800">
+                                    Lesson <span class="lesson-number"></span>
+                                </h3>
+
+                                <button type="button"
+                                        class="remove-lesson text-sm font-semibold text-red-600 hover:text-red-800">
+                                    Remove
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                                {% for field in formset.empty_form %}
+                                    <div>
+                                        <label for="{{ field.id_for_label }}"
+                                               class="mb-2 block text-sm font-semibold text-slate-700">
+                                            {{ field.label }}
+                                        </label>
+
+                                        {{ field }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </template>
+
+                    <button type="button"
+                            id="add-lesson"
+                            class="mt-5 w-full rounded-xl border-2 border-dashed border-indigo-300 px-5 py-4 text-sm font-bold text-indigo-600 transition hover:border-indigo-500 hover:bg-indigo-50">
+                        + Add Another Option Lesson
                     </button>
-                </div>
+
+                    <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row">
+                        <a href="{{ cancel_url }}"
+                           class="flex-1 rounded-xl border border-slate-300 px-5 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="flex-1 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
+                            Save All Lessons
+                        </button>
+                    </div>
+
+                {% else %}
+
+                    {% if form.non_field_errors %}
+                        <div class="mb-5 rounded-xl bg-red-50 p-4 text-sm text-red-700">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="space-y-6">
+
+                        {% for field in form %}
+                            <div>
+                                <label for="{{ field.id_for_label }}"
+                                       class="mb-2 block text-sm font-semibold text-slate-700">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+
+                                {% if field.help_text %}
+                                    <p class="mt-1 text-xs text-slate-500">
+                                        {{ field.help_text }}
+                                    </p>
+                                {% endif %}
+
+                                {% for error in field.errors %}
+                                    <p class="mt-2 text-sm text-red-600">
+                                        {{ error }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mt-8 flex flex-col-reverse gap-3 sm:flex-row">
+                        <a href="{{ cancel_url }}"
+                           class="flex-1 rounded-xl border border-slate-300 px-5 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50">
+                            Cancel
+                        </a>
+
+                        <button type="submit"
+                                class="flex-1 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
+                            Save Timetable
+                        </button>
+                    </div>
+
+                {% endif %}
 
             </form>
 
@@ -96,4 +215,52 @@
         cursor: pointer;
     }
 </style>
+
+{% if formset %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("lesson-forms");
+    const addButton = document.getElementById("add-lesson");
+    const template = document.getElementById("empty-lesson-form");
+    const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+
+    function updateNumbers() {
+        container.querySelectorAll(".lesson-row").forEach(function (row, index) {
+            row.querySelector(".lesson-number").textContent = index + 1;
+        });
+    }
+
+    addButton.addEventListener("click", function () {
+        const index = parseInt(totalForms.value, 10);
+        const html = template.innerHTML.replace(/__prefix__/g, index);
+
+        container.insertAdjacentHTML("beforeend", html);
+        totalForms.value = index + 1;
+
+        updateNumbers();
+    });
+
+    container.addEventListener("click", function (event) {
+        const button = event.target.closest(".remove-lesson");
+
+        if (!button) {
+            return;
+        }
+
+        const rows = container.querySelectorAll(".lesson-row");
+
+        if (rows.length <= 1) {
+            alert("At least one lesson row must remain.");
+            return;
+        }
+
+        button.closest(".lesson-row").remove();
+        updateNumbers();
+    });
+
+    updateNumbers();
+});
+</script>
+{% endif %}
+
 {% endblock %}

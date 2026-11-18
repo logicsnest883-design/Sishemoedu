@@ -1,6 +1,13 @@
 
 from django.contrib import admin
-from .models import Grade, Teacher, Subject, Timetable, TimetableEntry
+from .models import (
+    Grade,
+    Teacher,
+    Subject,
+    OptionGroup,
+    Timetable,
+    TimetableEntry,
+)
 
 
 @admin.register(Grade)
@@ -12,7 +19,13 @@ class GradeAdmin(admin.ModelAdmin):
 
 @admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ("first_name", "last_name", "phone_number", "email", "is_active")
+    list_display = (
+        "first_name",
+        "last_name",
+        "phone_number",
+        "email",
+        "is_active",
+    )
     list_filter = ("is_active",)
     search_fields = ("first_name", "last_name", "phone_number", "email")
 
@@ -22,6 +35,13 @@ class SubjectAdmin(admin.ModelAdmin):
     list_display = ("name", "is_active")
     list_filter = ("is_active",)
     search_fields = ("name",)
+
+
+@admin.register(OptionGroup)
+class OptionGroupAdmin(admin.ModelAdmin):
+    list_display = ("name", "grade", "is_active")
+    list_filter = ("grade", "is_active")
+    search_fields = ("name", "grade__name")
 
 
 class TimetableEntryInline(admin.TabularInline):
@@ -39,7 +59,26 @@ class TimetableAdmin(admin.ModelAdmin):
 @admin.register(TimetableEntry)
 class TimetableEntryAdmin(admin.ModelAdmin):
     list_display = (
-        "timetable", "day", "start_time", "end_time",
-        "activity", "subject", "teacher"
+        "timetable",
+        "day",
+        "start_time",
+        "end_time",
+        "activity",
+        "subject",
+        "teacher",
+        "option_group",
+        "classroom",
     )
-    list_filter = ("day", "activity", "timetable__year", "timetable__term")
+    list_filter = (
+        "day",
+        "activity",
+        "option_group",
+        "timetable__year",
+        "timetable__term",
+    )
+    search_fields = (
+        "subject__name",
+        "teacher__first_name",
+        "teacher__last_name",
+        "classroom",
+    )

@@ -49,6 +49,28 @@ class Subject(models.Model):
         return self.name
 
 
+class OptionGroup(models.Model):
+    grade = models.ForeignKey(
+        Grade,
+        on_delete=models.CASCADE,
+        related_name="option_groups"
+    )
+    name = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["grade__name", "name"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["grade", "name"],
+                name="unique_option_group_per_grade"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.grade} - {self.name}"
+
+
 class Timetable(models.Model):
     TERM_CHOICES = [
         ("Term 1", "Term 1"),
@@ -136,10 +158,23 @@ class TimetableEntry(models.Model):
         related_name="timetable_entries"
     )
 
+    option_group = models.ForeignKey(
+        OptionGroup,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="timetable_entries"
+    )
+
+    classroom = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
     notes = models.CharField(max_length=200, blank=True)
 
     class Meta:
-        ordering = ["day", "start_time"]
+        ordering = ["day", "start_time", "option_group__name"]
 
     def clean(self):
         super().clean()
@@ -157,6 +192,12 @@ class TimetableEntry(models.Model):
             if not self.teacher:
                 errors["teacher"] = "Please select a teacher."
 
+            if self.option_group_id and self.timetable_id:
+                if self.option_group.grade_id != self.timetable.grade_id:
+                    errors["option_group"] = (
+                        "This option group does not belong to this grade."
+                    )
+
             if self.start_time and self.end_time and self.timetable_id:
                 start = self.start_time.hour * 60 + self.start_time.minute
                 end = self.end_time.hour * 60 + self.end_time.minute
@@ -168,9 +209,9 @@ class TimetableEntry(models.Model):
                         f"{self.timetable.grade.lesson_duration}-minute lessons."
                     )
 
-        elif self.subject_id or self.teacher_id:
+        elif self.subject_id or self.teacher_id or self.option_group_id:
             errors["activity"] = (
-                "Only lessons can have a subject and teacher."
+                "Only lessons can have a subject, teacher or option group."
             )
 
         if (
@@ -180,19 +221,34 @@ class TimetableEntry(models.Model):
             and self.end_time
             and self.end_time > self.start_time
         ):
-            grade_conflict = TimetableEntry.objects.filter(
+            overlapping_entries = TimetableEntry.objects.filter(
                 timetable__grade=self.timetable.grade,
                 timetable__year=self.timetable.year,
                 timetable__term=self.timetable.term,
                 day=self.day,
                 start_time__lt=self.end_time,
                 end_time__gt=self.start_time,
-            ).exclude(pk=self.pk)
+            ).exclude(pk=self.pk).select_related("option_group")
 
-            if grade_conflict.exists():
-                errors["start_time"] = (
-                    "This grade already has an activity during this period."
-                )
+            for existing in overlapping_entries:
+                conflict = False
+
+                if self.activity != "lesson" or existing.activity != "lesson":
+                    conflict = True
+
+                elif (
+                    not self.option_group_id
+                    or not existing.option_group_id
+                    or self.option_group_id == existing.option_group_id
+                ):
+                    conflict = True
+
+                if conflict:
+                    errors["start_time"] = (
+                        "This grade or option group already has an activity "
+                        "during this period."
+                    )
+                    break
 
             if self.teacher_id:
                 teacher_conflict = TimetableEntry.objects.filter(
@@ -220,4 +276,7 @@ class TimetableEntry(models.Model):
                 f"{self.teacher} - {self.day}"
             )
 
-        return f"{self.timetable.grade} - {self.get_activity_display()} - {self.day}"
+        return (
+            f"{self.timetable.grade} - "
+            f"{self.get_activity_display()} - {self.day}"
+        )

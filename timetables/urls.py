@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 
@@ -17,6 +18,23 @@ urlpatterns = [
     path("subjects/", views.subject_list, name="subject_list"),
     path("subjects/add/", views.subject_create, name="subject_create"),
     path("subjects/<int:pk>/edit/", views.subject_edit, name="subject_edit"),
+
+    path("option-groups/", views.option_group_list, name="option_group_list"),
+    path(
+        "option-groups/add/",
+        views.option_group_create,
+        name="option_group_create"
+    ),
+    path(
+        "option-groups/<int:pk>/edit/",
+        views.option_group_edit,
+        name="option_group_edit"
+    ),
+    path(
+        "option-groups/<int:pk>/delete/",
+        views.option_group_delete,
+        name="option_group_delete"
+    ),
 
     path("list/", views.timetable_list, name="timetable_list"),
     path("create/", views.timetable_create, name="timetable_create"),

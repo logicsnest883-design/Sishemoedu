@@ -1,3 +1,4 @@
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
@@ -5,12 +6,24 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from datetime import time
+from django.db import transaction
+from django.core.exceptions import ValidationError
+from .forms import TimetableEntryFormSet
 
-from .models import Grade, Teacher, Subject, Timetable, TimetableEntry
+from .models import (
+    Grade,
+    Teacher,
+    Subject,
+    OptionGroup,
+    Timetable,
+    TimetableEntry,
+)
+
 from .forms import (
     GradeForm,
     TeacherForm,
     SubjectForm,
+    OptionGroupForm,
     TimetableForm,
     TimetableEntryForm,
 )
@@ -33,7 +46,9 @@ def timetable_dashboard(request):
 @login_required
 def grade_list(request):
     grades = Grade.objects.all()
-    return render(request, "timetables/grade_list.html", {"grades": grades})
+    return render(request, "timetables/grade_list.html", {
+        "grades": grades
+    })
 
 
 @login_required
@@ -152,6 +167,57 @@ def subject_edit(request, pk):
 
 
 @login_required
+def option_group_list(request):
+    option_groups = OptionGroup.objects.select_related("grade").all()
+
+    return render(request, "timetables/option_group_list.html", {
+        "option_groups": option_groups,
+    })
+
+
+@login_required
+def option_group_create(request):
+    form = OptionGroupForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Option group added successfully.")
+        return redirect("timetables:option_group_list")
+
+    return render(request, "timetables/form.html", {
+        "form": form,
+        "page_title": "Add Option Group",
+        "cancel_url": reverse("timetables:option_group_list"),
+    })
+
+
+@login_required
+def option_group_edit(request, pk):
+    option_group = get_object_or_404(OptionGroup, pk=pk)
+    form = OptionGroupForm(request.POST or None, instance=option_group)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Option group updated successfully.")
+        return redirect("timetables:option_group_list")
+
+    return render(request, "timetables/form.html", {
+        "form": form,
+        "page_title": "Edit Option Group",
+        "cancel_url": reverse("timetables:option_group_list"),
+    })
+
+
+@login_required
+@require_POST
+def option_group_delete(request, pk):
+    option_group = get_object_or_404(OptionGroup, pk=pk)
+    option_group.delete()
+    messages.success(request, "Option group deleted successfully.")
+    return redirect("timetables:option_group_list")
+
+
+@login_required
 def timetable_list(request):
     timetables = Timetable.objects.select_related("grade").all()
 
@@ -193,6 +259,7 @@ def timetable_create(request):
         "cancel_url": reverse("timetables:timetable_list"),
     })
 
+
 @login_required
 def timetable_detail(request, pk):
     timetable = get_object_or_404(
@@ -233,16 +300,11 @@ def timetable_detail(request, pk):
     # Morning lessons
     if duration == 30:
         add_lessons(8, 0, 10, 0)
-
         add_slot(time(10, 0), time(10, 30), "break")
-
         add_lessons(10, 30, 13, 0)
-
     else:
         add_lessons(8, 0, 10, 40)
-
         add_slot(time(10, 40), time(11, 0), "break")
-
         add_lessons(11, 0, 13, 0)
 
     # Lunch
@@ -260,19 +322,25 @@ def timetable_detail(request, pk):
     for day in days:
         entries = timetable.entries.filter(
             day=day
-        ).select_related("subject", "teacher")
+        ).select_related(
+            "subject",
+            "teacher",
+            "option_group",
+        )
 
-        entries_by_period = {
-            (entry.start_time, entry.end_time): entry
-            for entry in entries
-        }
+        entries_by_period = {}
+
+        for entry in entries:
+            period = (entry.start_time, entry.end_time)
+
+            entries_by_period.setdefault(period, []).append(entry)
 
         cells = []
 
         for slot in slots:
-            entry = entries_by_period.get(
-                (slot["start"], slot["end"])
-            )
+            period = (slot["start"], slot["end"])
+
+            period_entries = entries_by_period.get(period, [])
 
             kind = slot["kind"]
 
@@ -299,7 +367,7 @@ def timetable_detail(request, pk):
                 "end": slot["end"],
                 "kind": kind,
                 "label": label,
-                "entry": entry,
+                "entries": period_entries,
                 "add_url": add_url,
             })
 
@@ -308,7 +376,6 @@ def timetable_detail(request, pk):
             "cells": cells,
         })
 
-    # Other class timetables for the same year and term
     other_timetables = Timetable.objects.filter(
         year=timetable.year,
         term=timetable.term
@@ -319,6 +386,8 @@ def timetable_detail(request, pk):
         "daily_entries": daily_entries,
         "other_timetables": other_timetables,
     })
+
+
 @login_required
 def timetable_edit(request, pk):
     timetable = get_object_or_404(Timetable, pk=pk)
@@ -345,6 +414,7 @@ def timetable_delete(request, pk):
     return redirect("timetables:timetable_list")
 
 
+
 @login_required
 def entry_create(request, timetable_pk):
     timetable = get_object_or_404(Timetable, pk=timetable_pk)
@@ -355,26 +425,101 @@ def entry_create(request, timetable_pk):
         "end_time": request.GET.get("end_time", ""),
     }
 
-    form = TimetableEntryForm(
+    formset = TimetableEntryFormSet(
         request.POST or None,
-        initial=initial
+        form_kwargs={"timetable": timetable},
     )
 
-    if form.is_valid():
-        entry = form.save(commit=False)
-        entry.timetable = timetable
+    if request.method != "POST":
+        for form in formset.forms:
+            form.initial.update(initial)
 
-        try:
-            entry.full_clean()
-            entry.save()
-            messages.success(request, "Timetable lesson added successfully.")
-            return redirect("timetables:timetable_detail", pk=timetable.pk)
-        except ValidationError as error:
-            form.add_error(None, error)
+    if request.method == "POST" and formset.is_valid():
+        entries = []
+
+        for form in formset.forms:
+            if not form.has_changed():
+                continue
+
+            entry = form.save(commit=False)
+            entry.timetable = timetable
+
+            try:
+                entry.full_clean()
+                entries.append((form, entry))
+
+            except ValidationError as error:
+                if hasattr(error, "error_dict"):
+                    for field, field_errors in error.error_dict.items():
+                        if field in form.fields:
+                            form.add_error(field, field_errors)
+                        else:
+                            form.add_error(None, field_errors)
+                else:
+                    form.add_error(None, error)
+
+        # Check for conflicts between lessons submitted together.
+        for i, (form_a, entry_a) in enumerate(entries):
+            for form_b, entry_b in entries[i + 1:]:
+
+                if (
+                    entry_a.day != entry_b.day
+                    or entry_a.start_time >= entry_b.end_time
+                    or entry_b.start_time >= entry_a.end_time
+                ):
+                    continue
+
+                # Whole-class lessons cannot overlap option lessons.
+                if (
+                    entry_a.activity != "lesson"
+                    or entry_b.activity != "lesson"
+                    or not entry_a.option_group_id
+                    or not entry_b.option_group_id
+                ):
+                    form_b.add_error(
+                        None,
+                        "A whole-class activity cannot overlap an option lesson."
+                    )
+
+                # The same teacher cannot teach two simultaneous lessons.
+                if (
+                    entry_a.teacher_id
+                    and entry_a.teacher_id == entry_b.teacher_id
+                ):
+                    form_b.add_error(
+                        "teacher",
+                        "This teacher cannot teach two lessons at the same time."
+                    )
+
+        if entries and all(not form.errors for form, entry in entries):
+            try:
+                with transaction.atomic():
+                    for form, entry in entries:
+                        entry.save()
+
+                messages.success(
+                    request,
+                    f"{len(entries)} timetable lesson(s) added successfully."
+                )
+
+                return redirect(
+                    "timetables:timetable_detail",
+                    pk=timetable.pk
+                )
+
+            except ValidationError as error:
+                messages.error(request, str(error))
+
+        elif not entries:
+            if formset.forms:
+                formset.forms[0].add_error(
+                    None,
+                    "Please enter at least one lesson."
+                )
 
     return render(request, "timetables/form.html", {
-        "form": form,
-        "page_title": f"Add Lesson - {timetable.grade}",
+        "formset": formset,
+        "page_title": f"Add Lessons - {timetable.grade}",
         "cancel_url": reverse(
             "timetables:timetable_detail",
             args=[timetable.pk]
@@ -387,7 +532,12 @@ def entry_edit(request, pk):
         TimetableEntry.objects.select_related("timetable"),
         pk=pk
     )
-    form = TimetableEntryForm(request.POST or None, instance=entry)
+
+    form = TimetableEntryForm(
+        request.POST or None,
+        instance=entry,
+        timetable=entry.timetable,
+    )
 
     if form.is_valid():
         updated_entry = form.save(commit=False)
@@ -401,7 +551,7 @@ def entry_edit(request, pk):
                 "timetables:timetable_detail",
                 pk=entry.timetable.pk
             )
-        except Exception as error:
+        except ValidationError as error:
             form.add_error(None, error)
 
     return render(request, "timetables/form.html", {

@@ -1,5 +1,15 @@
+
 from django import forms
-from .models import Grade, Teacher, Subject, Timetable, TimetableEntry
+from django.forms import formset_factory
+
+from .models import (
+    Grade,
+    Teacher,
+    Subject,
+    OptionGroup,
+    Timetable,
+    TimetableEntry,
+)
 
 
 class GradeForm(forms.ModelForm):
@@ -26,6 +36,12 @@ class SubjectForm(forms.ModelForm):
         fields = ["name", "is_active"]
 
 
+class OptionGroupForm(forms.ModelForm):
+    class Meta:
+        model = OptionGroup
+        fields = ["grade", "name", "is_active"]
+
+
 class TimetableForm(forms.ModelForm):
     class Meta:
         model = Timetable
@@ -42,6 +58,8 @@ class TimetableEntryForm(forms.ModelForm):
             "activity",
             "subject",
             "teacher",
+            "option_group",
+            "classroom",
             "notes",
         ]
         widgets = {
@@ -50,6 +68,35 @@ class TimetableEntryForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        timetable = kwargs.pop("timetable", None)
+
         super().__init__(*args, **kwargs)
-        self.fields["subject"].queryset = Subject.objects.filter(is_active=True)
-        self.fields["teacher"].queryset = Teacher.objects.filter(is_active=True)
+
+        self.fields["subject"].queryset = Subject.objects.filter(
+            is_active=True
+        )
+
+        self.fields["teacher"].queryset = Teacher.objects.filter(
+            is_active=True
+        )
+
+        self.fields["option_group"].required = False
+
+        if timetable:
+            self.fields["option_group"].queryset = OptionGroup.objects.filter(
+                grade=timetable.grade,
+                is_active=True
+            )
+        elif self.instance and self.instance.pk:
+            self.fields["option_group"].queryset = OptionGroup.objects.filter(
+                grade=self.instance.timetable.grade,
+                is_active=True
+            )
+        else:
+            self.fields["option_group"].queryset = OptionGroup.objects.none()
+
+
+TimetableEntryFormSet = formset_factory(
+    TimetableEntryForm,
+    extra=2,
+)

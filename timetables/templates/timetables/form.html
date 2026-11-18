@@ -224,20 +224,47 @@ document.addEventListener("DOMContentLoaded", function () {
     const template = document.getElementById("empty-lesson-form");
     const totalForms = document.getElementById("id_form-TOTAL_FORMS");
 
-    function updateNumbers() {
-        container.querySelectorAll(".lesson-row").forEach(function (row, index) {
+    function updateForms() {
+        const rows = container.querySelectorAll(".lesson-row");
+
+        rows.forEach(function (row, index) {
             row.querySelector(".lesson-number").textContent = index + 1;
+
+            row.querySelectorAll("[name], [id], label[for]").forEach(function (element) {
+                if (element.name) {
+                    element.name = element.name.replace(
+                        /form-\d+-/,
+                        "form-" + index + "-"
+                    );
+                }
+
+                if (element.id) {
+                    element.id = element.id.replace(
+                        /form-\d+-/,
+                        "form-" + index + "-"
+                    );
+                }
+
+                if (element.htmlFor) {
+                    element.htmlFor = element.htmlFor.replace(
+                        /form-\d+-/,
+                        "form-" + index + "-"
+                    );
+                }
+            });
         });
+
+        totalForms.value = rows.length;
     }
 
     addButton.addEventListener("click", function () {
-        const index = parseInt(totalForms.value, 10);
+        const index = container.querySelectorAll(".lesson-row").length;
+
         const html = template.innerHTML.replace(/__prefix__/g, index);
 
         container.insertAdjacentHTML("beforeend", html);
-        totalForms.value = index + 1;
 
-        updateNumbers();
+        updateForms();
     });
 
     container.addEventListener("click", function (event) {
@@ -250,17 +277,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const rows = container.querySelectorAll(".lesson-row");
 
         if (rows.length <= 1) {
-            alert("At least one lesson row must remain.");
+            alert("At least one lesson must remain.");
             return;
         }
 
         button.closest(".lesson-row").remove();
-        updateNumbers();
+
+        updateForms();
     });
 
-    updateNumbers();
+    updateForms();
 });
 </script>
 {% endif %}
-
 {% endblock %}

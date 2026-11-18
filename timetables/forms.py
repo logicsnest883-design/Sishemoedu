@@ -98,5 +98,7 @@ class TimetableEntryForm(forms.ModelForm):
 
 TimetableEntryFormSet = formset_factory(
     TimetableEntryForm,
-    extra=2,
+    extra=1,
+    min_num=1,
+    validate_min=True,
 )

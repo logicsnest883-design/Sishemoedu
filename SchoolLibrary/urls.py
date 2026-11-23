@@ -22,6 +22,7 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path("games/", include("games.urls")),
     path("admin/timetables/", include("timetables.urls")),
+    path("graduation-quiz/", include("graduation_quiz.urls")),
 ]
 
 # Serve media files during development

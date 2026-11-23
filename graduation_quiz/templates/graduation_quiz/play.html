@@ -1,0 +1,428 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Live Quiz | Sishemo Graduation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-white p-4">
+
+<div class="max-w-7xl mx-auto py-6">
+
+    <header class="text-center mb-8">
+        <div class="text-5xl mb-3">🏆</div>
+        <h1 class="text-2xl md:text-3xl font-black">
+            SISHEMO GRADUATION QUIZ
+        </h1>
+        <p class="text-slate-400 mt-2">Good luck!</p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+        <!-- QUIZ AREA -->
+        <div class="lg:col-span-2">
+
+            <div class="grid grid-cols-2 gap-3 mb-6">
+
+                <div class="bg-slate-800 rounded-xl p-4 text-center">
+                    <p class="text-sm text-slate-400">Current stage</p>
+                    <p id="stage" class="text-xl font-bold">Waiting</p>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl p-4 text-center">
+                    <p class="text-sm text-slate-400">Stage time remaining</p>
+                    <p id="timer" class="text-2xl font-black">--</p>
+                </div>
+
+            </div>
+
+            <main class="bg-white text-slate-900 rounded-2xl p-6 md:p-8 shadow-xl">
+
+                <p id="question-number"
+                   class="text-sm font-bold text-blue-600 mb-4"></p>
+
+                <h2 id="question" class="text-xl md:text-2xl font-bold mb-6">
+                    Waiting for the organiser...
+                </h2>
+
+                <div id="options" class="space-y-3"></div>
+
+                <p id="message" class="text-center text-sm text-slate-500 mt-6">
+                    Please wait for the quiz to begin.
+                </p>
+
+            </main>
+
+            <div class="text-center mt-6">
+                <a href="{% url 'graduation_quiz:leaderboard' %}"
+                   class="text-blue-400 hover:text-blue-300 font-semibold">
+                    View Full Leaderboard
+                </a>
+            </div>
+
+        </div>
+
+        <!-- TOP FIVE LEADERBOARD -->
+        <aside class="bg-slate-800 rounded-2xl p-5 shadow-xl">
+
+            <div class="flex items-center justify-between mb-5">
+                <div>
+                    <p class="text-xs text-yellow-400 font-bold uppercase tracking-widest">
+                        Live rankings
+                    </p>
+                    <h2 class="text-xl font-black mt-1">
+                        Top 5 Players
+                    </h2>
+                </div>
+
+                <span class="text-3xl">🏆</span>
+            </div>
+
+            <div id="top-five" class="space-y-3">
+                <p class="text-slate-400 text-sm text-center py-6">
+                    Loading leaderboard...
+                </p>
+            </div>
+
+            <a href="{% url 'graduation_quiz:leaderboard' %}"
+               class="block text-center mt-5 bg-slate-700 hover:bg-slate-600 rounded-xl py-3 text-sm font-bold">
+                View All Rankings
+            </a>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<script>
+const statusUrl = "{% url 'graduation_quiz:status' %}";
+const submitUrl = "{% url 'graduation_quiz:submit' %}";
+const leaderboardUrl = "{% url 'graduation_quiz:leaderboard_data' %}";
+const resultsUrl = "{% url 'graduation_quiz:results' %}";
+const csrfToken = "{{ csrf_token }}";
+
+let currentQuestionId = null;
+let submitted = false;
+let loading = false;
+
+const questionElement = document.getElementById('question');
+const optionsElement = document.getElementById('options');
+const messageElement = document.getElementById('message');
+
+async function loadQuiz() {
+
+    if (loading) return;
+
+    loading = true;
+
+    try {
+
+        const response = await fetch(statusUrl, {
+            cache: 'no-store'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            messageElement.textContent =
+                'Your session has expired. Please join again.';
+
+            optionsElement.innerHTML = '';
+            return;
+        }
+
+        if (data.status === 'waiting') {
+
+            currentQuestionId = null;
+            submitted = false;
+
+            document.getElementById('stage').textContent = 'Waiting';
+            document.getElementById('timer').textContent = '--';
+            document.getElementById('question-number').textContent = '';
+
+            questionElement.textContent =
+                'Waiting for the organiser to start the next stage.';
+
+            optionsElement.innerHTML = '';
+
+            messageElement.textContent = 'Please wait.';
+
+            return;
+        }
+
+        if (data.status === 'stage_completed') {
+
+            currentQuestionId = null;
+            submitted = false;
+
+            document.getElementById('timer').textContent = '00:00';
+
+            questionElement.textContent = 'This stage has ended.';
+
+            optionsElement.innerHTML = '';
+
+            messageElement.textContent =
+                'Please wait for the organiser to activate the next stage.';
+
+            return;
+        }
+
+        if (data.status === 'competition_completed') {
+
+            currentQuestionId = null;
+
+            document.getElementById('stage').textContent = 'Completed';
+            document.getElementById('timer').textContent = '00:00';
+
+            questionElement.textContent =
+                'The graduation quiz has finished!';
+
+            optionsElement.innerHTML = '';
+
+            messageElement.textContent =
+                'Thank you for participating. View the final results below.';
+
+            const link = document.createElement('a');
+
+            link.href = resultsUrl;
+            link.textContent = 'View Final Results';
+
+            link.className =
+                'inline-block mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold';
+
+            optionsElement.appendChild(link);
+
+            return;
+        }
+
+        if (data.status !== 'active') return;
+
+        document.getElementById('stage').textContent =
+            data.stage + ' - ' + data.stage_title;
+
+        document.getElementById('timer').textContent =
+            formatTime(data.stage_seconds_remaining);
+
+        const questionId = data.stage + '-' + data.question_number;
+
+        document.getElementById('question-number').textContent =
+            'QUESTION ' + data.question_number + ' OF 10';
+
+        if (currentQuestionId !== questionId) {
+
+            currentQuestionId = questionId;
+            submitted = data.answered;
+
+            questionElement.textContent = data.question_text;
+
+            optionsElement.innerHTML = '';
+
+            Object.entries(data.options).forEach(([key, value]) => {
+
+                const button = document.createElement('button');
+
+                button.type = 'button';
+                button.textContent = key + '. ' + value;
+                button.disabled = data.answered;
+
+                button.className =
+                    'w-full text-left border border-slate-300 rounded-xl p-4 font-semibold hover:bg-blue-50 hover:border-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition';
+
+                button.addEventListener('click', () => {
+                    sendAnswer(key);
+                });
+
+                optionsElement.appendChild(button);
+
+            });
+
+        } else if (data.answered) {
+
+            submitted = true;
+
+            document.querySelectorAll('#options button').forEach(button => {
+                button.disabled = true;
+            });
+
+        }
+
+        messageElement.textContent = data.answered
+            ? 'Your answer has been submitted.'
+            : 'Question time remaining: ' + data.seconds_remaining + ' seconds';
+
+    } catch (error) {
+
+        messageElement.textContent =
+            'Connection interrupted. Reconnecting...';
+
+    } finally {
+
+        loading = false;
+
+    }
+}
+
+
+async function loadTopFive() {
+
+    try {
+
+        const response = await fetch(leaderboardUrl, {
+            cache: 'no-store'
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        const container = document.getElementById('top-five');
+
+        // This matches the exact structure returned by quiz_leaderboard.
+        const players = data.participants || [];
+
+        container.innerHTML = '';
+
+        if (!players.length) {
+
+            container.innerHTML =
+                '<p class="text-slate-400 text-sm text-center py-5">No players yet.</p>';
+
+            return;
+        }
+
+        players.slice(0, 5).forEach((player, index) => {
+
+            const item = document.createElement('div');
+
+            item.className =
+                'flex items-center justify-between gap-3 bg-slate-700 rounded-xl p-3';
+
+            const left = document.createElement('div');
+
+            left.className =
+                'flex items-center gap-3 min-w-0';
+
+            const rank = document.createElement('span');
+
+            rank.className =
+                'w-9 h-9 flex-shrink-0 rounded-full bg-slate-600 flex items-center justify-center font-black';
+
+            rank.textContent = index + 1;
+
+            const name = document.createElement('span');
+
+            name.className =
+                'font-semibold text-sm truncate';
+
+            name.textContent = player.name || 'Player';
+
+            const score = document.createElement('span');
+
+            score.className =
+                'text-yellow-400 font-black text-sm whitespace-nowrap';
+
+            score.textContent = (player.score ?? 0) + ' pts';
+
+            left.appendChild(rank);
+            left.appendChild(name);
+
+            item.appendChild(left);
+            item.appendChild(score);
+
+            container.appendChild(item);
+
+        });
+
+    } catch (error) {
+
+        // Keep the existing leaderboard if refreshing fails.
+
+    }
+}
+
+
+function formatTime(seconds) {
+
+    seconds = Math.max(0, Number(seconds) || 0);
+
+    const minutes = Math.floor(seconds / 60);
+    const remaining = seconds % 60;
+
+    return String(minutes).padStart(2, '0') + ':' +
+           String(remaining).padStart(2, '0');
+
+}
+
+
+async function sendAnswer(option) {
+
+    if (submitted) return;
+
+    submitted = true;
+
+    document.querySelectorAll('#options button').forEach(button => {
+        button.disabled = true;
+    });
+
+    try {
+
+        const response = await fetch(submitUrl, {
+
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+
+            body: JSON.stringify({
+                option: option
+            })
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+
+            submitted = false;
+
+            messageElement.textContent =
+                data.error || 'Unable to submit your answer.';
+
+            return;
+        }
+
+        messageElement.textContent =
+            'Your answer has been submitted successfully.';
+
+        loadTopFive();
+
+    } catch (error) {
+
+        submitted = false;
+
+        messageElement.textContent =
+            'Connection interrupted. Please try again.';
+
+    }
+
+}
+
+
+// Initial loading
+loadQuiz();
+loadTopFive();
+
+// Automatic updates
+setInterval(loadQuiz, 1000);
+setInterval(loadTopFive, 3000);
+
+</script>
+
+</body>
+</html>

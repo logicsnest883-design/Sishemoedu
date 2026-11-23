@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Final Results | Sishemo Graduation Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-slate-950 text-white p-5">
+
+<div class="max-w-4xl mx-auto py-10">
+
+    <div class="text-center mb-10">
+        <div class="text-6xl mb-4">🏆</div>
+        <h1 class="text-3xl md:text-5xl font-black">
+            FINAL RESULTS
+        </h1>
+        <p class="text-slate-400 mt-3">
+            Sishemo Graduation Quiz
+        </p>
+    </div>
+
+    {% if competition and competition.status == 'completed' %}
+
+        {% if winner %}
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-3xl p-8 text-center mb-10">
+                <p class="text-yellow-400 font-bold uppercase tracking-widest">
+                    Quiz Champion
+                </p>
+
+                <h2 class="text-3xl md:text-4xl font-black mt-4">
+                    {{ winner.name }}
+                </h2>
+
+                <p class="text-2xl font-bold text-yellow-400 mt-3">
+                    {{ winner.total_score }} Points
+                </p>
+            </div>
+        {% endif %}
+
+        <div class="bg-slate-900 rounded-2xl overflow-hidden">
+            <div class="grid grid-cols-12 bg-slate-800 p-4 font-bold text-slate-300">
+                <div class="col-span-2">Rank</div>
+                <div class="col-span-7">Participant</div>
+                <div class="col-span-3 text-right">Points</div>
+            </div>
+
+            {% for participant in participants %}
+                <div class="grid grid-cols-12 items-center p-4 border-t border-slate-800">
+                    <div class="col-span-2 font-bold">
+                        {{ forloop.counter }}
+                    </div>
+
+                    <div class="col-span-7 font-semibold">
+                        {{ participant.name }}
+                    </div>
+
+                    <div class="col-span-3 text-right font-bold text-blue-400">
+                        {{ participant.total_score }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div class="bg-slate-900 rounded-2xl p-8 text-center">
+            <h2 class="text-xl font-bold">Results are not available yet.</h2>
+            <p class="text-slate-400 mt-3">
+                The competition must finish all five stages first.
+            </p>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

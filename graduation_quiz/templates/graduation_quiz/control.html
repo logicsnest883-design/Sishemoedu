@@ -1,0 +1,179 @@
+
+{% extends "base.html" %}
+
+{% block title %}Quiz Control Centre | Sishemo{% endblock %}
+
+{% block content %}
+
+<div class="min-h-screen bg-slate-100 py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+
+        <div class="bg-slate-900 text-white rounded-3xl p-7 md:p-10 mb-7">
+            <p class="text-sm uppercase tracking-widest text-purple-300 font-bold">
+                Sishemo Education Trust
+            </p>
+
+            <h1 class="text-3xl md:text-4xl font-black mt-3">
+                Quiz Control Centre
+            </h1>
+
+            <p class="text-slate-300 mt-3">
+                Start the competition and control each round from here.
+            </p>
+
+            <div class="mt-7">
+                <p class="text-slate-400 text-sm">Competition status</p>
+                <p class="text-xl font-bold mt-1">
+                    {{ competition.get_status_display|default:"Not created" }}
+                </p>
+            </div>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-xl bg-white border border-slate-200 text-slate-800">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if competition %}
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+            <h2 class="text-xl font-bold text-slate-900">
+                1. Start the quiz
+            </h2>
+
+            <p class="text-slate-500 text-sm mt-2">
+                This opens registration so parents can join using their names.
+            </p>
+
+            <form method="POST" class="mt-5">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="start">
+
+                <button
+                    type="submit"
+                    {% if competition.status == "completed" %}disabled{% endif %}
+                    class="w-full sm:w-auto px-8 py-4 rounded-xl bg-purple-600 text-white font-bold hover:bg-purple-700 disabled:opacity-40"
+                >
+                    Start Quiz
+                </button>
+            </form>
+
+            <a
+                href="{% url 'graduation_quiz:home' %}"
+                target="_blank"
+                class="inline-block mt-4 text-purple-700 font-semibold underline"
+            >
+                Open Parent Quiz Page
+            </a>
+        </div>
+        <form method="POST"
+      action="{% url 'graduation_quiz:reset' %}"
+      onsubmit="return confirm('Are you sure you want to restart the entire tournament? All participants, scores and answers will be cleared. Questions will be preserved.');">
+
+    {% csrf_token %}
+
+    <button type="submit"
+            class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl shadow">
+        Restart Tournament
+    </button>
+
+</form>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-900">
+                2. Control the rounds
+            </h2>
+
+            <p class="text-slate-500 text-sm mt-2 mb-6">
+                Tick a round to start it. Each round lasts five minutes.
+            </p>
+
+            <div class="space-y-4">
+
+                {% for stage in stages %}
+                <div class="border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+
+                    <div>
+                        <h3 class="font-bold text-lg text-slate-900">
+                            Round {{ stage.number }}
+                        </h3>
+
+                        <p class="text-sm text-slate-500">
+                            {{ stage.title }}
+                            {% if stage.category %}
+                                · {{ stage.category }}
+                            {% endif %}
+                        </p>
+
+                        <p class="text-sm mt-2 font-semibold
+                            {% if stage.status == 'active' %}text-green-600
+                            {% elif stage.status == 'completed' %}text-slate-500
+                            {% else %}text-amber-600{% endif %}">
+                            {{ stage.get_status_display }}
+                        </p>
+                    </div>
+
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="activate">
+                        <input type="hidden" name="stage_id" value="{{ stage.id }}">
+
+                        <button
+                            type="submit"
+                            {% if stage.status != "pending" or competition.status == "completed" %}disabled{% endif %}
+                            class="px-6 py-3 rounded-xl font-bold text-white
+                            {% if stage.status == 'pending' and competition.status != 'completed' %}
+                                bg-green-600 hover:bg-green-700
+                            {% else %}
+                                bg-slate-300 cursor-not-allowed
+                            {% endif %}"
+                        >
+                            {% if stage.status == "pending" %}
+                                <span>☐ Start Round</span>
+                            {% elif stage.status == "active" %}
+                                Running
+                            {% else %}
+                                Completed
+                            {% endif %}
+                        </button>
+                    </form>
+
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="mt-6 grid sm:grid-cols-2 gap-4">
+            <a
+                href="{% url 'graduation_quiz:leaderboard' %}"
+                target="_blank"
+                class="bg-slate-900 text-white text-center p-5 rounded-xl font-bold hover:bg-slate-800"
+            >
+                Open Live Leaderboard
+            </a>
+
+            <a
+                href="{% url 'graduation_quiz:results' %}"
+                target="_blank"
+                class="bg-purple-700 text-white text-center p-5 rounded-xl font-bold hover:bg-purple-800"
+            >
+                View Final Results
+            </a>
+        </div>
+
+        {% else %}
+        <div class="bg-white p-6 rounded-2xl">
+            Quiz competition not found. Run:
+            <code>python manage.py setup_quiz</code>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

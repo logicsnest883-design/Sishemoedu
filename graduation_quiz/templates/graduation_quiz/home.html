@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sishemo Graduation Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 flex items-center justify-center p-5">
+
+    <div class="w-full max-w-md bg-white rounded-3xl p-8 shadow-2xl">
+
+        <div class="text-center mb-8">
+            <div class="text-5xl mb-4">🏆</div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Sishemo Graduation Quiz
+            </h1>
+            <p class="text-slate-500 mt-2">
+                Join the graduation competition
+            </p>
+        </div>
+
+        {% if competition %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <label class="block text-sm font-semibold text-slate-700 mb-2">
+                    Enter your name
+                </label>
+
+                <input
+                    type="text"
+                    name="name"
+                    required
+                    maxlength="150"
+                    placeholder="Your full name"
+                    class="w-full border border-slate-300 rounded-xl px-4 py-3 mb-5 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl"
+                >
+                    Join Quiz
+                </button>
+            </form>
+
+        {% else %}
+
+            <div class="text-center bg-slate-100 rounded-xl p-5">
+                <p class="font-semibold text-slate-700">
+                    The quiz is not open yet.
+                </p>
+                <p class="text-sm text-slate-500 mt-2">
+                    Please wait for the organisers to open registration.
+                </p>
+            </div>
+
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="text-red-600 text-sm text-center mt-4">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

@@ -38,6 +38,13 @@
                 Waiting for participants...
             </div>
         </div>
+        {% if user.is_authenticated and user.is_staff %}
+    <a href="{% url 'graduation_quiz:control' %}"
+       class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow hover:bg-slate-700 transition">
+        <i class="fas fa-sliders-h"></i>
+        Quiz Control
+    </a>
+{% endif %}
 
     </div>
 

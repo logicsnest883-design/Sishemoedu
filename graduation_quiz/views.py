@@ -23,6 +23,36 @@ from .models import (
 QUESTIONS_PER_STAGE = 20
 QUESTION_SECONDS = 25
 
+def ensure_quiz_setup():
+    stage_categories = [
+        (1, "Stage 1", "Riddles"),
+        (2, "Stage 2", "Proverbs"),
+        (3, "Stage 3", "Philosophy"),
+        (4, "Stage 4", "General Knowledge"),
+        (5, "Stage 5", "Zambian History"),
+    ]
+
+    with transaction.atomic():
+        competition, created = QuizCompetition.objects.get_or_create(
+            title="Sishemo Graduation Quiz",
+            defaults={'status': 'draft'}
+        )
+
+        for number, title, category in stage_categories:
+            QuizStage.objects.get_or_create(
+                competition=competition,
+                number=number,
+                defaults={
+                    'title': title,
+                    'category': category,
+                    'status': 'pending',
+                    'question_seconds': QUESTION_SECONDS,
+                    'duration_seconds': QUESTIONS_PER_STAGE * QUESTION_SECONDS,
+                }
+            )
+
+    return competition
+
 
 def get_participant(request):
     token = request.session.get('quiz_participant_token')
@@ -496,9 +526,7 @@ def quiz_results(request):
 
 @staff_member_required
 def quiz_control(request):
-    competition = QuizCompetition.objects.filter(
-        title='Sishemo Graduation Quiz'
-    ).order_by('-created_at').first()
+	competition = ensure_quiz_setup()
 
     if competition:
         active_stage = QuizStage.objects.filter(

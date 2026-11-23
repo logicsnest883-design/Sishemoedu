@@ -526,7 +526,7 @@ def quiz_results(request):
 
 @staff_member_required
 def quiz_control(request):
-	competition = ensure_quiz_setup()
+    competition = ensure_quiz_setup()
 
     if competition:
         active_stage = QuizStage.objects.filter(

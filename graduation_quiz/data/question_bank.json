@@ -1,133 +1,1132 @@
-
 {
   "1": {
     "title": "Stage 1",
     "category": "Riddles",
     "questions": [
-      {"question": "The more you take away from me, the larger I become. What am I?", "options": {"A": "A debt", "B": "A hole", "C": "A shadow", "D": "A wound"}, "correct_option": "B", "points": 10},
-      {"question": "I can be broken without being touched, given without being held, and kept without being locked away. What am I?", "options": {"A": "A promise", "B": "A mirror", "C": "A dream", "D": "A secret"}, "correct_option": "A", "points": 10},
-      {"question": "I have cities but no houses, forests but no trees, and rivers but no water. What am I?", "options": {"A": "A painting", "B": "A globe", "C": "A map", "D": "A photograph"}, "correct_option": "C", "points": 10},
-      {"question": "I speak without a mouth and hear without ears. I have no body, but I come alive when something calls me. What am I?", "options": {"A": "The wind", "B": "An echo", "C": "A radio", "D": "A shadow"}, "correct_option": "B", "points": 10},
-      {"question": "What belongs to you, but other people use it more often than you do?", "options": {"A": "Your money", "B": "Your house", "C": "Your time", "D": "Your name"}, "correct_option": "D", "points": 10},
-      {"question": "I am always ahead of you, but you can never see me. What am I?", "options": {"A": "Tomorrow", "B": "Your shadow", "C": "Your reflection", "D": "Your past"}, "correct_option": "A", "points": 10},
-      {"question": "What can travel around the world while remaining in one corner?", "options": {"A": "A compass", "B": "A satellite", "C": "A postage stamp", "D": "A photograph"}, "correct_option": "C", "points": 10},
-      {"question": "I have keys but no locks, space but no room, and you can enter but cannot go inside. What am I?", "options": {"A": "A piano", "B": "A keyboard", "C": "A calculator", "D": "A telephone"}, "correct_option": "B", "points": 10},
-      {"question": "The person who makes me does not need me. The person who buys me does not use me. The person who uses me does not know it. What am I?", "options": {"A": "A uniform", "B": "A wedding ring", "C": "A medicine", "D": "A coffin"}, "correct_option": "D", "points": 10},
-      {"question": "I become shorter as I grow older, and I give light while slowly disappearing. What am I?", "options": {"A": "A candle", "B": "A pencil", "C": "A tree", "D": "A shadow"}, "correct_option": "A", "points": 10},
-      {"question": "What disappears the moment you say its name?", "options": {"A": "Darkness", "B": "A secret", "C": "Silence", "D": "An echo"}, "correct_option": "C", "points": 10},
-      {"question": "I am not alive, but I grow. I have no lungs, but I need air. Water kills me. What am I?", "options": {"A": "Smoke", "B": "Fire", "C": "Dust", "D": "Rust"}, "correct_option": "B", "points": 10},
-      {"question": "What gets wetter the more it dries?", "options": {"A": "A sponge", "B": "A cloud", "C": "A river", "D": "A towel"}, "correct_option": "D", "points": 10},
-      {"question": "A man looks at a photograph and says, 'Brothers and sisters, I have none, but that man's father is my father's son.' Who is in the photograph?", "options": {"A": "His son", "B": "His father", "C": "His uncle", "D": "His grandfather"}, "correct_option": "A", "points": 10},
-      {"question": "A woman has four daughters, and each daughter has one brother. How many children does the woman have?", "options": {"A": "Four", "B": "Eight", "C": "Five", "D": "Nine"}, "correct_option": "C", "points": 10},
-      {"question": "What has many teeth but cannot bite?", "options": {"A": "A crocodile", "B": "A comb", "C": "A dog", "D": "A shark"}, "correct_option": "B", "points": 10},
-      {"question": "What can fill an entire room but takes up no physical space?", "options": {"A": "Furniture", "B": "Water", "C": "Smoke", "D": "Light"}, "correct_option": "D", "points": 10},
-      {"question": "I have a neck but no head, two arms but no hands. What am I?", "options": {"A": "A shirt", "B": "A bottle", "C": "A chair", "D": "A table"}, "correct_option": "A", "points": 10},
-      {"question": "What can you hold in your left hand but never in your right hand?", "options": {"A": "Your left elbow", "B": "Your right shoulder", "C": "Your right elbow", "D": "Your left thumb"}, "correct_option": "C", "points": 10},
-      {"question": "I have no life, yet I can die. I have no mouth, yet I can be fed. What am I?", "options": {"A": "A river", "B": "A fire", "C": "A mountain", "D": "A clock"}, "correct_option": "B", "points": 10}
+      {
+        "question": "The more you take away from me, the larger I become. What am I?",
+        "options": {
+          "A": "A debt",
+          "B": "A hole",
+          "C": "A shadow",
+          "D": "A wound"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "I can be broken without being touched, given without being held, and kept without being locked away. What am I?",
+        "options": {
+          "A": "A promise",
+          "B": "A mirror",
+          "C": "A dream",
+          "D": "A secret"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "I have cities but no houses, forests but no trees, and rivers but no water. What am I?",
+        "options": {
+          "A": "A painting",
+          "B": "A globe",
+          "C": "A map",
+          "D": "A photograph"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "I speak without a mouth and hear without ears. I have no body, but I come alive when something calls me. What am I?",
+        "options": {
+          "A": "The wind",
+          "B": "An echo",
+          "C": "A radio",
+          "D": "A shadow"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What belongs to you, but other people use it more often than you do?",
+        "options": {
+          "A": "Your money",
+          "B": "Your house",
+          "C": "Your time",
+          "D": "Your name"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "I am always ahead of you, but you can never see me. What am I?",
+        "options": {
+          "A": "Tomorrow",
+          "B": "Your shadow",
+          "C": "Your reflection",
+          "D": "Your past"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What can travel around the world while remaining in one corner?",
+        "options": {
+          "A": "A compass",
+          "B": "A satellite",
+          "C": "A postage stamp",
+          "D": "A photograph"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "I have keys but no locks, space but no room, and you can enter but cannot go inside. What am I?",
+        "options": {
+          "A": "A piano",
+          "B": "A keyboard",
+          "C": "A calculator",
+          "D": "A telephone"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "The person who makes me does not need me. The person who buys me does not use me. The person who uses me does not know it. What am I?",
+        "options": {
+          "A": "A uniform",
+          "B": "A wedding ring",
+          "C": "A medicine",
+          "D": "A coffin"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "I become shorter as I grow older, and I give light while slowly disappearing. What am I?",
+        "options": {
+          "A": "A candle",
+          "B": "A pencil",
+          "C": "A tree",
+          "D": "A shadow"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What disappears the moment you say its name?",
+        "options": {
+          "A": "Darkness",
+          "B": "A secret",
+          "C": "Silence",
+          "D": "An echo"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "I am not alive, but I grow. I have no lungs, but I need air. Water kills me. What am I?",
+        "options": {
+          "A": "Smoke",
+          "B": "Fire",
+          "C": "Dust",
+          "D": "Rust"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What gets wetter the more it dries?",
+        "options": {
+          "A": "A sponge",
+          "B": "A cloud",
+          "C": "A river",
+          "D": "A towel"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "A man looks at a photograph and says, 'Brothers and sisters, I have none, but that man's father is my father's son.' Who is in the photograph?",
+        "options": {
+          "A": "His son",
+          "B": "His father",
+          "C": "His uncle",
+          "D": "His grandfather"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "A woman has four daughters, and each daughter has one brother. How many children does the woman have?",
+        "options": {
+          "A": "Four",
+          "B": "Eight",
+          "C": "Five",
+          "D": "Nine"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What has many teeth but cannot bite?",
+        "options": {
+          "A": "A crocodile",
+          "B": "A comb",
+          "C": "A dog",
+          "D": "A shark"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What can fill an entire room but takes up no physical space?",
+        "options": {
+          "A": "Furniture",
+          "B": "Water",
+          "C": "Smoke",
+          "D": "Light"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "I have a neck but no head, two arms but no hands. What am I?",
+        "options": {
+          "A": "A shirt",
+          "B": "A bottle",
+          "C": "A chair",
+          "D": "A table"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What can you hold in your left hand but never in your right hand?",
+        "options": {
+          "A": "Your left elbow",
+          "B": "Your right shoulder",
+          "C": "Your right elbow",
+          "D": "Your left thumb"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "I have no life, yet I can die. I have no mouth, yet I can be fed. What am I?",
+        "options": {
+          "A": "A river",
+          "B": "A fire",
+          "C": "A mountain",
+          "D": "A clock"
+        },
+        "correct_option": "B",
+        "points": 10
+      }
     ]
   },
   "2": {
     "title": "Stage 2",
     "category": "Proverbs",
     "questions": [
-      {"question": "What does the proverb 'A bird in the hand is worth two in the bush' teach?", "options": {"A": "Birds are difficult to catch", "B": "Having something certain is better than risking it for something greater but uncertain", "C": "One should always hunt for more", "D": "Wild animals should be protected"}, "correct_option": "B", "points": 10},
-      {"question": "What is the meaning of 'When two elephants fight, it is the grass that suffers'?", "options": {"A": "Powerful people always win", "B": "Nature is stronger than people", "C": "Conflicts between powerful people often harm innocent or weaker people", "D": "Large animals destroy forests"}, "correct_option": "C", "points": 10},
-      {"question": "What does 'A journey of a thousand miles begins with a single step' emphasise?", "options": {"A": "Great achievements begin with small actions", "B": "Long journeys require expensive transport", "C": "One should avoid difficult journeys", "D": "Success depends entirely on luck"}, "correct_option": "A", "points": 10},
-      {"question": "What is implied by the saying 'Empty vessels make the most noise'?", "options": {"A": "Quiet people know nothing", "B": "People who speak loudly are always correct", "C": "Silence is a sign of weakness", "D": "People with little knowledge often talk the most confidently"}, "correct_option": "D", "points": 10},
-      {"question": "What does 'Do not count your chickens before they hatch' warn against?", "options": {"A": "Keeping too many animals", "B": "Assuming success before it has actually happened", "C": "Selling eggs too early", "D": "Avoiding agricultural work"}, "correct_option": "B", "points": 10},
-      {"question": "What is the lesson in 'You reap what you sow'?", "options": {"A": "Harvesting should be done early", "B": "Farmers need good equipment", "C": "Your actions determine the consequences you experience", "D": "Good people always become wealthy"}, "correct_option": "C", "points": 10},
-      {"question": "What does 'The axe forgets, but the tree remembers' suggest?", "options": {"A": "Those who cause harm may forget, but those harmed may remember", "B": "Trees are more intelligent than people", "C": "Tools should be properly stored", "D": "Forgiveness is always impossible"}, "correct_option": "A", "points": 10},
-      {"question": "What does 'A chain is only as strong as its weakest link' mean?", "options": {"A": "Strong people should work alone", "B": "Every chain needs more links", "C": "Weakness is always easy to identify", "D": "The weakness of one part can undermine the whole group"}, "correct_option": "D", "points": 10},
-      {"question": "What is the meaning of 'He who asks is a fool for five minutes, but he who does not ask remains a fool forever'?", "options": {"A": "Questions should only be asked in school", "B": "Asking questions is a way to overcome ignorance", "C": "People should avoid difficult questions", "D": "Knowledge is impossible to obtain"}, "correct_option": "B", "points": 10},
-      {"question": "What does 'Make hay while the sun shines' advise?", "options": {"A": "Work only during hot weather", "B": "Avoid working in the rain", "C": "Take advantage of favourable opportunities while they last", "D": "Never postpone leisure activities"}, "correct_option": "C", "points": 10},
-      {"question": "What does 'The early bird catches the worm' communicate?", "options": {"A": "Being prompt and prepared can create advantages", "B": "Birds should wake up before sunrise", "C": "Success comes only to the strongest", "D": "People should compete over everything"}, "correct_option": "A", "points": 10},
-      {"question": "What is the meaning of 'Too many cooks spoil the broth'?", "options": {"A": "Cooking requires expensive ingredients", "B": "Everyone should learn to cook", "C": "Large teams always produce better results", "D": "Too many people interfering in one task can damage the outcome"}, "correct_option": "D", "points": 10},
-      {"question": "What does 'A fool and his money are soon parted' warn about?", "options": {"A": "Money should never be spent", "B": "Careless or unwise people can easily lose their money", "C": "Wealth always creates conflict", "D": "Rich people cannot make mistakes"}, "correct_option": "B", "points": 10},
-      {"question": "What is meant by 'The grass is always greener on the other side'?", "options": {"A": "Other people's circumstances may appear better than our own", "B": "Other countries have better agriculture", "C": "People should always relocate", "D": "Grass grows better near rivers"}, "correct_option": "A", "points": 10},
-      {"question": "What does 'One rotten apple spoils the barrel' suggest?", "options": {"A": "Fruit should be stored in cold places", "B": "One mistake destroys every achievement", "C": "One bad influence can negatively affect an entire group", "D": "People should avoid working together"}, "correct_option": "C", "points": 10},
-      {"question": "What is the lesson behind 'Actions speak louder than words'?", "options": {"A": "Speaking is more important than listening", "B": "Promises should never be made", "C": "People should avoid public speaking", "D": "What people do is more convincing than what they claim"}, "correct_option": "D", "points": 10},
-      {"question": "What does 'You cannot teach an old dog new tricks' traditionally suggest?", "options": {"A": "Older people are always wiser", "B": "People may find it difficult to change established habits", "C": "Animals cannot learn", "D": "Education is only for young people"}, "correct_option": "B", "points": 10},
-      {"question": "What is the meaning of 'A rising tide lifts all boats'?", "options": {"A": "Improvement in general conditions can benefit many people", "B": "Everyone should own a boat", "C": "Success is always individual", "D": "Water levels determine national wealth"}, "correct_option": "A", "points": 10},
-      {"question": "What does 'The tongue has no bones, but it is strong enough to break a heart' remind us?", "options": {"A": "Physical strength is unimportant", "B": "People should never disagree", "C": "Words can cause serious emotional harm", "D": "Silence solves every problem"}, "correct_option": "C", "points": 10},
-      {"question": "What does 'If you want to go fast, go alone; if you want to go far, go together' emphasise?", "options": {"A": "Individual success is always better", "B": "Working together is important for lasting achievements", "C": "Speed is the only measure of success", "D": "Leadership should be avoided"}, "correct_option": "B", "points": 10}
+      {
+        "question": "What does the proverb 'A bird in the hand is worth two in the bush' teach?",
+        "options": {
+          "A": "Birds are difficult to catch",
+          "B": "Having something certain is better than risking it for something greater but uncertain",
+          "C": "One should always hunt for more",
+          "D": "Wild animals should be protected"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What is the meaning of 'When two elephants fight, it is the grass that suffers'?",
+        "options": {
+          "A": "Powerful people always win",
+          "B": "Nature is stronger than people",
+          "C": "Conflicts between powerful people often harm innocent or weaker people",
+          "D": "Large animals destroy forests"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What does 'A journey of a thousand miles begins with a single step' emphasise?",
+        "options": {
+          "A": "Great achievements begin with small actions",
+          "B": "Long journeys require expensive transport",
+          "C": "One should avoid difficult journeys",
+          "D": "Success depends entirely on luck"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What is implied by the saying 'Empty vessels make the most noise'?",
+        "options": {
+          "A": "Quiet people know nothing",
+          "B": "People who speak loudly are always correct",
+          "C": "Silence is a sign of weakness",
+          "D": "People with little knowledge often talk the most confidently"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What does 'Do not count your chickens before they hatch' warn against?",
+        "options": {
+          "A": "Keeping too many animals",
+          "B": "Assuming success before it has actually happened",
+          "C": "Selling eggs too early",
+          "D": "Avoiding agricultural work"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What is the lesson in 'You reap what you sow'?",
+        "options": {
+          "A": "Harvesting should be done early",
+          "B": "Farmers need good equipment",
+          "C": "Your actions determine the consequences you experience",
+          "D": "Good people always become wealthy"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What does 'The axe forgets, but the tree remembers' suggest?",
+        "options": {
+          "A": "Those who cause harm may forget, but those harmed may remember",
+          "B": "Trees are more intelligent than people",
+          "C": "Tools should be properly stored",
+          "D": "Forgiveness is always impossible"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What does 'A chain is only as strong as its weakest link' mean?",
+        "options": {
+          "A": "Strong people should work alone",
+          "B": "Every chain needs more links",
+          "C": "Weakness is always easy to identify",
+          "D": "The weakness of one part can undermine the whole group"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What is the meaning of 'He who asks is a fool for five minutes, but he who does not ask remains a fool forever'?",
+        "options": {
+          "A": "Questions should only be asked in school",
+          "B": "Asking questions is a way to overcome ignorance",
+          "C": "People should avoid difficult questions",
+          "D": "Knowledge is impossible to obtain"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What does 'Make hay while the sun shines' advise?",
+        "options": {
+          "A": "Work only during hot weather",
+          "B": "Avoid working in the rain",
+          "C": "Take advantage of favourable opportunities while they last",
+          "D": "Never postpone leisure activities"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What does 'The early bird catches the worm' communicate?",
+        "options": {
+          "A": "Being prompt and prepared can create advantages",
+          "B": "Birds should wake up before sunrise",
+          "C": "Success comes only to the strongest",
+          "D": "People should compete over everything"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What is the meaning of 'Too many cooks spoil the broth'?",
+        "options": {
+          "A": "Cooking requires expensive ingredients",
+          "B": "Everyone should learn to cook",
+          "C": "Large teams always produce better results",
+          "D": "Too many people interfering in one task can damage the outcome"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What does 'A fool and his money are soon parted' warn about?",
+        "options": {
+          "A": "Money should never be spent",
+          "B": "Careless or unwise people can easily lose their money",
+          "C": "Wealth always creates conflict",
+          "D": "Rich people cannot make mistakes"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What is meant by 'The grass is always greener on the other side'?",
+        "options": {
+          "A": "Other people's circumstances may appear better than our own",
+          "B": "Other countries have better agriculture",
+          "C": "People should always relocate",
+          "D": "Grass grows better near rivers"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What does 'One rotten apple spoils the barrel' suggest?",
+        "options": {
+          "A": "Fruit should be stored in cold places",
+          "B": "One mistake destroys every achievement",
+          "C": "One bad influence can negatively affect an entire group",
+          "D": "People should avoid working together"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What is the lesson behind 'Actions speak louder than words'?",
+        "options": {
+          "A": "Speaking is more important than listening",
+          "B": "Promises should never be made",
+          "C": "People should avoid public speaking",
+          "D": "What people do is more convincing than what they claim"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What does 'You cannot teach an old dog new tricks' traditionally suggest?",
+        "options": {
+          "A": "Older people are always wiser",
+          "B": "People may find it difficult to change established habits",
+          "C": "Animals cannot learn",
+          "D": "Education is only for young people"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What is the meaning of 'A rising tide lifts all boats'?",
+        "options": {
+          "A": "Improvement in general conditions can benefit many people",
+          "B": "Everyone should own a boat",
+          "C": "Success is always individual",
+          "D": "Water levels determine national wealth"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What does 'The tongue has no bones, but it is strong enough to break a heart' remind us?",
+        "options": {
+          "A": "Physical strength is unimportant",
+          "B": "People should never disagree",
+          "C": "Words can cause serious emotional harm",
+          "D": "Silence solves every problem"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What does 'If you want to go fast, go alone; if you want to go far, go together' emphasise?",
+        "options": {
+          "A": "Individual success is always better",
+          "B": "Working together is important for lasting achievements",
+          "C": "Speed is the only measure of success",
+          "D": "Leadership should be avoided"
+        },
+        "correct_option": "B",
+        "points": 10
+      }
     ]
   },
   "3": {
     "title": "Stage 3",
     "category": "Philosophy",
     "questions": [
-      {"question": "Which philosopher is most closely associated with the statement 'I think, therefore I am'?", "options": {"A": "Plato", "B": "Aristotle", "C": "René Descartes", "D": "Socrates"}, "correct_option": "C", "points": 10},
-      {"question": "In Plato's Allegory of the Cave, what do the shadows on the wall primarily represent?", "options": {"A": "Appearances mistaken for reality", "B": "The power of political leaders", "C": "The importance of physical strength", "D": "The inevitability of death"}, "correct_option": "A", "points": 10},
-      {"question": "Which philosopher is famous for using questions to challenge assumptions and examine beliefs?", "options": {"A": "Confucius", "B": "Thomas Hobbes", "C": "John Locke", "D": "Socrates"}, "correct_option": "D", "points": 10},
-      {"question": "What is the central idea of utilitarianism?", "options": {"A": "Always obey traditional customs", "B": "Choose actions that produce the greatest overall happiness or well-being", "C": "Personal wealth is the highest good", "D": "Moral rules should never be questioned"}, "correct_option": "B", "points": 10},
-      {"question": "Which philosopher wrote 'The Republic', a work discussing justice and the ideal state?", "options": {"A": "Aristotle", "B": "Immanuel Kant", "C": "Plato", "D": "Jean-Jacques Rousseau"}, "correct_option": "C", "points": 10},
-      {"question": "What does the philosophical concept of free will concern?", "options": {"A": "The ability to make choices and exercise control over one's actions", "B": "The freedom to ignore every law", "C": "The belief that all events are random", "D": "The right to own property"}, "correct_option": "A", "points": 10},
-      {"question": "Which philosopher is associated with the idea of the categorical imperative?", "options": {"A": "Karl Marx", "B": "David Hume", "C": "Friedrich Nietzsche", "D": "Immanuel Kant"}, "correct_option": "D", "points": 10},
-      {"question": "What is epistemology the study of?", "options": {"A": "Beauty and art", "B": "Knowledge and how we know things", "C": "Political institutions", "D": "Human anatomy"}, "correct_option": "B", "points": 10},
-      {"question": "What is the main philosophical question raised by the problem of evil?", "options": {"A": "Whether human beings can become immortal", "B": "Whether science can explain everything", "C": "How the existence of suffering and evil can be reconciled with an all-powerful and perfectly good God", "D": "Whether governments should control religion"}, "correct_option": "C", "points": 10},
-      {"question": "Which philosopher is associated with the statement that humans are naturally in a state of war without a common power to keep them in order?", "options": {"A": "Thomas Hobbes", "B": "John Stuart Mill", "C": "Plato", "D": "Socrates"}, "correct_option": "A", "points": 10},
-      {"question": "What does existentialism generally emphasise?", "options": {"A": "Human behaviour is entirely determined by biology", "B": "Tradition should determine every decision", "C": "Only scientific knowledge matters", "D": "Individual existence, freedom, choice and responsibility"}, "correct_option": "D", "points": 10},
-      {"question": "Which philosopher is strongly associated with the idea of the 'will to power'?", "options": {"A": "Aristotle", "B": "Friedrich Nietzsche", "C": "John Locke", "D": "René Descartes"}, "correct_option": "B", "points": 10},
-      {"question": "What is the central question of ethics?", "options": {"A": "What exists in the universe?", "B": "How does language develop?", "C": "What makes actions right or wrong?", "D": "How does the human brain function?"}, "correct_option": "C", "points": 10},
-      {"question": "Which philosopher argued that people are born with a mind resembling a blank slate, or tabula rasa?", "options": {"A": "John Locke", "B": "Plato", "C": "René Descartes", "D": "Immanuel Kant"}, "correct_option": "A", "points": 10},
-      {"question": "What is the philosophical meaning of determinism?", "options": {"A": "People can change the laws of nature", "B": "All events happen without causes", "C": "Every human decision is completely random", "D": "Events, including human actions, are determined by prior causes and conditions"}, "correct_option": "D", "points": 10},
-      {"question": "What does the principle of Occam's razor recommend?", "options": {"A": "Always choose the most complicated explanation", "B": "Prefer the simplest explanation that adequately accounts for the evidence", "C": "Reject explanations based on observation", "D": "Assume that every theory is equally correct"}, "correct_option": "B", "points": 10},
-      {"question": "Which philosopher is traditionally associated with the idea that the unexamined life is not worth living?", "options": {"A": "Aristotle", "B": "Plato", "C": "Socrates", "D": "Epicurus"}, "correct_option": "C", "points": 10},
-      {"question": "What is a logical fallacy?", "options": {"A": "An error in reasoning that weakens an argument", "B": "A scientific discovery", "C": "A statement supported by strong evidence", "D": "A mathematical formula"}, "correct_option": "A", "points": 10},
-      {"question": "What does the concept of social contract theory attempt to explain?", "options": {"A": "Why people form friendships", "B": "How businesses establish prices", "C": "Why every society follows the same religion", "D": "Why individuals accept political authority and rules in exchange for order and protection"}, "correct_option": "D", "points": 10},
-      {"question": "Which branch of philosophy examines the nature of reality and what exists?", "options": {"A": "Aesthetics", "B": "Metaphysics", "C": "Ethics", "D": "Logic"}, "correct_option": "B", "points": 10}
+      {
+        "question": "Which philosopher is traditionally associated with the statement 'The unexamined life is not worth living'?",
+        "options": {
+          "A": "Aristotle",
+          "B": "Socrates",
+          "C": "Epicurus",
+          "D": "Plato"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Which philosopher is associated with the statement 'I think, therefore I am'?",
+        "options": {
+          "A": "John Locke",
+          "B": "Plato",
+          "C": "René Descartes",
+          "D": "Thomas Hobbes"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "A person tells the truth even though lying would help them avoid punishment. Which value are they demonstrating?",
+        "options": {
+          "A": "Integrity",
+          "B": "Pride",
+          "C": "Ambition",
+          "D": "Obedience"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "A government makes a law that is legal but treats one group unfairly. What philosophical issue does this raise?",
+        "options": {
+          "A": "Whether laws should be written down",
+          "B": "Whether all citizens should have the same jobs",
+          "C": "Whether leaders should be wealthy",
+          "D": "Whether something legal is necessarily just"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "A person helps a stranger in need without expecting money, praise or a reward. What principle best describes this action?",
+        "options": {
+          "A": "Self-interest",
+          "B": "Altruism",
+          "C": "Competition",
+          "D": "Revenge"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Why should people question information before accepting it as true?",
+        "options": {
+          "A": "Because all information is false",
+          "B": "Because opinions are always better than facts",
+          "C": "Because claims may be mistaken and should be tested with evidence and reason",
+          "D": "Because questioning everything makes a person an expert"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "A judge gives the same fair treatment to a rich person and a poor person facing the same charge. Which idea is being demonstrated?",
+        "options": {
+          "A": "Justice",
+          "B": "Popularity",
+          "C": "Loyalty",
+          "D": "Wealth"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Someone does a good deed only because they are afraid of being punished if they do not. What question does this raise about their action?",
+        "options": {
+          "A": "Whether the action was expensive",
+          "B": "Whether other people noticed",
+          "C": "Whether the person is intelligent",
+          "D": "Whether the action came from genuine moral conviction"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What is the main difference between knowledge and a mere opinion?",
+        "options": {
+          "A": "Knowledge is always popular",
+          "B": "Knowledge is supported by adequate reasons or evidence",
+          "C": "Opinions are always written down",
+          "D": "Knowledge never changes"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "A decision will make most people happy but will seriously harm a small minority. Which ethical problem does this illustrate?",
+        "options": {
+          "A": "Whether happiness is measurable",
+          "B": "Whether the majority is always correct",
+          "C": "Whether the greatest overall benefit justifies harm to a minority",
+          "D": "Whether people should avoid making decisions"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "If people are free to choose their actions, what important idea is often linked to that freedom?",
+        "options": {
+          "A": "Responsibility for the consequences of their choices",
+          "B": "Freedom from every consequence",
+          "C": "The right to control other people",
+          "D": "The belief that choices do not matter"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "A person changes their opinion after discovering strong evidence that their original belief was wrong. What quality are they showing?",
+        "options": {
+          "A": "Stubbornness",
+          "B": "Indifference",
+          "C": "Fear",
+          "D": "Open-mindedness"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "A speaker claims that an idea must be correct because millions of people believe it. What is the weakness in this argument?",
+        "options": {
+          "A": "It uses too many examples",
+          "B": "Popularity alone does not prove that a claim is true",
+          "C": "It considers other people's views",
+          "D": "It asks the audience to think"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Can an action be legal but still be morally wrong?",
+        "options": {
+          "A": "No, law and morality always mean exactly the same thing",
+          "B": "Only if the action is unpopular",
+          "C": "Yes, because legality and morality are not always identical",
+          "D": "Only when no one witnesses it"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "A student refuses to cheat in an examination even though nobody would discover it. What does this best demonstrate?",
+        "options": {
+          "A": "Honesty guided by personal principle",
+          "B": "Fear of public embarrassment",
+          "C": "Desire for attention",
+          "D": "Obedience to classmates"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which branch of philosophy asks fundamental questions about what exists and the nature of reality?",
+        "options": {
+          "A": "Aesthetics",
+          "B": "Ethics",
+          "C": "Logic",
+          "D": "Metaphysics"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Two witnesses observe the same event but remember it differently. What does this situation remind us?",
+        "options": {
+          "A": "One witness must always be lying",
+          "B": "Human knowledge and memory can be influenced by perspective",
+          "C": "Events do not have facts",
+          "D": "The truth is always decided by the majority"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "A person chooses to forgive someone who has wronged them instead of seeking revenge. Which idea does this choice reflect?",
+        "options": {
+          "A": "Weakness in every situation",
+          "B": "The belief that wrongdoing should be ignored",
+          "C": "A moral response that may break the cycle of hostility",
+          "D": "The claim that justice is unnecessary"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What does critical thinking mainly require a person to do?",
+        "options": {
+          "A": "Examine ideas, question assumptions and evaluate evidence",
+          "B": "Accept the first explanation they hear",
+          "C": "Agree with the most confident speaker",
+          "D": "Reject every traditional belief"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "A person has wealth and comfort but is not free to make important choices about their own life. What philosophical question does this situation raise?",
+        "options": {
+          "A": "Whether wealth should be measured",
+          "B": "Whether comfort is always expensive",
+          "C": "Whether every person should become famous",
+          "D": "What makes a human life meaningful and worth living"
+        },
+        "correct_option": "D",
+        "points": 10
+      }
     ]
   },
   "4": {
     "title": "Stage 4",
     "category": "General Knowledge",
     "questions": [
-      {"question": "Which treaty, signed in 1648, is commonly associated with the development of the modern state system in Europe?", "options": {"A": "Treaty of Versailles", "B": "Treaty of Utrecht", "C": "Peace of Westphalia", "D": "Treaty of Rome"}, "correct_option": "C", "points": 10},
-      {"question": "Which strait separates Europe from Africa at their closest point?", "options": {"A": "Strait of Gibraltar", "B": "Strait of Malacca", "C": "Bering Strait", "D": "Bosporus Strait"}, "correct_option": "A", "points": 10},
-      {"question": "What is the SI unit of electrical resistance?", "options": {"A": "Volt", "B": "Ampere", "C": "Watt", "D": "Ohm"}, "correct_option": "D", "points": 10},
-      {"question": "Which element has the chemical symbol W?", "options": {"A": "Vanadium", "B": "Tungsten", "C": "Tin", "D": "Titanium"}, "correct_option": "B", "points": 10},
-      {"question": "Which economist wrote 'The Wealth of Nations', published in 1776?", "options": {"A": "Karl Marx", "B": "John Maynard Keynes", "C": "Adam Smith", "D": "David Ricardo"}, "correct_option": "C", "points": 10},
-      {"question": "Which blood vessels carry oxygenated blood from the lungs to the heart?", "options": {"A": "Pulmonary veins", "B": "Pulmonary arteries", "C": "Vena cava", "D": "Coronary arteries"}, "correct_option": "A", "points": 10},
-      {"question": "What is the deepest known oceanic trench in the world?", "options": {"A": "Java Trench", "B": "Puerto Rico Trench", "C": "Tonga Trench", "D": "Mariana Trench"}, "correct_option": "D", "points": 10},
-      {"question": "Which international organisation was established in 1945 to promote international peace and cooperation?", "options": {"A": "African Union", "B": "United Nations", "C": "European Union", "D": "NATO"}, "correct_option": "B", "points": 10},
-      {"question": "What is the term for the change of a substance directly from a solid to a gas?", "options": {"A": "Condensation", "B": "Evaporation", "C": "Sublimation", "D": "Freezing"}, "correct_option": "C", "points": 10},
-      {"question": "Which country was formerly known as Persia?", "options": {"A": "Iran", "B": "Iraq", "C": "Turkey", "D": "Afghanistan"}, "correct_option": "A", "points": 10},
-      {"question": "Which scientist formulated the three laws of motion?", "options": {"A": "Albert Einstein", "B": "Galileo Galilei", "C": "Michael Faraday", "D": "Isaac Newton"}, "correct_option": "D", "points": 10},
-      {"question": "What is the largest internal organ in the human body?", "options": {"A": "Brain", "B": "Liver", "C": "Lung", "D": "Kidney"}, "correct_option": "B", "points": 10},
-      {"question": "Which civilisation developed the writing system known as cuneiform?", "options": {"A": "Ancient Egyptians", "B": "Ancient Greeks", "C": "Sumerians", "D": "Romans"}, "correct_option": "C", "points": 10},
-      {"question": "What is the name of the boundary around a black hole beyond which nothing can escape?", "options": {"A": "Event horizon", "B": "Solar boundary", "C": "Singularity line", "D": "Photon belt"}, "correct_option": "A", "points": 10},
-      {"question": "Which economic term describes a sustained general increase in the prices of goods and services?", "options": {"A": "Deflation", "B": "Recession", "C": "Depreciation", "D": "Inflation"}, "correct_option": "D", "points": 10},
-      {"question": "Which language has the largest number of native speakers in the world?", "options": {"A": "English", "B": "Mandarin Chinese", "C": "Spanish", "D": "Hindi"}, "correct_option": "B", "points": 10},
-      {"question": "Which part of the brain is primarily responsible for balance and coordination?", "options": {"A": "Medulla", "B": "Hypothalamus", "C": "Cerebellum", "D": "Cerebrum"}, "correct_option": "C", "points": 10},
-      {"question": "Which agreement is the principal international treaty addressing climate change and was adopted in 2015?", "options": {"A": "Paris Agreement", "B": "Kyoto Protocol", "C": "Montreal Protocol", "D": "Geneva Convention"}, "correct_option": "A", "points": 10},
-      {"question": "Which mathematical constant represents the ratio of a circle's circumference to its diameter?", "options": {"A": "Euler's number", "B": "The golden ratio", "C": "The square root of two", "D": "Pi"}, "correct_option": "D", "points": 10},
-      {"question": "Which organelle is commonly described as the powerhouse of the cell because it produces most of the cell's ATP?", "options": {"A": "Ribosome", "B": "Mitochondrion", "C": "Nucleus", "D": "Golgi apparatus"}, "correct_option": "B", "points": 10}
+      {
+        "question": "Which treaty, signed in 1648, is commonly associated with the development of the modern state system in Europe?",
+        "options": {
+          "A": "Treaty of Versailles",
+          "B": "Treaty of Utrecht",
+          "C": "Peace of Westphalia",
+          "D": "Treaty of Rome"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which strait separates Europe from Africa at their closest point?",
+        "options": {
+          "A": "Strait of Gibraltar",
+          "B": "Strait of Malacca",
+          "C": "Bering Strait",
+          "D": "Bosporus Strait"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What is the SI unit of electrical resistance?",
+        "options": {
+          "A": "Volt",
+          "B": "Ampere",
+          "C": "Watt",
+          "D": "Ohm"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Which element has the chemical symbol W?",
+        "options": {
+          "A": "Vanadium",
+          "B": "Tungsten",
+          "C": "Tin",
+          "D": "Titanium"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Which economist wrote 'The Wealth of Nations', published in 1776?",
+        "options": {
+          "A": "Karl Marx",
+          "B": "John Maynard Keynes",
+          "C": "Adam Smith",
+          "D": "David Ricardo"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which blood vessels carry oxygenated blood from the lungs to the heart?",
+        "options": {
+          "A": "Pulmonary veins",
+          "B": "Pulmonary arteries",
+          "C": "Vena cava",
+          "D": "Coronary arteries"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "What is the deepest known oceanic trench in the world?",
+        "options": {
+          "A": "Java Trench",
+          "B": "Puerto Rico Trench",
+          "C": "Tonga Trench",
+          "D": "Mariana Trench"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Which international organisation was established in 1945 to promote international peace and cooperation?",
+        "options": {
+          "A": "African Union",
+          "B": "United Nations",
+          "C": "European Union",
+          "D": "NATO"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "What is the term for the change of a substance directly from a solid to a gas?",
+        "options": {
+          "A": "Condensation",
+          "B": "Evaporation",
+          "C": "Sublimation",
+          "D": "Freezing"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which country was formerly known as Persia?",
+        "options": {
+          "A": "Iran",
+          "B": "Iraq",
+          "C": "Turkey",
+          "D": "Afghanistan"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which scientist formulated the three laws of motion?",
+        "options": {
+          "A": "Albert Einstein",
+          "B": "Galileo Galilei",
+          "C": "Michael Faraday",
+          "D": "Isaac Newton"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What is the largest internal organ in the human body?",
+        "options": {
+          "A": "Brain",
+          "B": "Liver",
+          "C": "Lung",
+          "D": "Kidney"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Which civilisation developed the writing system known as cuneiform?",
+        "options": {
+          "A": "Ancient Egyptians",
+          "B": "Ancient Greeks",
+          "C": "Sumerians",
+          "D": "Romans"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What is the name of the boundary around a black hole beyond which nothing can escape?",
+        "options": {
+          "A": "Event horizon",
+          "B": "Solar boundary",
+          "C": "Singularity line",
+          "D": "Photon belt"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which economic term describes a sustained general increase in the prices of goods and services?",
+        "options": {
+          "A": "Deflation",
+          "B": "Recession",
+          "C": "Depreciation",
+          "D": "Inflation"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Which language has the largest number of native speakers in the world?",
+        "options": {
+          "A": "English",
+          "B": "Mandarin Chinese",
+          "C": "Spanish",
+          "D": "Hindi"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Which part of the brain is primarily responsible for balance and coordination?",
+        "options": {
+          "A": "Medulla",
+          "B": "Hypothalamus",
+          "C": "Cerebellum",
+          "D": "Cerebrum"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which agreement is the principal international treaty addressing climate change and was adopted in 2015?",
+        "options": {
+          "A": "Paris Agreement",
+          "B": "Kyoto Protocol",
+          "C": "Montreal Protocol",
+          "D": "Geneva Convention"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which mathematical constant represents the ratio of a circle's circumference to its diameter?",
+        "options": {
+          "A": "Euler's number",
+          "B": "The golden ratio",
+          "C": "The square root of two",
+          "D": "Pi"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Which organelle is commonly described as the powerhouse of the cell because it produces most of the cell's ATP?",
+        "options": {
+          "A": "Ribosome",
+          "B": "Mitochondrion",
+          "C": "Nucleus",
+          "D": "Golgi apparatus"
+        },
+        "correct_option": "B",
+        "points": 10
+      }
     ]
   },
   "5": {
     "title": "Stage 5",
     "category": "Zambian History",
     "questions": [
-      {"question": "What was the name of Zambia before it gained independence in 1964?", "options": {"A": "Northern Rhodesia", "B": "Southern Rhodesia", "C": "Nyasaland", "D": "Barotseland"}, "correct_option": "A", "points": 10},
-      {"question": "On what date did Northern Rhodesia become independent as the Republic of Zambia?", "options": {"A": "1 January 1964", "B": "24 October 1964", "C": "25 October 1964", "D": "24 October 1965"}, "correct_option": "B", "points": 10},
-      {"question": "Who became the first President of independent Zambia?", "options": {"A": "Harry Mwaanga Nkumbula", "B": "Simon Kapwepwe", "C": "Kenneth Kaunda", "D": "Levy Mwanawasa"}, "correct_option": "C", "points": 10},
-      {"question": "Which political party led Zambia to independence under Kenneth Kaunda?", "options": {"A": "African National Congress", "B": "Movement for Multi-Party Democracy", "C": "United Party for National Development", "D": "United National Independence Party"}, "correct_option": "D", "points": 10},
-      {"question": "Who was the leader of the African National Congress in Northern Rhodesia and a major figure in the independence struggle?", "options": {"A": "Harry Mwaanga Nkumbula", "B": "Simon Kapwepwe", "C": "Mainza Chona", "D": "Elijah Mudenda"}, "correct_option": "A", "points": 10},
-      {"question": "Which two territories, together with Nyasaland, formed the Federation of Rhodesia and Nyasaland in 1953?", "options": {"A": "Northern Rhodesia and Tanganyika", "B": "Northern Rhodesia and Southern Rhodesia", "C": "Southern Rhodesia and Bechuanaland", "D": "Nyasaland and Bechuanaland"}, "correct_option": "B", "points": 10},
-      {"question": "In which year was the Federation of Rhodesia and Nyasaland dissolved?", "options": {"A": "1958", "B": "1960", "C": "1963", "D": "1965"}, "correct_option": "C", "points": 10},
-      {"question": "Which Zambian nationalist leader was popularly known as KK?", "options": {"A": "Simon Kapwepwe", "B": "Harry Mwaanga Nkumbula", "C": "Mainza Chona", "D": "Kenneth Kaunda"}, "correct_option": "D", "points": 10},
-      {"question": "What was the name of the constitution that introduced a one-party political system in Zambia in 1973?", "options": {"A": "The 1964 Independence Constitution", "B": "The 1973 Constitution", "C": "The 1991 Constitution", "D": "The 2016 Constitution"}, "correct_option": "B", "points": 10},
-      {"question": "Who defeated Kenneth Kaunda in the 1991 presidential election?", "options": {"A": "Frederick Chiluba", "B": "Levy Mwanawasa", "C": "Michael Sata", "D": "Rupiah Banda"}, "correct_option": "A", "points": 10},
-      {"question": "Which political movement won the 1991 general election and ended UNIP's long period in government?", "options": {"A": "United National Independence Party", "B": "National Democratic Congress", "C": "Movement for Multi-Party Democracy", "D": "Forum for Democracy and Development"}, "correct_option": "C", "points": 10},
-      {"question": "Which Zambian president introduced major economic reforms and privatisation during the 1990s?", "options": {"A": "Kenneth Kaunda", "B": "Levy Mwanawasa", "C": "Michael Sata", "D": "Frederick Chiluba"}, "correct_option": "D", "points": 10},
-      {"question": "Which Zambian leader served as president from 2002 until his death in 2008?", "options": {"A": "Rupiah Banda", "B": "Levy Mwanawasa", "C": "Michael Sata", "D": "Frederick Chiluba"}, "correct_option": "B", "points": 10},
-      {"question": "Which Zambian president was in office when the country marked its 50th anniversary of independence in 2014?", "options": {"A": "Rupiah Banda", "B": "Levy Mwanawasa", "C": "Michael Sata", "D": "Edgar Lungu"}, "correct_option": "C", "points": 10},
-      {"question": "What was the name of the railway project built to provide Zambia with an alternative route to the sea through Tanzania?", "options": {"A": "TAZARA Railway", "B": "Benguela Railway", "C": "Cape-to-Cairo Railway", "D": "Lobito Corridor Railway"}, "correct_option": "A", "points": 10},
-      {"question": "Which two countries jointly built the TAZARA Railway?", "options": {"A": "Zambia and Zimbabwe", "B": "Zambia and Tanzania", "C": "Tanzania and Malawi", "D": "Zambia and Angola"}, "correct_option": "B", "points": 10},
-      {"question": "Which Zambian town became a major centre of copper mining and industrial development?", "options": {"A": "Chipata", "B": "Mongu", "C": "Kitwe", "D": "Kasama"}, "correct_option": "C", "points": 10},
-      {"question": "What was the name of the 1964 national slogan associated with Kenneth Kaunda's vision of national unity?", "options": {"A": "One Nation, One People", "B": "Africa Must Unite", "C": "Freedom and Justice", "D": "One Zambia, One Nation"}, "correct_option": "D", "points": 10},
-      {"question": "Which Zambian freedom fighter and nationalist became the country's first Vice-President after independence?", "options": {"A": "Simon Kapwepwe", "B": "Mainza Chona", "C": "Harry Mwaanga Nkumbula", "D": "Arthur Wina"}, "correct_option": "A", "points": 10},
-      {"question": "Which year saw Zambia return to multi-party politics following a referendum and constitutional changes?", "options": {"A": "1973", "B": "1991", "C": "2001", "D": "2011"}, "correct_option": "B", "points": 10}
+      {
+        "question": "What was the name of Zambia before it gained independence in 1964?",
+        "options": {
+          "A": "Northern Rhodesia",
+          "B": "Southern Rhodesia",
+          "C": "Nyasaland",
+          "D": "Barotseland"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "On what date did Northern Rhodesia become independent as the Republic of Zambia?",
+        "options": {
+          "A": "1 January 1964",
+          "B": "24 October 1964",
+          "C": "25 October 1964",
+          "D": "24 October 1965"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Who became the first President of independent Zambia?",
+        "options": {
+          "A": "Harry Mwaanga Nkumbula",
+          "B": "Simon Kapwepwe",
+          "C": "Kenneth Kaunda",
+          "D": "Levy Mwanawasa"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which political party led Zambia to independence under Kenneth Kaunda?",
+        "options": {
+          "A": "African National Congress",
+          "B": "Movement for Multi-Party Democracy",
+          "C": "United Party for National Development",
+          "D": "United National Independence Party"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Who was the leader of the African National Congress in Northern Rhodesia and a major figure in the independence struggle?",
+        "options": {
+          "A": "Harry Mwaanga Nkumbula",
+          "B": "Simon Kapwepwe",
+          "C": "Mainza Chona",
+          "D": "Elijah Mudenda"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which two territories, together with Nyasaland, formed the Federation of Rhodesia and Nyasaland in 1953?",
+        "options": {
+          "A": "Northern Rhodesia and Tanganyika",
+          "B": "Northern Rhodesia and Southern Rhodesia",
+          "C": "Southern Rhodesia and Bechuanaland",
+          "D": "Nyasaland and Bechuanaland"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "In which year was the Federation of Rhodesia and Nyasaland dissolved?",
+        "options": {
+          "A": "1958",
+          "B": "1960",
+          "C": "1963",
+          "D": "1965"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which Zambian nationalist leader was popularly known as KK?",
+        "options": {
+          "A": "Simon Kapwepwe",
+          "B": "Harry Mwaanga Nkumbula",
+          "C": "Mainza Chona",
+          "D": "Kenneth Kaunda"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "What was the name of the constitution that introduced a one-party political system in Zambia in 1973?",
+        "options": {
+          "A": "The 1964 Independence Constitution",
+          "B": "The 1973 Constitution",
+          "C": "The 1991 Constitution",
+          "D": "The 2016 Constitution"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Who defeated Kenneth Kaunda in the 1991 presidential election?",
+        "options": {
+          "A": "Frederick Chiluba",
+          "B": "Levy Mwanawasa",
+          "C": "Michael Sata",
+          "D": "Rupiah Banda"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which political movement won the 1991 general election and ended UNIP's long period in government?",
+        "options": {
+          "A": "United National Independence Party",
+          "B": "National Democratic Congress",
+          "C": "Movement for Multi-Party Democracy",
+          "D": "Forum for Democracy and Development"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "Which Zambian president introduced major economic reforms and privatisation during the 1990s?",
+        "options": {
+          "A": "Kenneth Kaunda",
+          "B": "Levy Mwanawasa",
+          "C": "Michael Sata",
+          "D": "Frederick Chiluba"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Which Zambian leader served as president from 2002 until his death in 2008?",
+        "options": {
+          "A": "Rupiah Banda",
+          "B": "Levy Mwanawasa",
+          "C": "Michael Sata",
+          "D": "Frederick Chiluba"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Which Zambian president was in office when the country marked its 50th anniversary of independence in 2014?",
+        "options": {
+          "A": "Rupiah Banda",
+          "B": "Levy Mwanawasa",
+          "C": "Michael Sata",
+          "D": "Edgar Lungu"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What was the name of the railway project built to provide Zambia with an alternative route to the sea through Tanzania?",
+        "options": {
+          "A": "TAZARA Railway",
+          "B": "Benguela Railway",
+          "C": "Cape-to-Cairo Railway",
+          "D": "Lobito Corridor Railway"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which two countries jointly built the TAZARA Railway?",
+        "options": {
+          "A": "Zambia and Zimbabwe",
+          "B": "Zambia and Tanzania",
+          "C": "Tanzania and Malawi",
+          "D": "Zambia and Angola"
+        },
+        "correct_option": "B",
+        "points": 10
+      },
+      {
+        "question": "Which Zambian town became a major centre of copper mining and industrial development?",
+        "options": {
+          "A": "Chipata",
+          "B": "Mongu",
+          "C": "Kitwe",
+          "D": "Kasama"
+        },
+        "correct_option": "C",
+        "points": 10
+      },
+      {
+        "question": "What was the name of the 1964 national slogan associated with Kenneth Kaunda's vision of national unity?",
+        "options": {
+          "A": "One Nation, One People",
+          "B": "Africa Must Unite",
+          "C": "Freedom and Justice",
+          "D": "One Zambia, One Nation"
+        },
+        "correct_option": "D",
+        "points": 10
+      },
+      {
+        "question": "Which Zambian freedom fighter and nationalist became the country's first Vice-President after independence?",
+        "options": {
+          "A": "Simon Kapwepwe",
+          "B": "Mainza Chona",
+          "C": "Harry Mwaanga Nkumbula",
+          "D": "Arthur Wina"
+        },
+        "correct_option": "A",
+        "points": 10
+      },
+      {
+        "question": "Which year saw Zambia return to multi-party politics following a referendum and constitutional changes?",
+        "options": {
+          "A": "1973",
+          "B": "1991",
+          "C": "2001",
+          "D": "2011"
+        },
+        "correct_option": "B",
+        "points": 10
+      }
     ]
   }
 }
